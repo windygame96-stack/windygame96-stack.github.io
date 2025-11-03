@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+// 【要改】把下面的“你的用户名”换成你的GitHub用户名（比如nainai123）
+var 用户名 = "windygame96-stack";
+// 访问“域名/项目A”就转到项目A，“域名/项目B”转到项目B
+var 项目1名称 = "super-broccoli"; // 【要改】换成你的第一个项目名（比如你的项目叫“xiaomai”，就写"xiaomai"）
+var 项目1地址 = "https://" + 用户名 + ".github.io/" + 项目1名称;
+var 项目2名称 = "lure_for_fitness"; // 【要改】换成你的第二个项目名（比如“xiangjiao”，就写"xiangjiao"）
+var 项目2地址 = "https://" + 用户名 + ".github.io/" + 项目2名称;
+
+// 自动转发逻辑（不用改）
+var 访问路径 = window.location.pathname;
+if (访问路径.startsWith("/" + 项目1名称)) {
+  window.location.href = 项目1地址 + 访问路径.replace("/" + 项目1名称, "");
+} else if (访问路径.startsWith("/" + 项目2名称)) {
+  window.location.href = 项目2地址 + 访问路径.replace("/" + 项目2名称, "");
+} else {
+  // 访问域名本身（比如奶奶的网站.com），可以显示一句话（可选，不想显示就删掉这行）
+  document.write("欢迎访问摸鱼之神的网站！<br>访问项目A：<a href='/" + 项目1名称 + "'>" + 项目1名称 + "</a><br>访问项目B：<a href='/" + 项目2名称 + "'>" + 项目2名称 + "</a>");
+}
+</script>
+</body>
+</html>
