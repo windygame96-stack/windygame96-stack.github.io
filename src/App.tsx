@@ -7,9 +7,11 @@ const GITHUB_USERNAME = "windygame96-stack";
 const PROJECT_1_NAME = "super-broccoli";
 const PROJECT_2_NAME = "lure_for_fitness";
 const PROJECT_3_NAME = "hub111";
+const PROJECT_4_NAME = "ELEV-9";
 const PROJECT_1_URL = `https://${GITHUB_USERNAME}.github.io/${PROJECT_1_NAME}`;
 const PROJECT_2_URL = `https://${GITHUB_USERNAME}.github.io/${PROJECT_2_NAME}`;
 const PROJECT_3_URL = `https://${GITHUB_USERNAME}.github.io/${PROJECT_3_NAME}`;
+const PROJECT_4_URL = `https://${GITHUB_USERNAME}.github.io/${PROJECT_4_NAME}`;
 
 export default function App() {
   useEffect(() => {
@@ -22,6 +24,8 @@ export default function App() {
       window.location.href = PROJECT_2_URL + path.replace(`/${PROJECT_2_NAME}`, "");
     } else if (path.startsWith(`/${PROJECT_3_NAME}`)) {
       window.location.href = PROJECT_3_URL + path.replace(`/${PROJECT_3_NAME}`, "");
+    } else if (path.startsWith(`/${PROJECT_4_NAME}`)) 
+      window.location.href = PROJECT_4_URL + path.replace(`/${PROJECT_4_NAME}`, "");
     }
     // 访问域名根路径时显示主页，不需要特别处理
   }, []);
