@@ -34,6 +34,13 @@ const games: Game[] = [
     description: "在拥挤的地铁中，你需要运用策略和反应速度，在瞬息万变的环境中抢占座位。每一关都有不同的挑战和障碍，展示你的抢座技巧吧！",
     gameUrl: "https://www.escapefromhongye.xyz/hub111",
     imageUrl: "https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=subway+seat+game+cartoon+style+crowded+train+platform&sign=8f66f1158e711fbf800dfc3c9abe02b7"
+  },
+  {
+    id: 4,
+    title: "电梯ELEV-9",
+    description: "你被困在一个神秘的智能电梯ELEV-9中，需要通过解谜和操作来逐层上升，揭开电梯背后的秘密并最终逃脱。每层都有独特的谜题和挑战等着你！",
+    gameUrl: "https://www.escapefromhongye.xyz/ELEV-9",
+    imageUrl: "https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=elevator+puzzle+game+futuristic+style+digital+interface&sign=1fe57b59130b86e0aa4527600b2619ec"
   }
 ];
 

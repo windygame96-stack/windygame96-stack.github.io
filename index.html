@@ -11,38 +11,349 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.escapefromhongye.xyz" />
     <link rel="canonical" href="https://www.escapefromhongye.xyz" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
       crossorigin="anonymous"
     />
+    <!-- 配置Tailwind自定义主题 -->
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#3b82f6',
+              secondary: '#8b5cf6',
+            },
+            fontFamily: {
+              inter: ['Inter', 'system-ui', 'sans-serif'],
+            },
+          },
+        }
+      }
+    </script>
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+      @layer utilities {
+        .content-auto {
+          content-visibility: auto;
+        }
+        .bg-opacity-80 {
+          background-opacity: 0.8;
+        }
+        .text-shadow {
+          text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+      }
+    </style>
+    <style>
+      /* 全局样式 */
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+        line-height: 1.5;
+        font-weight: 400;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      /* 动画样式 */
+      .game-card {
+        transition: all 0.3s ease;
+      }
+      
+      .game-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      
+      .game-card img {
+        transition: transform 0.7s ease;
+      }
+      
+      .game-card:hover img {
+        transform: scale(1.1);
+      }
+      
+      .theme-toggle {
+        transition: all 0.2s ease;
+      }
+      
+      .theme-toggle:hover {
+        transform: scale(1.1);
+      }
+      
+      .theme-toggle:active {
+        transform: scale(0.9);
+      }
+      
+      .social-link {
+        transition: all 0.2s ease;
+      }
+      
+      .social-link:hover {
+        transform: scale(1.2);
+      }
+      
+      /* 背景动画 */
+      .bg-animation-1 {
+        animation: bgAnimation1 10s ease-in-out infinite alternate;
+      }
+      
+      .bg-animation-2 {
+        animation: bgAnimation2 12s ease-in-out infinite alternate;
+      }
+      
+      @keyframes bgAnimation1 {
+        0% {
+          transform: scale(1);
+          opacity: 0.5;
+        }
+        100% {
+          transform: scale(1.2);
+          opacity: 0.8;
+        }
+      }
+      
+      @keyframes bgAnimation2 {
+        0% {
+          transform: scale(1.2);
+          opacity: 0.8;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0.5;
+        }
+      }
+    </style>
   </head>
-  <body>
-    <!-- 简单的降级显示，确保在React加载失败时也能显示基本信息 -->
-    <div id="root">
-      <div class="min-h-screen bg-gray-50 text-gray-900 flex flex-col items-center justify-center p-4">
-        <h1 class="text-3xl font-bold mb-4">摸鱼之神温迪的游戏仓库</h1>
-        <p class="text-lg mb-6">欢迎来到我的游戏作品集！</p>
-        <div class="space-y-4">
-          <p>
-            项目A：
-            <a href="/super-broccoli" class="text-blue-600 hover:underline">逃离宏业电子厂</a>
-          </p>
-          <p>
-            项目B：
-            <a href="/lure_for_fitness" class="text-blue-600 hover:underline">肌肉的诱惑</a>
-          </p>
-           <p>
-             项目C：
-             <a href="/hub111" class="text-blue-600 hover:underline">地铁抢座大作战</a>
-           </p>
-           <p>
-             项目D：
-             <a href="/ELEV-9" class="text-blue-600 hover:underline">电梯ELEV-9</a>
-           </p>
-         </div>
-      </div>
+  <body class="min-h-screen font-inter">
+    <!-- 背景装饰 -->
+    <div class="fixed inset-0 -z-10 overflow-hidden">
+      <div class="absolute -top-20 -right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl bg-animation-1"></div>
+      <div class="absolute -bottom-20 -left-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl bg-animation-2"></div>
     </div>
-    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- 主容器 -->
+    <div id="app" class="min-h-screen w-full bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300">
+      <!-- 导航栏 -->
+      <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+          <h1 class="text-2xl md:text-3xl font-bold flex items-center">
+            <i class="fas fa-gamepad mr-2 text-blue-500"></i>
+            摸鱼之神温迪的游戏仓库
+          </h1>
+          
+          <button id="theme-toggle" class="theme-toggle w-10 h-10 rounded-full flex items-center justify-center bg-blue-100 text-gray-700 dark:bg-gray-800 dark:text-yellow-300">
+            <i class="fas fa-moon dark:hidden"></i>
+            <i class="fas fa-sun hidden dark:inline-block"></i>
+          </button>
+        </div>
+      </header>
+      
+      <!-- 主内容 -->
+      <main class="container mx-auto px-4 py-8 md:py-16">
+        <section class="mb-12 text-center">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">探索我的游戏作品</h2>
+          <p class="text-lg max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
+            欢迎来到摸鱼之神温迪的游戏仓库！这里存放着我开发的独立游戏作品，欢迎体验和Star支持！
+          </p>
+        </section>
+        
+        <!-- 游戏卡片网格 -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- 游戏卡片1 -->
+          <a href="https://www.escapefromhongye.xyz/super-broccoli" target="_blank" rel="noopener noreferrer" class="game-card block w-full rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800">
+            <div class="relative h-48 overflow-hidden">
+              <img 
+                src="https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=escape+game+factory+setting+pixel+art+style&sign=045d48518ed6589b3a4bbb74d800b983" 
+                alt="逃离宏业电子厂" 
+                class="w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+              <div class="absolute bottom-0 left-0 p-4 text-white">
+                <h3 class="text-xl font-bold">逃离宏业电子厂</h3>
+              </div>
+            </div>
+            <div class="p-4">
+              <p class="text-sm text-gray-600 dark:text-gray-300">
+                现在是2024年6月17日，你是一个收债人，你来宏业电子厂收债，但这里空无一人，且大门紧锁，需要密码才能逃出，你被困在了这里，通过探索解谜逃出这里吧。
+              </p>
+              <div class="mt-4 flex items-center justify-between">
+                <span class="text-sm text-blue-600 dark:text-blue-400">
+                  <i class="fas fa-gamepad mr-1"></i> 开始游戏
+                </span>
+                <div class="w-8 h-8 rounded-full flex items-center justify-center">
+                  <i class="fas fa-arrow-right text-blue-600 dark:text-blue-400"></i>
+                </div>
+              </div>
+            </div>
+          </a>
+          
+          <!-- 游戏卡片2 -->
+          <a href="https://www.escapefromhongye.xyz/lure_for_fitness" target="_blank" rel="noopener noreferrer" class="game-card block w-full rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800">
+            <div class="relative h-48 overflow-hidden">
+              <img 
+                src="https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=fitness+game+muscle+building+cartoon+style&sign=ed050fd4741505427cac33425cce7aa8" 
+                alt="肌肉的诱惑" 
+                class="w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+              <div class="absolute bottom-0 left-0 p-4 text-white">
+                <h3 class="text-xl font-bold">肌肉的诱惑</h3>
+              </div>
+            </div>
+            <div class="p-4">
+              <p class="text-sm text-gray-600 dark:text-gray-300">
+                你是一个大学辅导员，你的一个学生李凌失踪了一整天，你现在只有一个他室友在宿舍找到他的手机，找出他失踪的真相，并前去解救他吧
+              </p>
+              <div class="mt-4 flex items-center justify-between">
+                <span class="text-sm text-blue-600 dark:text-blue-400">
+                  <i class="fas fa-gamepad mr-1"></i> 开始游戏
+                </span>
+                <div class="w-8 h-8 rounded-full flex items-center justify-center">
+                  <i class="fas fa-arrow-right text-blue-600 dark:text-blue-400"></i>
+                </div>
+              </div>
+            </div>
+          </a>
+          
+          <!-- 游戏卡片3 -->
+          <a href="https://www.escapefromhongye.xyz/hub111" target="_blank" rel="noopener noreferrer" class="game-card block w-full rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800">
+            <div class="relative h-48 overflow-hidden">
+              <img 
+                src="https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=subway+seat+game+cartoon+style+crowded+train+platform&sign=8f66f1158e711fbf800dfc3c9abe02b7" 
+                alt="地铁抢座大作战" 
+                class="w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+              <div class="absolute bottom-0 left-0 p-4 text-white">
+                <h3 class="text-xl font-bold">地铁抢座大作战</h3>
+              </div>
+            </div>
+            <div class="p-4">
+              <p class="text-sm text-gray-600 dark:text-gray-300">
+                在拥挤的地铁中，你需要运用策略和反应速度，在瞬息万变的环境中抢占座位。每一关都有不同的挑战和障碍，展示你的抢座技巧吧！
+              </p>
+              <div class="mt-4 flex items-center justify-between">
+                <span class="text-sm text-blue-600 dark:text-blue-400">
+                  <i class="fas fa-gamepad mr-1"></i> 开始游戏
+                </span>
+                <div class="w-8 h-8 rounded-full flex items-center justify-center">
+                  <i class="fas fa-arrow-right text-blue-600 dark:text-blue-400"></i>
+                </div>
+              </div>
+            </div>
+          </a>
+          
+          <!-- 游戏卡片4 -->
+          <a href="https://www.escapefromhongye.xyz/ELEV-9" target="_blank" rel="noopener noreferrer" class="game-card block w-full rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800">
+            <div class="relative h-48 overflow-hidden">
+              <img 
+                src="https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=elevator+puzzle+game+futuristic+style+digital+interface&sign=1fe57b59130b86e0aa4527600b2619ec" 
+                alt="电梯ELEV-9" 
+                class="w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+              <div class="absolute bottom-0 left-0 p-4 text-white">
+                <h3 class="text-xl font-bold">电梯ELEV-9</h3>
+              </div>
+            </div>
+            <div class="p-4">
+              <p class="text-sm text-gray-600 dark:text-gray-300">
+                你被困在一个神秘的智能电梯ELEV-9中，需要通过解谜和操作来逐层上升，揭开电梯背后的秘密并最终逃脱。每层都有独特的谜题和挑战等着你！
+              </p>
+              <div class="mt-4 flex items-center justify-between">
+                <span class="text-sm text-blue-600 dark:text-blue-400">
+                  <i class="fas fa-gamepad mr-1"></i> 开始游戏
+                </span>
+                <div class="w-8 h-8 rounded-full flex items-center justify-center">
+                  <i class="fas fa-arrow-right text-blue-600 dark:text-blue-400"></i>
+                </div>
+              </div>
+            </div>
+          </a>
+        </section>
+      </main>
+      
+      <!-- 页脚 -->
+      <footer class="py-8 border-t border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400">
+        <div class="container mx-auto px-4 text-center">
+          <p>© 2025 摸鱼之神温迪的游戏仓库 | <a href="https://www.escapefromhongye.xyz" class="text-blue-500 hover:underline">www.escapefromhongye.xyz</a></p>
+          <div class="mt-4 flex justify-center space-x-4">
+            <a 
+              href="https://github.com/windygame96-stack" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="social-link hover:text-blue-500 transition-colors"
+            >
+              <i class="fab fa-github text-xl"></i>
+            </a>
+            <a 
+              href="#" 
+              class="social-link hover:text-blue-500 transition-colors flex items-center"
+            >
+              <i class="fab fa-xiaohongshu text-xl mr-1"></i>
+              <span class="text-sm">摸鱼之神温迪</span>
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <!-- 路径转发逻辑 -->
+    <script>
+      // 项目配置
+      const GITHUB_USERNAME = "windygame96-stack";
+      const PROJECT_1_NAME = "super-broccoli";
+      const PROJECT_2_NAME = "lure_for_fitness";
+      const PROJECT_3_NAME = "hub111";
+      const PROJECT_4_NAME = "ELEV-9";
+      const PROJECT_1_URL = `https://${GITHUB_USERNAME}.github.io/${PROJECT_1_NAME}`;
+      const PROJECT_2_URL = `https://${GITHUB_USERNAME}.github.io/${PROJECT_2_NAME}`;
+      const PROJECT_3_URL = `https://${GITHUB_USERNAME}.github.io/${PROJECT_3_NAME}`;
+      const PROJECT_4_URL = `https://${GITHUB_USERNAME}.github.io/${PROJECT_4_NAME}`;
+      
+      // 路径转发逻辑
+      document.addEventListener('DOMContentLoaded', () => {
+        const path = window.location.pathname;
+        
+        if (path.startsWith(`/${PROJECT_1_NAME}`)) {
+          window.location.href = PROJECT_1_URL + path.replace(`/${PROJECT_1_NAME}`, "");
+        } else if (path.startsWith(`/${PROJECT_2_NAME}`)) {
+          window.location.href = PROJECT_2_URL + path.replace(`/${PROJECT_2_NAME}`, "");
+        } else if (path.startsWith(`/${PROJECT_3_NAME}`)) {
+          window.location.href = PROJECT_3_URL + path.replace(`/${PROJECT_3_NAME}`, "");
+        } else if (path.startsWith(`/${PROJECT_4_NAME}`)) {
+          window.location.href = PROJECT_4_URL + path.replace(`/${PROJECT_4_NAME}`, "");
+        }
+      });
+      
+      // 主题切换逻辑
+      document.addEventListener('DOMContentLoaded', () => {
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        // 检查本地存储的主题偏好
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // 设置初始主题
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+        
+        // 主题切换事件
+        themeToggle.addEventListener('click', () => {
+          document.documentElement.classList.toggle('dark');
+          const newTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+          localStorage.setItem('theme', newTheme);
+        });
+      });
+    </script>
   </body>
 </html>

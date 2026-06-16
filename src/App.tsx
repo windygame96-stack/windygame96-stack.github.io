@@ -24,7 +24,7 @@ export default function App() {
       window.location.href = PROJECT_2_URL + path.replace(`/${PROJECT_2_NAME}`, "");
     } else if (path.startsWith(`/${PROJECT_3_NAME}`)) {
       window.location.href = PROJECT_3_URL + path.replace(`/${PROJECT_3_NAME}`, "");
-    } else if (path.startsWith(`/${PROJECT_4_NAME}`)) 
+    } else if (path.startsWith(`/${PROJECT_4_NAME}`)) {
       window.location.href = PROJECT_4_URL + path.replace(`/${PROJECT_4_NAME}`, "");
     }
     // 访问域名根路径时显示主页，不需要特别处理
