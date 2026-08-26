@@ -41,6 +41,13 @@ const games: Game[] = [
     description: "你被困在一个神秘的智能电梯ELEV-9中，需要通过解谜和操作来逐层上升，揭开电梯背后的秘密并最终逃脱。每层都有独特的谜题和挑战等着你！",
     gameUrl: "https://www.escapefromhongye.xyz/ELEV-9",
     imageUrl: "https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=elevator+puzzle+game+futuristic+style+digital+interface&sign=1fe57b59130b86e0aa4527600b2619ec"
+  },
+  {
+    id: 5,
+    title: "字雀 · 文字麻将",
+    description: "用汉字组成词语的线上麻将。轻登录、开房间、把房间号发给朋友，2—4 人即可一起玩。",
+    gameUrl: "https://www.escapefromhongye.xyz/zique-word-mahjong",
+    imageUrl: "/assets/zique-cover.svg"
   }
 ];
 

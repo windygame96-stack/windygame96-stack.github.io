@@ -278,6 +278,34 @@
               </div>
             </div>
           </a>
+
+          <!-- 游戏卡片5 -->
+          <a href="https://www.escapefromhongye.xyz/zique-word-mahjong" target="_blank" rel="noopener noreferrer" class="game-card block w-full rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800">
+            <div class="relative h-48 overflow-hidden">
+              <img
+                src="/assets/zique-cover.svg"
+                alt="字雀 · 文字麻将"
+                class="w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+              <div class="absolute bottom-0 left-0 p-4 text-white">
+                <h3 class="text-xl font-bold">字雀 · 文字麻将</h3>
+              </div>
+            </div>
+            <div class="p-4">
+              <p class="text-sm text-gray-600 dark:text-gray-300">
+                用汉字组成词语的线上麻将。轻登录、开房间、把房间号发给朋友，2—4 人即可一起玩。
+              </p>
+              <div class="mt-4 flex items-center justify-between">
+                <span class="text-sm text-blue-600 dark:text-blue-400">
+                  <i class="fas fa-gamepad mr-1"></i> 开始游戏
+                </span>
+                <div class="w-8 h-8 rounded-full flex items-center justify-center">
+                  <i class="fas fa-arrow-right text-blue-600 dark:text-blue-400"></i>
+                </div>
+              </div>
+            </div>
+          </a>
         </section>
       </main>
       
@@ -314,10 +342,12 @@
       const PROJECT_2_NAME = "lure_for_fitness";
       const PROJECT_3_NAME = "hub111";
       const PROJECT_4_NAME = "ELEV-9";
+      const PROJECT_5_NAME = "zique-word-mahjong";
       const PROJECT_1_URL = `https://${GITHUB_USERNAME}.github.io/${PROJECT_1_NAME}`;
       const PROJECT_2_URL = `https://${GITHUB_USERNAME}.github.io/${PROJECT_2_NAME}`;
       const PROJECT_3_URL = `https://${GITHUB_USERNAME}.github.io/${PROJECT_3_NAME}`;
       const PROJECT_4_URL = `https://${GITHUB_USERNAME}.github.io/${PROJECT_4_NAME}`;
+      const PROJECT_5_URL = `https://${GITHUB_USERNAME}.github.io/${PROJECT_5_NAME}`;
       
       // 路径转发逻辑
       document.addEventListener('DOMContentLoaded', () => {
@@ -331,6 +361,8 @@
           window.location.href = PROJECT_3_URL + path.replace(`/${PROJECT_3_NAME}`, "");
         } else if (path.startsWith(`/${PROJECT_4_NAME}`)) {
           window.location.href = PROJECT_4_URL + path.replace(`/${PROJECT_4_NAME}`, "");
+        } else if (path.startsWith(`/${PROJECT_5_NAME}`)) {
+          window.location.href = PROJECT_5_URL + path.replace(`/${PROJECT_5_NAME}`, "");
         }
       });
       
