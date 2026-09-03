@@ -121,13 +121,19 @@ function setHeaderVisible(visible) {
 
 // ---------- 认证 ----------
 function initAuth() {
+  const redirectTo = `${window.location.origin}${window.location.pathname}`;
+
   $("#signin-btn").addEventListener("click", () => {
-    auth.openSignInModal();
+    auth.openSignInModal({
+      appName: "学习工坊",
+      locale: "zh-CN",
+      redirectTo,
+    });
   });
 
   $("#google-btn").addEventListener("click", async () => {
     try {
-      await auth.signInWithOAuth({ provider: "google" });
+      await auth.signInWithOAuth({ provider: "google", redirectTo });
     } catch (err) {
       toast("Google 登录失败：" + (err?.message || err));
     }
@@ -392,7 +398,9 @@ function initUpload() {
 
     let result = null;
     let genStatusMsg = null;
-    if (mode === "ai") {
+    if (mode === "ai" && session.isGuest) {
+      genStatusMsg = "⚠️ AI 生成功能需要登录账号，已使用本地规则算法生成。";
+    } else if (mode === "ai") {
       try {
         const { data, error } = await supabase.functions.invoke(
           "generate-course-ai",
@@ -757,7 +765,7 @@ function buildEditCard(course, q, idx) {
       </div>
       <p class="ai-rewrite-error"></p>
     `;
-  card.appendChild(aiBox);
+  if (!session.isGuest) card.appendChild(aiBox);
   card.appendChild(saveBtn);
 
   aiBox.querySelector(".ai-rewrite-btn").addEventListener("click", async (e) => {

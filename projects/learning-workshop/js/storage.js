@@ -63,15 +63,12 @@ export const Storage = (() => {
     if (!email || !password || !username)
       return { ok: false, msg: "邮箱、用户名和密码不能为空" };
 
-    const { data: existing } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("username", username)
-      .maybeSingle();
-    if (existing) return { ok: false, msg: "用户名已被占用，请换一个" };
-
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) return { ok: false, msg: error.message };
+
+    if (!data.session) {
+      return { ok: true, username, needsEmailVerification: true };
+    }
 
     const userId = data.user.id;
     const { error: profileErr } = await supabase

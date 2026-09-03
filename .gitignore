@@ -2,3 +2,4 @@ work/
 **/node_modules/
 **/.env.local
 **/.DS_Store
+projects/learning-workshop/dist/

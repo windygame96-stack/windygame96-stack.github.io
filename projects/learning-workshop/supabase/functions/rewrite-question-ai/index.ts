@@ -3,11 +3,7 @@
 // 输入: { question, userPrompt, courseTitle, courseCategory }
 // 输出: { ok:true, question:{...同类型题目...}, provider } 或 { ok:false, msg }
 
-const CORS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+import { authenticateRequest, corsHeaders, jsonResponse } from "../_shared/http.ts";
 
 const PROVIDERS = {
   zhipu: {
@@ -124,16 +120,21 @@ async function callProvider(providerKey, prompt) {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders(req) });
+  if (req.method !== "POST") return jsonResponse(req, { ok: false, msg: "仅支持 POST 请求" }, 405);
+
+  const user = await authenticateRequest(req);
+  if (!user) return jsonResponse(req, { ok: false, msg: "请先登录后再使用 AI 改写功能" }, 401);
 
   try {
     const { question, userPrompt, courseTitle, courseCategory } = await req.json();
     if (!question || !question.type) {
-      return new Response(JSON.stringify({ ok: false, msg: "缺少原题目数据" }), { headers: { ...CORS, "Content-Type": "application/json" } });
+      return jsonResponse(req, { ok: false, msg: "缺少原题目数据" }, 400);
     }
     if (!userPrompt || !userPrompt.trim()) {
-      return new Response(JSON.stringify({ ok: false, msg: "请填写修改要求" }), { headers: { ...CORS, "Content-Type": "application/json" } });
+      return jsonResponse(req, { ok: false, msg: "请填写修改要求" }, 400);
     }
+    if (userPrompt.length > 800) return jsonResponse(req, { ok: false, msg: "修改要求请控制在 800 字以内" }, 400);
 
     const order = getProviderOrder();
     const prompt = buildPrompt(question, userPrompt.trim(), courseTitle, courseCategory);
@@ -155,18 +156,19 @@ Deno.serve(async (req) => {
       const msg = errors.length
         ? "所有已配置的 AI 模型均调用失败：" + errors.join("；")
         : "尚未配置任何 AI 模型密钥，请先在后台设置对应 API Key";
-      return new Response(JSON.stringify({ ok: false, msg }), { headers: { ...CORS, "Content-Type": "application/json" } });
+      return jsonResponse(req, { ok: false, msg }, 503);
     }
 
     let newQuestion;
     try {
       newQuestion = normalizeQuestion(success.parsed, question.type);
     } catch (err) {
-      return new Response(JSON.stringify({ ok: false, msg: `${success.providerLabel} 返回的题目格式不合法：${err.message}` }), { headers: { ...CORS, "Content-Type": "application/json" } });
+      return jsonResponse(req, { ok: false, msg: `${success.providerLabel} 返回的题目格式不合法：${err.message}` }, 502);
     }
 
-    return new Response(JSON.stringify({ ok: true, question: newQuestion, provider: success.providerLabel }), { headers: { ...CORS, "Content-Type": "application/json" } });
+    return jsonResponse(req, { ok: true, question: newQuestion, provider: success.providerLabel });
   } catch (err) {
-    return new Response(JSON.stringify({ ok: false, msg: "AI 改写出错：" + (err && err.message || String(err)) }), { headers: { ...CORS, "Content-Type": "application/json" } });
+    console.error("AI question rewrite failed", err);
+    return jsonResponse(req, { ok: false, msg: "AI 改写暂时不可用，请稍后重试" }, 500);
   }
 });

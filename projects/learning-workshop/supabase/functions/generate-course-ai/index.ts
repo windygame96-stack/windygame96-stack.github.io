@@ -3,11 +3,7 @@
 // 输入: { title, category, text, ownerUsername }
 // 输出: { ok:true, course:{...}, provider } 与规则算法 Generator.generateCourse 相同结构，或 { ok:false, msg }
 
-const CORS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+import { authenticateRequest, corsHeaders, jsonResponse } from "../_shared/http.ts";
 
 const PROVIDERS = {
   zhipu: {
@@ -135,13 +131,18 @@ async function callProvider(providerKey, prompt) {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders(req) });
+  if (req.method !== "POST") return jsonResponse(req, { ok: false, msg: "仅支持 POST 请求" }, 405);
+
+  const user = await authenticateRequest(req);
+  if (!user) return jsonResponse(req, { ok: false, msg: "请先登录后再使用 AI 生成功能" }, 401);
 
   try {
     const { title, category, text, ownerUsername } = await req.json();
     if (!text || text.trim().length < 30) {
-      return new Response(JSON.stringify({ ok: false, msg: "教材内容过短，无法生成" }), { headers: { ...CORS, "Content-Type": "application/json" } });
+      return jsonResponse(req, { ok: false, msg: "教材内容过短，无法生成" }, 400);
     }
+    if (text.length > 20000) return jsonResponse(req, { ok: false, msg: "教材内容过长，请控制在 20000 字以内" }, 400);
 
     const order = getProviderOrder();
     const prompt = buildPrompt(text, title, category);
@@ -163,7 +164,7 @@ Deno.serve(async (req) => {
       const msg = errors.length
         ? "所有已配置的 AI 模型均调用失败：" + errors.join("；")
         : "尚未配置任何 AI 模型密钥（支持智谱GLM/Kimi/DeepSeek/Groq），请先在后台设置对应 API Key";
-      return new Response(JSON.stringify({ ok: false, msg }), { headers: { ...CORS, "Content-Type": "application/json" } });
+      return jsonResponse(req, { ok: false, msg }, 503);
     }
 
     const levels = {
@@ -173,7 +174,7 @@ Deno.serve(async (req) => {
     };
     const totalQ = levels.easy.length + levels.medium.length + levels.hard.length;
     if (totalQ === 0) {
-      return new Response(JSON.stringify({ ok: false, msg: `${success.providerLabel} 未能生成有效题目` }), { headers: { ...CORS, "Content-Type": "application/json" } });
+      return jsonResponse(req, { ok: false, msg: `${success.providerLabel} 未能生成有效题目` }, 502);
     }
 
     const course = {
@@ -185,8 +186,9 @@ Deno.serve(async (req) => {
       levels,
     };
 
-    return new Response(JSON.stringify({ ok: true, course, provider: success.providerLabel }), { headers: { ...CORS, "Content-Type": "application/json" } });
+    return jsonResponse(req, { ok: true, course, provider: success.providerLabel });
   } catch (err) {
-    return new Response(JSON.stringify({ ok: false, msg: "AI 生成出错：" + (err && err.message || String(err)) }), { headers: { ...CORS, "Content-Type": "application/json" } });
+    console.error("AI course generation failed", err);
+    return jsonResponse(req, { ok: false, msg: "AI 生成暂时不可用，请稍后重试" }, 500);
   }
 });
