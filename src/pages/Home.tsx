@@ -84,6 +84,8 @@ const productSlots: ProductSlot[] = [
   },
 ];
 
+const xiaohongshuUrl = "https://www.xiaohongshu.com/user/profile/580cd5526a6a6943b735378c";
+
 function Icon({ name, size = 22 }: { name: IconName; size?: number }) {
   const paths: Record<IconName, ReactNode> = {
     spark: <path d="M12 2l1.7 5.3L19 9l-5.3 1.7L12 16l-1.7-5.3L5 9l5.3-1.7L12 2Zm7 13 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z" />,
@@ -167,6 +169,7 @@ export default function Home() {
         <nav className={menuOpen ? "site-nav site-nav--open" : "site-nav"} aria-label="主导航">
           <a href="#games" onClick={closeMenu}>独立游戏</a>
           <a href="#products" onClick={closeMenu}>产品实验</a>
+          <a href={xiaohongshuUrl} target="_blank" rel="noopener noreferrer">小红书 ↗</a>
           <a href="https://github.com/windygame96-stack" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
           <button className="theme-button" type="button" onClick={toggleTheme} aria-label={isDark ? "切换到浅色模式" : "切换到深色模式"}><Icon name={isDark ? "sun" : "moon"} size={19} /></button>
         </nav>
@@ -217,7 +220,8 @@ export default function Home() {
 
       <footer className="site-footer">
         <a href="#top" className="brand"><span className="brand__mark">W</span><span>摸鱼之神温迪的 LAB</span></a>
-        <p>游戏、产品与偶尔不太正经的实验。</p><span>© {new Date().getFullYear()} Windy</span>
+        <a className="footer-social" href={xiaohongshuUrl} target="_blank" rel="noopener noreferrer">小红书 @摸鱼之神温迪 ↗</a>
+        <span>© {new Date().getFullYear()} Windy</span>
       </footer>
     </div>
   );
