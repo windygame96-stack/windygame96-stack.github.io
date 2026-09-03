@@ -1,231 +1,207 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useTheme } from '@/hooks/useTheme';
-import { cn } from '@/lib/utils';
+import { useState, type ReactNode } from "react";
+import { motion } from "framer-motion";
+import { useTheme } from "@/hooks/useTheme";
 
-// 游戏数据类型定义
+type IconName = "spark" | "book" | "wave" | "chart" | "game" | "arrow" | "sun" | "moon";
+
 interface Game {
-  id: number;
   title: string;
   description: string;
-  gameUrl: string;
-  imageUrl: string;
+  url: string;
+  image: string;
+  tag: string;
 }
 
-// 游戏数据
+interface ProductSlot {
+  title: string;
+  eyebrow: string;
+  description: string;
+  icon: IconName;
+  accent: string;
+}
+
 const games: Game[] = [
   {
-    id: 1,
     title: "逃离宏业电子厂",
-    description: "现在是2024年6月17日，你是一个收债人，你来宏业电子厂收债，但这里空无一人，且大门紧锁，需要密码才能逃出，你被困在了这里，通过探索解谜逃出这里吧。",
-    gameUrl: "https://www.escapefromhongye.xyz/super-broccoli",
-    imageUrl: "https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=escape+game+factory+setting+pixel+art+style&sign=045d48518ed6589b3a4bbb74d800b983"
+    description: "在空无一人的工厂里探索线索、破解密码，想办法赶在一切失控前逃出去。",
+    url: "https://www.escapefromhongye.xyz/super-broccoli",
+    image: "https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=escape+game+factory+setting+pixel+art+style&sign=045d48518ed6589b3a4bbb74d800b983",
+    tag: "叙事解谜",
   },
   {
-    id: 2,
     title: "肌肉的诱惑",
-    description: "你是一个大学辅导员，你的一个学生李凌失踪了一整天，你现在只有一个他室友在宿舍找到他的手机，找出他失踪的真相，并前去解救他吧",
-    gameUrl: "https://www.escapefromhongye.xyz/lure_for_fitness",
-    imageUrl: "https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=fitness+game+muscle+building+cartoon+style&sign=ed050fd4741505427cac33425cce7aa8"
+    description: "一位学生离奇失踪，你只有他遗落的手机。顺着聊天记录，找出事件背后的真相。",
+    url: "https://www.escapefromhongye.xyz/lure_for_fitness",
+    image: "https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=fitness+game+muscle+building+cartoon+style&sign=ed050fd4741505427cac33425cce7aa8",
+    tag: "手机解谜",
   },
   {
-    id: 3,
     title: "地铁抢座大作战",
-    description: "在拥挤的地铁中，你需要运用策略和反应速度，在瞬息万变的环境中抢占座位。每一关都有不同的挑战和障碍，展示你的抢座技巧吧！",
-    gameUrl: "https://www.escapefromhongye.xyz/hub111",
-    imageUrl: "https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=subway+seat+game+cartoon+style+crowded+train+platform&sign=8f66f1158e711fbf800dfc3c9abe02b7"
+    description: "观察乘客、预判路线，在瞬息万变的通勤现场里抢到属于你的那个座位。",
+    url: "https://www.escapefromhongye.xyz/hub111",
+    image: "https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=subway+seat+game+cartoon+style+crowded+train+platform&sign=8f66f1158e711fbf800dfc3c9abe02b7",
+    tag: "策略反应",
   },
   {
-    id: 4,
-    title: "电梯ELEV-9",
-    description: "你被困在一个神秘的智能电梯ELEV-9中，需要通过解谜和操作来逐层上升，揭开电梯背后的秘密并最终逃脱。每层都有独特的谜题和挑战等着你！",
-    gameUrl: "https://www.escapefromhongye.xyz/ELEV-9",
-    imageUrl: "https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=elevator+puzzle+game+futuristic+style+digital+interface&sign=1fe57b59130b86e0aa4527600b2619ec"
+    title: "电梯 ELEV-9",
+    description: "困在一台不太对劲的智能电梯里。识别异常、逐层解谜，直到抵达第九层。",
+    url: "https://www.escapefromhongye.xyz/ELEV-9",
+    image: "https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=elevator+puzzle+game+futuristic+style+digital+interface&sign=1fe57b59130b86e0aa4527600b2619ec",
+    tag: "异常观察",
   },
   {
-    id: 5,
     title: "字雀 · 文字麻将",
-    description: "用汉字组成词语的线上麻将。轻登录、开房间、把房间号发给朋友，2—4 人即可一起玩。",
-    gameUrl: "https://www.escapefromhongye.xyz/zique-word-mahjong",
-    imageUrl: "/assets/zique-cover.svg"
-  }
+    description: "把汉字摸进手牌、组合成词。轻登录开房，2—4 人就能来一局脑力麻将。",
+    url: "https://www.escapefromhongye.xyz/zique-word-mahjong",
+    image: "/assets/zique-cover.svg",
+    tag: "多人文字",
+  },
 ];
 
-// 游戏卡片组件
-const GameCard = ({ game }: { game: Game }) => {
-  const { theme } = useTheme();
-  
+const productSlots: ProductSlot[] = [
+  {
+    title: "教育产品",
+    eyebrow: "LEARNING TOOLS",
+    description: "课程、练习工具与学习体验，会在这里拥有自己的展示入口。",
+    icon: "book",
+    accent: "product-card--lime",
+  },
+  {
+    title: "DJ 产品",
+    eyebrow: "MUSIC & PLAY",
+    description: "围绕选曲、混音和现场体验的小工具，将从这里开始播放。",
+    icon: "wave",
+    accent: "product-card--violet",
+  },
+  {
+    title: "Trading Agent",
+    eyebrow: "AGENT EXPERIMENTS",
+    description: "交易研究与智能 Agent 实验的展示位，只陈列可公开体验的作品。",
+    icon: "chart",
+    accent: "product-card--coral",
+  },
+];
+
+function Icon({ name, size = 22 }: { name: IconName; size?: number }) {
+  const paths: Record<IconName, ReactNode> = {
+    spark: <path d="M12 2l1.7 5.3L19 9l-5.3 1.7L12 16l-1.7-5.3L5 9l5.3-1.7L12 2Zm7 13 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z" />,
+    book: <><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z" /><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v16h4.5a2.5 2.5 0 0 1 2.5 2.5v-16Z" /></>,
+    wave: <path d="M3 12h2l2-6 3 12 3-14 3 16 2-8h3" />,
+    chart: <><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" /><path d="m3 8 7-5 6 8 5-5" /></>,
+    game: <><path d="M8 7h8a5 5 0 0 1 4.7 6.7l-1.1 3A2 2 0 0 1 16.4 18L14 16h-4l-2.4 2a2 2 0 0 1-3.2-1.3l-1.1-3A5 5 0 0 1 8 7Z" /><path d="M7 12h4M9 10v4M16.5 11.5h.01M18.5 13.5h.01" /></>,
+    arrow: <><path d="M5 12h14" /><path d="m14 7 5 5-5 5" /></>,
+    sun: <><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41" /></>,
+    moon: <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" />,
+  };
+
   return (
-    <motion.a
-      href={game.gameUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={cn(
-        "block w-full rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl",
-        theme === 'dark' ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-50'
-      )}
-      whileHover={{ y: -8 }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="relative h-48 overflow-hidden">
-        <img 
-          src={game.imageUrl} 
-          alt={game.title} 
-          className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 p-4 text-white">
-          <h3 className="text-xl font-bold">{game.title}</h3>
-        </div>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={name === "spark" ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {paths[name]}
+    </svg>
+  );
+}
+
+const fadeUp = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } };
+
+function ProductCard({ product, index }: { product: ProductSlot; index: number }) {
+  return (
+    <motion.article className={`product-card ${product.accent}`} variants={fadeUp} transition={{ duration: 0.45, delay: index * 0.08 }}>
+      <div className="product-card__top">
+        <span className="product-card__index">0{index + 1}</span>
+        <span className="product-card__icon"><Icon name={product.icon} size={28} /></span>
       </div>
-      <div className="p-4">
-        <p className={cn("text-sm", theme === 'dark' ? 'text-gray-300' : 'text-gray-600')}>
-          {game.description}
-        </p>
-        <div className="mt-4 flex items-center justify-between">
-          <span className={cn("text-sm", theme === 'dark' ? 'text-blue-400' : 'text-blue-600')}>
-            <i className="fas fa-gamepad mr-1"></i> 开始游戏
-          </span>
-          <motion.div 
-            className="w-8 h-8 rounded-full flex items-center justify-center"
-            whileHover={{ scale: 1.2 }}
-          >
-            <i className={cn("fas fa-arrow-right", theme === 'dark' ? 'text-blue-400' : 'text-blue-600')}></i>
-          </motion.div>
-        </div>
+      <div>
+        <p className="eyebrow">{product.eyebrow}</p>
+        <h3>{product.title}</h3>
+        <p className="product-card__description">{product.description}</p>
+      </div>
+      <div className="product-card__status"><span /> 等待首个项目</div>
+    </motion.article>
+  );
+}
+
+function GameCard({ game, index }: { game: Game; index: number }) {
+  return (
+    <motion.a href={game.url} target="_blank" rel="noopener noreferrer" className="game-card" variants={fadeUp} transition={{ duration: 0.45, delay: Math.min(index * 0.06, 0.24) }}>
+      <div className="game-card__visual">
+        <img src={game.image} alt="" loading="lazy" />
+        <span className="game-card__tag">{game.tag}</span>
+      </div>
+      <div className="game-card__body">
+        <h3>{game.title}</h3>
+        <p>{game.description}</p>
+        <span className="text-link">开始体验 <Icon name="arrow" size={18} /></span>
       </div>
     </motion.a>
   );
-};
+}
 
-// 背景装饰组件
-const BackgroundDecorations = () => {
-  return (
-    <div className="fixed inset-0 -z-10 overflow-hidden">
-      <motion.div 
-        className="absolute -top-20 -right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"
-        animate={{ 
-          scale: [1, 1.2, 1],
-          opacity: [0.5, 0.8, 0.5] 
-        }}
-        transition={{ 
-          duration: 10,
-          repeat: Infinity,
-          repeatType: "reverse" 
-        }}
-      />
-      <motion.div 
-        className="absolute -bottom-20 -left-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
-        animate={{ 
-          scale: [1.2, 1, 1.2],
-          opacity: [0.8, 0.5, 0.8] 
-        }}
-        transition={{ 
-          duration: 12,
-          repeat: Infinity,
-          repeatType: "reverse" 
-        }}
-      />
-    </div>
-  );
-};
-
-// 主页面组件
 export default function Home() {
-  const { theme, toggleTheme, isDark } = useTheme();
-  const [isLoaded, setIsLoaded] = useState(false);
-  
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
+  const { toggleTheme, isDark } = useTheme();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
 
   return (
-    <div className={cn("min-h-screen w-full", theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900')}>
-      <BackgroundDecorations />
-      
-      {/* 导航栏 */}
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-opacity-80 border-b" style={{ 
-        backgroundColor: theme === 'dark' ? 'rgba(17, 24, 39, 0.8)' : 'rgba(255, 255, 255, 0.8)',
-        borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-      }}>
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <motion.h1 
-            className="text-2xl md:text-3xl font-bold flex items-center"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <i className="fas fa-gamepad mr-2 text-blue-500"></i>
-            摸鱼之神温迪的游戏仓库
-          </motion.h1>
-          
-          <motion.button
-            onClick={toggleTheme}
-            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-              theme === 'dark' ? 'bg-gray-800 text-yellow-300' : 'bg-blue-100 text-gray-700'
-            }`}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            {isDark ? <i className="fas fa-sun"></i> : <i className="fas fa-moon"></i>}
-          </motion.button>
-        </div>
+    <div className="site-shell">
+      <header className="site-header">
+        <a href="#top" className="brand" onClick={closeMenu} aria-label="摸鱼之神温迪的 LAB 首页">
+          <span className="brand__mark">W</span><span>摸鱼之神温迪的 LAB</span>
+        </a>
+        <button className="menu-toggle" type="button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-label="打开导航"><span /><span /></button>
+        <nav className={menuOpen ? "site-nav site-nav--open" : "site-nav"} aria-label="主导航">
+          <a href="#games" onClick={closeMenu}>独立游戏</a>
+          <a href="#products" onClick={closeMenu}>产品实验</a>
+          <a href="https://github.com/windygame96-stack" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          <button className="theme-button" type="button" onClick={toggleTheme} aria-label={isDark ? "切换到浅色模式" : "切换到深色模式"}><Icon name={isDark ? "sun" : "moon"} size={19} /></button>
+        </nav>
       </header>
-      
-      {/* 主内容 */}
-      <main className="container mx-auto px-4 py-8 md:py-16">
-        <motion.section
-          className="mb-12 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-           <h2 className="text-3xl md:text-4xl font-bold mb-4">探索我的游戏作品</h2>
-           <p className={cn("text-lg max-w-2xl mx-auto", theme === 'dark' ? 'text-gray-400' : 'text-gray-600')}>
-             欢迎来到摸鱼之神温迪的游戏仓库！这里存放着我开发的独立游戏作品，欢迎体验和Star支持！</p>
-        </motion.section>
-        
-         <motion.section 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          {games.map((game, index) => (
-            <GameCard key={game.id} game={game} />
-          ))}
-        </motion.section>
+
+      <main id="top">
+        <section className="hero">
+          <div className="hero__glow hero__glow--one" /><div className="hero__glow hero__glow--two" />
+          <motion.div className="hero__content" initial="hidden" animate="visible" variants={fadeUp} transition={{ duration: 0.65 }}>
+            <p className="hero__kicker"><Icon name="spark" size={17} /> SMALL IDEAS, REAL EXPERIENCES</p>
+            <h1>把脑洞，做成<br /><span>可以点开的东西。</span></h1>
+            <p className="hero__lead">这里是 Windy 的数字实验场。游戏只是第一章，接下来还有学习工具、音乐产品和智能 Agent。</p>
+            <div className="hero__actions">
+              <a className="button button--primary" href="#games"><Icon name="game" size={19} /> 开始玩游戏</a>
+              <a className="button button--ghost" href="#products">看看产品实验 <Icon name="arrow" size={19} /></a>
+            </div>
+          </motion.div>
+          <motion.div className="hero__note" initial={{ opacity: 0, rotate: 2, y: 18 }} animate={{ opacity: 1, rotate: -2, y: 0 }} transition={{ duration: 0.55, delay: 0.35 }}>
+            <span>NOW EXPANDING</span><strong>PLAY<br />LEARN<br />BUILD</strong><small>持续增加中 ↗</small>
+          </motion.div>
+        </section>
+
+        <section className="section" id="games">
+          <div className="section-heading">
+            <div><p className="eyebrow">THE GAME SHELF</p><h2>熟悉的游戏，原样保留。</h2></div>
+            <p><strong>{games.length}</strong> 个可玩作品，从文字麻将到叙事解谜。每一个都会在新主页里继续被看见。</p>
+          </div>
+          <motion.div className="game-grid" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
+            {games.map((game, index) => <GameCard key={game.title} game={game} index={index} />)}
+          </motion.div>
+        </section>
+
+        <section className="section section--products" id="products">
+          <div className="section-heading section-heading--divided">
+            <div><p className="eyebrow">BEYOND GAMES</p><h2>产品实验，新区域。</h2></div>
+            <p>为游戏之外的网页留出一块正式空间。以后只需新增一条项目配置，就能把公开作品接进来。</p>
+          </div>
+          <motion.div className="product-grid" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.18 }}>
+            {productSlots.map((product, index) => <ProductCard key={product.title} product={product} index={index} />)}
+          </motion.div>
+        </section>
+
+        <section className="manifesto">
+          <Icon name="spark" size={28} /><p>作品不必属于同一个分类，<br />只要它值得被打开一次。</p>
+          <a href="https://github.com/windygame96-stack" target="_blank" rel="noopener noreferrer">在 GitHub 看制作现场 <Icon name="arrow" size={18} /></a>
+        </section>
       </main>
-      
-      {/* 页脚 */}
-      <footer className={cn("py-8 border-t", theme === 'dark' ? 'border-gray-800 text-gray-400' : 'border-gray-200 text-gray-600')}>
-        <div className="container mx-auto px-4 text-center">
-            <p>© 2025 摸鱼之神温迪的游戏仓库 | <a href="https://www.escapefromhongye.xyz" className="text-blue-500 hover:underline">www.escapefromhongye.xyz</a></p>
-           <div className="mt-4 flex justify-center space-x-4">
-             <motion.a 
-                href="https://github.com/windygame96-stack" 
-                target="_blank" 
-               rel="noopener noreferrer"
-               className="hover:text-blue-500 transition-colors"
-               whileHover={{ scale: 1.2 }}
-             >
-               <i className="fab fa-github text-xl"></i>
-             </motion.a>
-             <motion.a 
-                href="#" 
-                className="hover:text-blue-500 transition-colors flex items-center"
-                whileHover={{ scale: 1.2 }}
-             >
-               <i className="fab fa-xiaohongshu text-xl mr-1"></i>
-               <span className="text-sm">摸鱼之神温迪</span>
-             </motion.a>
-           </div>
-        </div>
+
+      <footer className="site-footer">
+        <a href="#top" className="brand"><span className="brand__mark">W</span><span>摸鱼之神温迪的 LAB</span></a>
+        <p>游戏、产品与偶尔不太正经的实验。</p><span>© {new Date().getFullYear()} Windy</span>
       </footer>
     </div>
   );
