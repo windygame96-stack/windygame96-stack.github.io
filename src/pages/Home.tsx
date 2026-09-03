@@ -18,6 +18,7 @@ interface ProductSlot {
   description: string;
   icon: IconName;
   accent: string;
+  url?: string;
 }
 
 const games: Game[] = [
@@ -60,11 +61,12 @@ const games: Game[] = [
 
 const productSlots: ProductSlot[] = [
   {
-    title: "教育产品",
-    eyebrow: "LEARNING TOOLS",
-    description: "课程、练习工具与学习体验，会在这里拥有自己的展示入口。",
+    title: "学习工坊",
+    eyebrow: "EDUCATION PRODUCT",
+    description: "上传自己的教材，生成分级互动课程；也可以直接从示例内容开始学习。",
     icon: "book",
     accent: "product-card--lime",
+    url: "/learning-workshop/",
   },
   {
     title: "DJ 产品",
@@ -104,8 +106,8 @@ function Icon({ name, size = 22 }: { name: IconName; size?: number }) {
 const fadeUp = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } };
 
 function ProductCard({ product, index }: { product: ProductSlot; index: number }) {
-  return (
-    <motion.article className={`product-card ${product.accent}`} variants={fadeUp} transition={{ duration: 0.45, delay: index * 0.08 }}>
+  const content = (
+    <>
       <div className="product-card__top">
         <span className="product-card__index">0{index + 1}</span>
         <span className="product-card__icon"><Icon name={product.icon} size={28} /></span>
@@ -115,7 +117,21 @@ function ProductCard({ product, index }: { product: ProductSlot; index: number }
         <h3>{product.title}</h3>
         <p className="product-card__description">{product.description}</p>
       </div>
-      <div className="product-card__status"><span /> 等待首个项目</div>
+      {product.url ? (
+        <div className="product-card__status product-card__status--live">立即体验 <Icon name="arrow" size={16} /></div>
+      ) : (
+        <div className="product-card__status"><span /> 等待首个项目</div>
+      )}
+    </>
+  );
+
+  return product.url ? (
+    <motion.a href={product.url} target="_blank" rel="noopener noreferrer" className={`product-card product-card--live ${product.accent}`} variants={fadeUp} transition={{ duration: 0.45, delay: index * 0.08 }}>
+      {content}
+    </motion.a>
+  ) : (
+    <motion.article className={`product-card ${product.accent}`} variants={fadeUp} transition={{ duration: 0.45, delay: index * 0.08 }}>
+      {content}
     </motion.article>
   );
 }

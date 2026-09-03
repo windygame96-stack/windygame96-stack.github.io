@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学习工坊 · 自定义内容学习平台</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header id="app-header" class="app-header hidden">
+  <div class="brand">📚 学习工坊</div>
+  <nav class="main-nav">
+    <button class="nav-btn active" data-view="dashboard">仪表盘</button>
+    <button class="nav-btn" data-view="upload">创建课程</button>
+    <button class="nav-btn" data-view="mistakes">错题本</button>
+    <button class="nav-btn" data-view="profile">我的进度</button>
+  </nav>
+  <div class="header-right">
+    <button id="checkin-btn" class="btn-checkin" title="每日打卡">📅 打卡 <span id="streak-badge" class="streak-badge">0</span></button>
+    <span id="user-badge" class="user-badge"></span>
+    <button id="logout-btn" class="btn-ghost">退出</button>
+  </div>
+</header>
+
+<main id="app-main">
+
+  <!-- 登录 / 注册 / 游客 -->
+  <section id="view-auth" class="view active">
+    <div class="auth-wrap">
+      <div class="auth-brand">
+        <div class="auth-logo">📚</div>
+        <h1>学习工坊</h1>
+        <p>上传你的教材，AI 规则引擎自动生成互动课程</p>
+      </div>
+      <div class="auth-card">
+        <h2 class="auth-card-title">登录或注册</h2>
+        <p class="auth-card-subtitle">使用邮箱、Google 账号或游客模式开始学习</p>
+
+        <button id="signin-btn" class="btn-primary btn-auth">✉️ 邮箱登录 / 注册</button>
+        <button id="google-btn" class="btn-auth btn-google">🚀 Google 一键登录</button>
+
+        <div class="auth-divider"><span>或</span></div>
+        <button id="guest-btn" class="btn-guest">👤 以游客身份体验，无需登录</button>
+        <p class="guest-tip">游客数据仅保存在本机浏览器，注册账号可长期保留学习记录</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 仪表盘 -->
+  <section id="view-dashboard" class="view">
+    <div class="page-head">
+      <h2>我的课程</h2>
+      <button class="btn-primary" data-view="upload">＋ 创建新课程</button>
+    </div>
+    <div id="dashboard-empty" class="empty-state hidden">
+      <p>还没有任何课程，上传一段教材文本，立即生成你的第一门互动课程吧。</p>
+      <button class="btn-primary" data-view="upload">立即创建</button>
+    </div>
+    <div id="course-list" class="course-grid"></div>
+  </section>
+
+  <!-- 上传/生成课程 -->
+  <section id="view-upload" class="view">
+    <div class="page-head"><h2>上传教材，生成课程</h2></div>
+    <div class="upload-card">
+      <label>预设示例教材库（点击直接填充，可编辑后再生成）</label>
+      <div id="sample-grid" class="sample-grid"></div>
+      <div class="upload-divider"><span>或手动输入</span></div>
+      <label>课程标题</label>
+      <input type="text" id="course-title" placeholder="例如：品鉴入门 / 居家健身基础">
+      <label>课程分类（可选）</label>
+      <input type="text" id="course-category" placeholder="例如：品酒 / 健身 / 其他">
+      <label>教材内容</label>
+      <textarea id="course-text" rows="10" placeholder="粘贴你的教材文本内容，每行/每句都会被拆解为知识点用于生成题目..."></textarea>
+      <p id="course-text-counter" class="text-counter">已输入 0 字（建议 150～4000 字；少于 60 字无法生成，AI 模式超过 4000 字只会截取前 4000 字）</p>
+      <div class="upload-row">
+        <label class="file-label">
+          📄 或上传 .txt 文件
+          <input type="file" id="course-file" accept=".txt" hidden>
+        </label>
+        <span id="file-name" class="file-name"></span>
+      </div>
+      <label>生成方式</label>
+      <div class="gen-mode-group">
+        <label class="gen-mode-opt"><input type="radio" name="gen-mode" value="ai" checked> 🤖 AI 智能生成（支持 智谱GLM / Kimi / DeepSeek / Groq，自动按优先级调用）</label>
+        <label class="gen-mode-opt"><input type="radio" name="gen-mode" value="rule"> ⚙️ 规则算法生成（离线稳定）</label>
+      </div>
+      <p class="form-error" id="upload-error"></p>
+      <button id="generate-btn" class="btn-primary">🪄 生成课程</button>
+      <p class="gen-tip">AI 模式会调用大模型理解教材语义生成更自然的题目；若未配置或调用失败会自动回退到规则算法。规则算法通过切分句子、提取术语与释义生成题目，建议输入 150 字以上、包含多个"术语+解释"句子的教材内容，生成效果更佳。</p>
+    </div>
+  </section>
+
+  <!-- 课程详情 -->
+  <section id="view-course" class="view">
+    <div class="page-head">
+      <h2 id="course-detail-title">课程详情</h2>
+      <p id="course-source" class="course-source"></p>
+      <div id="course-owner-actions" class="hidden">
+        <button class="btn-ghost" id="edit-questions-btn">✏️ 编辑题目</button>
+        <button class="btn-ghost btn-danger" id="delete-course-btn">🗑 删除课程</button>
+      </div>
+    </div>
+    <div class="level-tabs" id="level-tabs">
+      <button class="level-tab" data-level="easy">初级</button>
+      <button class="level-tab" data-level="medium">中级</button>
+      <button class="level-tab" data-level="hard">高级</button>
+    </div>
+    <div id="level-panel" class="level-panel"></div>
+  </section>
+
+  <!-- 答题页 -->
+  <section id="view-quiz" class="view">
+    <div class="quiz-head">
+      <button class="btn-ghost" id="quiz-back-btn">← 返回课程</button>
+      <div class="quiz-progress"><div id="quiz-progress-bar" class="quiz-progress-bar"></div></div>
+      <span id="quiz-progress-text"></span>
+    </div>
+    <div id="quiz-body" class="quiz-body"></div>
+    <div class="quiz-footer">
+      <button id="quiz-submit-btn" class="btn-primary">提交答案</button>
+      <button id="quiz-next-btn" class="btn-primary hidden">下一题</button>
+    </div>
+  </section>
+
+  <!-- 创作者编辑题目 -->
+  <section id="view-edit" class="view">
+    <div class="page-head">
+      <h2>编辑题目</h2>
+      <button class="btn-ghost" id="edit-back-btn">← 返回课程</button>
+    </div>
+    <div class="level-tabs" id="edit-level-tabs">
+      <button class="level-tab" data-level="easy">初级</button>
+      <button class="level-tab" data-level="medium">中级</button>
+      <button class="level-tab" data-level="hard">高级</button>
+    </div>
+    <div id="edit-panel" class="edit-panel"></div>
+    <button id="add-question-btn" class="btn-primary">＋ 新增题目</button>
+  </section>
+
+  <!-- 错题本 -->
+  <section id="view-mistakes" class="view">
+    <div class="page-head">
+      <h2>错题本</h2>
+      <button class="btn-ghost btn-danger" id="clear-mistakes-btn">🗑 清空错题本</button>
+    </div>
+    <div id="mistakes-empty" class="empty-state hidden">
+      <p>暂无错题记录，答题时做错的题目会自动收录到这里，方便你重点复习。</p>
+    </div>
+    <div id="mistakes-list" class="mistakes-list"></div>
+  </section>
+
+  <!-- 我的进度 -->
+  <section id="view-profile" class="view">
+    <div class="page-head"><h2>我的进度与成就</h2></div>
+    <div class="profile-grid">
+      <div class="profile-card">
+        <h3>打卡记录</h3>
+        <div class="checkin-stats">
+          <div><strong id="stat-streak">0</strong><span>连续打卡</span></div>
+          <div><strong id="stat-total-days">0</strong><span>累计打卡</span></div>
+          <div><strong id="stat-correct">0</strong><span>累计答对</span></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <h3>成就徽章</h3>
+        <div id="achievement-list" class="achievement-list"></div>
+      </div>
+    </div>
+    <h3 class="section-title">课程进度</h3>
+    <div id="progress-course-list" class="progress-list"></div>
+  </section>
+
+</main>
+
+<div id="toast" class="toast hidden"></div>
+
+<div id="confirm-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <p id="confirm-modal-msg" class="modal-msg"></p>
+    <div class="modal-actions">
+      <button id="confirm-modal-cancel" class="btn-ghost">取消</button>
+      <button id="confirm-modal-ok" class="btn-primary btn-modal-danger">确定</button>
+    </div>
+  </div>
+</div>
+
+<div id="alert-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <p id="alert-modal-msg" class="modal-msg modal-msg-pre"></p>
+    <div class="modal-actions">
+      <button id="alert-modal-ok" class="btn-primary">知道了</button>
+    </div>
+  </div>
+</div>
+
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

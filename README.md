@@ -12,7 +12,7 @@ Windy 的数字作品门户，集中展示独立游戏与游戏之外的产品�
 ## 页面结构
 
 - `独立游戏`：保留原有 5 个可玩项目
-- `产品实验`：教育产品、DJ 产品、Trading Agent 的预留展示位
+- `产品实验`：已接入学习工坊；DJ 产品与 Trading Agent 为预留展示位
 - 支持深色/浅色主题和移动端导航
 
 ## 游戏项目
@@ -26,6 +26,8 @@ Windy 的数字作品门户，集中展示独立游戏与游戏之外的产品�
 ## 添加新产品
 
 产品和游戏内容集中在 `src/pages/Home.tsx` 的 `productSlots` 与 `games` 数组中。给产品补充公开链接后，可将预留卡片改为可点击项目卡片。
+
+教育平台源码位于 `projects/learning-workshop`，构建后的线上版本位于 `learning-workshop`，访问路径为 `/learning-workshop/`。
 
 ## 本地运行
 
