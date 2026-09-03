@@ -6,8 +6,8 @@ Windy 的数字作品门户，集中展示独立游戏与游戏之外的产品�
 
 1. 运行 `npm install`
 2. 运行 `npm run build:client`
-3. 将 `dist` 目录内容发布到 GitHub Pages 使用的 `gh-pages` 分支
-4. 等待 GitHub Pages 完成更新
+3. 将 `dist/index.html` 与 `dist/assets` 同步到仓库根目录
+4. 推送 `main` 分支，等待 GitHub Pages 完成更新
 
 ## 页面结构
 
@@ -33,6 +33,8 @@ Windy 的数字作品门户，集中展示独立游戏与游戏之外的产品�
 npm install
 npm run dev:client
 ```
+
+开发页面位于 `http://localhost:3000/app.html`；根目录的 `index.html` 是供 GitHub Pages 直接使用的构建版本。
 
 构建静态文件：
 

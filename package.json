@@ -6,7 +6,7 @@
   "scripts": {
     "dev:client": "vite --host --port 3000",
     "dev": "pnpm dev:client",
-    "build:client": "vite build",
+    "build:client": "vite build && mv dist/app.html dist/index.html",
     "build": "rm -rf dist && pnpm build:client",
     "preview": "vite preview"
   },
