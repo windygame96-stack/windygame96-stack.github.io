@@ -131,14 +131,6 @@ function initAuth() {
     });
   });
 
-  $("#google-btn").addEventListener("click", async () => {
-    try {
-      await auth.signInWithOAuth({ provider: "google", redirectTo });
-    } catch (err) {
-      toast("Google 登录失败：" + (err?.message || err));
-    }
-  });
-
   $("#guest-btn").addEventListener("click", () => {
     Storage.setGuestSession();
     session = { username: "guest", isGuest: true };
@@ -191,7 +183,7 @@ async function ensureProfile() {
     "user";
   username = String(username).trim() || "user";
 
-  // 用户名有唯一约束，Google 昵称/邮箱前缀可能与已有用户重名，
+  // 用户名有唯一约束，账号昵称或邮箱前缀可能与已有用户重名，
   // 失败时自动加随机后缀重试，避免整个登录流程被卡住。
   for (let attempt = 0; attempt < 3; attempt++) {
     const { error } = await supabase
