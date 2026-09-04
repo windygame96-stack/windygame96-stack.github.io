@@ -68,20 +68,6 @@ const productSlots: ProductSlot[] = [
     accent: "product-card--lime",
     url: "/learning-workshop/",
   },
-  {
-    title: "DJ 产品",
-    eyebrow: "MUSIC & PLAY",
-    description: "围绕选曲、混音和现场体验的小工具，将从这里开始播放。",
-    icon: "wave",
-    accent: "product-card--violet",
-  },
-  {
-    title: "Trading Agent",
-    eyebrow: "AGENT EXPERIMENTS",
-    description: "交易研究与智能 Agent 实验的展示位，只陈列可公开体验的作品。",
-    icon: "chart",
-    accent: "product-card--coral",
-  },
 ];
 
 const xiaohongshuUrl = "https://www.xiaohongshu.com/user/profile/580cd5526a6a6943b735378c";
