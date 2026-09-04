@@ -62,8 +62,8 @@ const games: Game[] = [
 const productSlots: ProductSlot[] = [
   {
     title: "学习工坊",
-    eyebrow: "EDUCATION PRODUCT",
-    description: "上传自己的教材，生成分级互动课程；也可以直接从示例内容开始学习。",
+    eyebrow: "把资料变成练习",
+    description: "把教材、文章或笔记粘贴进来，自动变成由浅入深的练习题；边学边答，进度和错题都会帮你记住。",
     icon: "book",
     accent: "product-card--lime",
     url: "/learning-workshop/",
