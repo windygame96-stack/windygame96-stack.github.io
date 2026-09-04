@@ -52,7 +52,7 @@ const games: Game[] = [
   },
   {
     title: "字雀 · 文字麻将",
-    description: "把汉字摸进手牌、组合成词。轻登录开房，2—4 人就能来一局脑力麻将。",
+    description: "玩法借鉴《白色失明文字麻将》的非官方线上版本。轻登录开房、扫码邀请，2—4 人即可一起玩。",
     url: "https://www.escapefromhongye.xyz/zique-word-mahjong",
     image: "/assets/zique-cover.svg",
     tag: "多人文字",
