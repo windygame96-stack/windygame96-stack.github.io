@@ -1,0 +1,83 @@
+{
+  "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/tesseract.js/src/index.js": {
+    "file": "_next/static/chunks/src-CXll9mN9.js",
+    "name": "src",
+    "src": "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/tesseract.js/src/index.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C5USp2td.js"
+    ]
+  },
+  "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/vinext/dist/shims/internal/app-route-prefetch-policy.js": {
+    "file": "_next/static/chunks/app-route-prefetch-policy-6xQQlnML.js",
+    "name": "app-route-prefetch-policy",
+    "src": "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/vinext/dist/shims/internal/app-route-prefetch-policy.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "virtual:vinext-app-browser-entry"
+    ]
+  },
+  "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/vinext/dist/shims/layout-segment-context.js": {
+    "file": "_next/static/chunks/layout-segment-context-BqtQl1yq.js",
+    "name": "layout-segment-context",
+    "src": "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/vinext/dist/shims/layout-segment-context.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C5USp2td.js",
+      "virtual:vinext-app-browser-entry",
+      "_framework-DGW0pQoC.js"
+    ]
+  },
+  "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/vinext/dist/shims/streamed-icons.js": {
+    "file": "_next/static/chunks/streamed-icons-6dafvZf7.js",
+    "name": "streamed-icons",
+    "src": "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/vinext/dist/shims/streamed-icons.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C5USp2td.js",
+      "_framework-DGW0pQoC.js"
+    ]
+  },
+  "_framework-DGW0pQoC.js": {
+    "file": "_next/static/chunks/framework-DGW0pQoC.js",
+    "name": "framework",
+    "imports": [
+      "_rolldown-runtime-C5USp2td.js"
+    ]
+  },
+  "_rolldown-runtime-C5USp2td.js": {
+    "file": "_next/static/chunks/rolldown-runtime-C5USp2td.js",
+    "name": "rolldown-runtime"
+  },
+  "app/page.tsx": {
+    "file": "_next/static/chunks/page-BxoAa35v.js",
+    "name": "page",
+    "src": "app/page.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C5USp2td.js",
+      "virtual:vinext-app-browser-entry",
+      "_framework-DGW0pQoC.js"
+    ],
+    "dynamicImports": [
+      "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/tesseract.js/src/index.js"
+    ]
+  },
+  "virtual:vinext-app-browser-entry": {
+    "file": "_next/static/chunks/index-KKnwjCUL.js",
+    "name": "index",
+    "src": "virtual:vinext-app-browser-entry",
+    "isEntry": true,
+    "imports": [
+      "_rolldown-runtime-C5USp2td.js",
+      "_framework-DGW0pQoC.js"
+    ],
+    "dynamicImports": [
+      "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/vinext/dist/shims/internal/app-route-prefetch-policy.js",
+      "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/vinext/dist/shims/layout-segment-context.js",
+      "virtual:vinext-app-browser-entry",
+      "app/page.tsx",
+      "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/vinext/dist/shims/streamed-icons.js"
+    ]
+  }
+}

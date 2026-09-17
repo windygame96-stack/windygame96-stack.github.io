@@ -61,6 +61,14 @@ const games: Game[] = [
 
 const productSlots: ProductSlot[] = [
   {
+    title: "老板翻译机",
+    eyebrow: "把模糊指令变成行动",
+    description: "粘贴老板聊天记录和最新一句话，结合业务背景拆成具体任务、交付物、优先级和确认回复；支持智谱 GLM、DeepSeek 和截图识别。",
+    icon: "wave",
+    accent: "product-card--violet",
+    url: "/boss-translator/",
+  },
+  {
     title: "学习工坊",
     eyebrow: "把资料变成练习",
     description: "把教材、文章或笔记粘贴进来，自动变成由浅入深的练习题；边学边答，进度和错题都会帮你记住。",
