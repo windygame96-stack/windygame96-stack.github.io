@@ -183,7 +183,7 @@ export default function Home() {
           <motion.div className="hero__content" initial="hidden" animate="visible" variants={fadeUp} transition={{ duration: 0.65 }}>
             <p className="hero__kicker"><Icon name="spark" size={17} /> SMALL IDEAS, REAL EXPERIENCES</p>
             <h1>把脑洞，做成<br /><span>可以点开的东西。</span></h1>
-            <p className="hero__lead">这里是 Windy 的数字实验场。游戏只是第一章，接下来还有学习工具、音乐产品和智能 Agent。</p>
+            <p className="hero__lead">这里是 wendi 的数字实验场。游戏只是第一章，接下来还有学习工具、音乐产品和智能 Agent。</p>
             <div className="hero__actions">
               <a className="button button--primary" href="#games"><Icon name="game" size={19} /> 开始玩游戏</a>
               <a className="button button--ghost" href="#products">看看产品实验 <Icon name="arrow" size={19} /></a>
@@ -223,7 +223,7 @@ export default function Home() {
       <footer className="site-footer">
         <a href="#top" className="brand"><span className="brand__mark">W</span><span>摸鱼之神温迪的 LAB</span></a>
         <a className="footer-social" href={xiaohongshuUrl} target="_blank" rel="noopener noreferrer">小红书 @摸鱼之神温迪 ↗</a>
-        <span>© {new Date().getFullYear()} Windy</span>
+        <span>© {new Date().getFullYear()} wendi</span>
       </footer>
     </div>
   );
