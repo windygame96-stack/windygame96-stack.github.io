@@ -30,7 +30,9 @@ function cleanRoom(value: string) { return value.toLowerCase().replace(/[^a-z0-9
 function memberKey() {
   let value = localStorage.getItem("black-cat-member-id") || "";
   if (!/^[a-f0-9]{32}$/.test(value)) {
-    value = crypto.randomUUID().replace(/-/g, "");
+    value = typeof crypto.randomUUID === "function"
+      ? crypto.randomUUID().replace(/-/g, "")
+      : Array.from(crypto.getRandomValues(new Uint8Array(16)), (byte) => byte.toString(16).padStart(2, "0")).join("");
     localStorage.setItem("black-cat-member-id", value);
   }
   return value;
@@ -70,14 +72,22 @@ export default function SharedBlackCat() {
     const nextRoom = cleanRoom(new URLSearchParams(location.search).get("room") || "");
     if (!nextRoom) return;
     const nextMember = memberKey();
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 10000);
     setRoom(nextRoom); setRoomInput(nextRoom); setMember(nextMember); setStatus("joining");
-    fetch(`${API}/api/room/join`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ room: nextRoom, memberId: nextMember }) })
+    fetch(`${API}/api/room/join`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ room: nextRoom, memberId: nextMember }), signal: controller.signal })
       .then(async (response) => {
         const data = await response.json() as { slot?: "a" | "b"; error?: string; code?: string };
         if (!response.ok || !data.slot) throw Object.assign(new Error(data.error || "暂时进不了房间"), { full: data.code === "ROOM_FULL" });
-        setMe(data.slot); setJoined(true); setStatus("idle"); await refresh(nextRoom, nextMember);
+        setMe(data.slot); setJoined(true); setStatus("idle");
+        void refresh(nextRoom, nextMember).catch(() => undefined);
       })
-      .catch((reason: Error & { full?: boolean }) => { setStatus(reason.full ? "full" : "error"); setError(reason.message); });
+      .catch((reason: Error & { full?: boolean }) => {
+        setStatus(reason.full ? "full" : "error");
+        setError(reason.name === "AbortError" ? "房间连接有点慢，请再试一次。" : reason.message);
+      })
+      .finally(() => window.clearTimeout(timeout));
+    return () => { window.clearTimeout(timeout); controller.abort(); };
   }, [refresh]);
 
   useEffect(() => {
