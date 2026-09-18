@@ -6,7 +6,7 @@ import sitSheet from "@/assets/shared-black-cat/cat-anim-sit.png";
 import teaseSheet from "@/assets/shared-black-cat/cat-anim-tease.png";
 import "./SharedBlackCat.css";
 
-const API = "https://shared-black-cat.wendiwang233.chatgpt.site";
+const API = "https://api.escapefromhongye.xyz";
 type Mood = "good" | "tired" | "anxious" | "quiet" | "praise";
 type Action = "pet" | "feed" | "hug" | "sit" | "play";
 type Interaction = { id: number; actorId: string; kind: "action" | "mood" | "message"; message: string; createdAt: number };
