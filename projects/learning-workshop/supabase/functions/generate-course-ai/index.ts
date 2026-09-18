@@ -103,8 +103,8 @@ function extractJson(raw) {
 }
 
 function readCustomProvider(req, body) {
-  const apiKey = String(body?.modelApiKey || req.headers.get("x-model-api-key") || "").trim();
-  const providerKey = String(body?.modelProvider || req.headers.get("x-model-provider") || "").trim();
+  const apiKey = String(body?._byokApiKey || body?.modelApiKey || req.headers.get("x-model-api-key") || "").trim();
+  const providerKey = String(body?._byokProvider || body?.modelProvider || req.headers.get("x-model-provider") || "").trim();
   if (!apiKey && !providerKey) return null;
   if (!apiKey || !providerKey) throw new Error("自有 API 配置不完整");
   if (!PROVIDERS[providerKey]) throw new Error("不支持的模型服务");

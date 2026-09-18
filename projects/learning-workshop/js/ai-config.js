@@ -55,7 +55,7 @@ function getConfig() {
 function getRequestBodyFields() {
   const { provider, apiKey, hasCustomKey } = getConfig();
   return hasCustomKey
-    ? { modelProvider: provider, modelApiKey: apiKey }
+    ? { _byokProvider: provider, _byokApiKey: apiKey }
     : {};
 }
 

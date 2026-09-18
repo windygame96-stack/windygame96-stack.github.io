@@ -7,8 +7,8 @@ test("API Key remains in memory and produces request body fields", () => {
   AiConfig.selectProvider("deepseek");
   AiConfig.setKey("deepseek", "  test-secret  ");
   assert.deepEqual(AiConfig.getRequestBodyFields(), {
-    modelProvider: "deepseek",
-    modelApiKey: "test-secret",
+    _byokProvider: "deepseek",
+    _byokApiKey: "test-secret",
   });
 });
 
