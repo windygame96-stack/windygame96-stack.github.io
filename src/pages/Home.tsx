@@ -76,6 +76,14 @@ const productSlots: ProductSlot[] = [
     accent: "product-card--lime",
     url: "/learning-workshop/",
   },
+  {
+    title: "有只黑猫",
+    eyebrow: "两个人的异步陪伴",
+    description: "输入同一个房间号，共同照顾一只会回应互动的黑猫。每间房只留两张位置，十几秒也能留下‘我来过’。",
+    icon: "spark",
+    accent: "product-card--coral",
+    url: "https://shared-black-cat.wendiwang233.chatgpt.site/",
+  },
 ];
 
 const xiaohongshuUrl = "https://www.xiaohongshu.com/user/profile/580cd5526a6a6943b735378c";
@@ -214,10 +222,7 @@ export default function Home() {
 
       <footer className="site-footer">
         <a href="#top" className="brand"><span className="brand__mark">W</span><span>摸鱼之神温迪的 LAB</span></a>
-        <div className="footer-links">
-          <a className="footer-social" href={xiaohongshuUrl} target="_blank" rel="noopener noreferrer">小红书 @摸鱼之神温迪 ↗</a>
-          <a className="footer-cat-link" href="https://shared-black-cat.wendiwang233.chatgpt.site/?room=windy-lab&me=a" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">●</span> 有只黑猫 ↗</a>
-        </div>
+        <a className="footer-social" href={xiaohongshuUrl} target="_blank" rel="noopener noreferrer">小红书 @摸鱼之神温迪 ↗</a>
         <span>© {new Date().getFullYear()} Windy</span>
       </footer>
     </div>
