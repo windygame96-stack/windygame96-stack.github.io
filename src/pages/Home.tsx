@@ -82,7 +82,7 @@ const productSlots: ProductSlot[] = [
     description: "输入同一个房间号，共同照顾一只会回应互动的黑猫。每间房只留两张位置，十几秒也能留下‘我来过’。",
     icon: "spark",
     accent: "product-card--coral",
-    url: "https://shared-black-cat.wendiwang233.chatgpt.site/",
+    url: "/shared-black-cat/",
   },
 ];
 
