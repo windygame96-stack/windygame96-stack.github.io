@@ -214,7 +214,10 @@ export default function Home() {
 
       <footer className="site-footer">
         <a href="#top" className="brand"><span className="brand__mark">W</span><span>摸鱼之神温迪的 LAB</span></a>
-        <a className="footer-social" href={xiaohongshuUrl} target="_blank" rel="noopener noreferrer">小红书 @摸鱼之神温迪 ↗</a>
+        <div className="footer-links">
+          <a className="footer-social" href={xiaohongshuUrl} target="_blank" rel="noopener noreferrer">小红书 @摸鱼之神温迪 ↗</a>
+          <a className="footer-cat-link" href="https://shared-black-cat.wendiwang233.chatgpt.site/?room=windy-lab&me=a" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">●</span> 有只黑猫 ↗</a>
+        </div>
         <span>© {new Date().getFullYear()} Windy</span>
       </footer>
     </div>
