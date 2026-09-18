@@ -90,9 +90,27 @@
         <label class="gen-mode-opt"><input type="radio" name="gen-mode" value="ai" checked> 🤖 AI 智能生成（支持 智谱GLM / Kimi / DeepSeek / Groq，自动按优先级调用）</label>
         <label class="gen-mode-opt"><input type="radio" name="gen-mode" value="rule"> ⚙️ 规则算法生成（离线稳定）</label>
       </div>
+      <details id="ai-api-settings" class="api-settings">
+        <summary>
+          使用自己的 API Key
+          <span id="api-key-status">可选 · 本次会话保存</span>
+        </summary>
+        <p class="api-settings-intro">填写后将只调用你选择的模型，不使用平台密钥，也不会在失败时静默降级。</p>
+        <label>模型服务</label>
+        <div id="api-provider-picker" class="api-provider-picker" aria-label="模型服务"></div>
+        <label for="api-key-input"><span id="api-provider-name">智谱 GLM</span> API Key</label>
+        <input id="api-key-input" type="password" autocomplete="off" spellcheck="false" placeholder="智谱开放平台 API Key">
+        <a id="api-key-link" class="api-key-link" href="https://open.bigmodel.cn/usercenter/proj-mgmt/apikeys" target="_blank" rel="noopener noreferrer">前往智谱官网申请 · 新用户有免费体验额度 ↗</a>
+        <div class="api-key-guide">
+          <strong id="api-guide-title">如何申请智谱 GLM Key</strong>
+          <ol id="api-guide-steps"></ol>
+          <p>申请页面通常只展示一次完整 Key，创建后请立即复制。不要把 Key 发给他人或粘贴到公开文档。</p>
+        </div>
+        <p class="api-privacy-note">Key 只保存在当前页面内存，并通过学习工坊后端转发给对应模型服务；不会写入账号、课程或浏览器存储，刷新即清空。</p>
+      </details>
       <p class="form-error" id="upload-error"></p>
       <button id="generate-btn" class="btn-primary">🪄 生成课程</button>
-      <p class="gen-tip">AI 模式会调用大模型理解教材语义生成更自然的题目；若未配置或调用失败会自动回退到规则算法。规则算法通过切分句子、提取术语与释义生成题目，建议输入 150 字以上、包含多个"术语+解释"句子的教材内容，生成效果更佳。</p>
+      <p class="gen-tip">AI 模式会调用大模型理解教材语义生成更自然的题目。未填写自有 Key 时沿用平台模型池，若平台调用失败会回退到规则算法；填写自有 Key 后只调用选定模型，失败会直接提示。规则算法通过切分句子、提取术语与释义生成题目。</p>
     </div>
   </section>
 

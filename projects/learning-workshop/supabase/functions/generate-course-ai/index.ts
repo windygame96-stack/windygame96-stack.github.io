@@ -102,9 +102,19 @@ function extractJson(raw) {
   return JSON.parse(s.slice(start, end + 1));
 }
 
-async function callProvider(providerKey, prompt) {
+function readCustomProvider(req, body) {
+  const apiKey = String(body?.modelApiKey || req.headers.get("x-model-api-key") || "").trim();
+  const providerKey = String(body?.modelProvider || req.headers.get("x-model-provider") || "").trim();
+  if (!apiKey && !providerKey) return null;
+  if (!apiKey || !providerKey) throw new Error("自有 API 配置不完整");
+  if (!PROVIDERS[providerKey]) throw new Error("不支持的模型服务");
+  if (apiKey.length > 1000) throw new Error("API Key 格式不正确");
+  return { apiKey, providerKey };
+}
+
+async function callProvider(providerKey, prompt, customApiKey = "") {
   const cfg = PROVIDERS[providerKey];
-  const apiKey = Deno.env.get(cfg.keyEnv);
+  const apiKey = customApiKey || Deno.env.get(cfg.keyEnv);
   if (!apiKey) return { ok: false, skip: true };
 
   const resp = await fetch(`${cfg.baseUrl}/chat/completions`, {
@@ -134,24 +144,27 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders(req) });
   if (req.method !== "POST") return jsonResponse(req, { ok: false, msg: "仅支持 POST 请求" }, 405);
 
-  const user = await authenticateRequest(req);
-  if (!user) return jsonResponse(req, { ok: false, msg: "请先登录后再使用 AI 生成功能" }, 401);
-
   try {
-    const { title, category, text, ownerUsername } = await req.json();
+    const body = await req.json();
+    const customProvider = readCustomProvider(req, body);
+    const user = await authenticateRequest(req);
+    if (!user && !customProvider) {
+      return jsonResponse(req, { ok: false, msg: "请先登录，或填写自己的 API Key" }, 401);
+    }
+    const { title, category, text, ownerUsername } = body;
     if (!text || text.trim().length < 30) {
       return jsonResponse(req, { ok: false, msg: "教材内容过短，无法生成" }, 400);
     }
     if (text.length > 20000) return jsonResponse(req, { ok: false, msg: "教材内容过长，请控制在 20000 字以内" }, 400);
 
-    const order = getProviderOrder();
+    const order = customProvider ? [customProvider.providerKey] : getProviderOrder();
     const prompt = buildPrompt(text, title, category);
     const errors = [];
     let success = null;
 
     for (const providerKey of order) {
       try {
-        const r = await callProvider(providerKey, prompt);
+        const r = await callProvider(providerKey, prompt, customProvider?.apiKey || "");
         if (r.skip) continue;
         if (r.ok) { success = r; break; }
         errors.push(r.msg);
@@ -162,7 +175,9 @@ Deno.serve(async (req) => {
 
     if (!success) {
       const msg = errors.length
-        ? "所有已配置的 AI 模型均调用失败：" + errors.join("；")
+        ? customProvider
+          ? errors[0]
+          : "所有已配置的 AI 模型均调用失败：" + errors.join("；")
         : "尚未配置任何 AI 模型密钥（支持智谱GLM/Kimi/DeepSeek/Groq），请先在后台设置对应 API Key";
       return jsonResponse(req, { ok: false, msg }, 503);
     }
@@ -186,9 +201,16 @@ Deno.serve(async (req) => {
       levels,
     };
 
-    return jsonResponse(req, { ok: true, course, provider: success.providerLabel });
+    return jsonResponse(req, {
+      ok: true,
+      course,
+      provider: success.providerLabel,
+      apiSource: customProvider ? "user" : "platform",
+    });
   } catch (err) {
     console.error("AI course generation failed", err);
-    return jsonResponse(req, { ok: false, msg: "AI 生成暂时不可用，请稍后重试" }, 500);
+    const message = err instanceof Error ? err.message : "AI 生成暂时不可用，请稍后重试";
+    const status = /配置不完整|不支持|格式不正确/.test(message) ? 400 : 500;
+    return jsonResponse(req, { ok: false, msg: message }, status);
   }
 });

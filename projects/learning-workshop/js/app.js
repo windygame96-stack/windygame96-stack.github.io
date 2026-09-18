@@ -4,6 +4,7 @@ import { Samples } from "./samples.js";
 import { Generator } from "./generator.js";
 import { QuizRunner } from "./quiz.js";
 import { Achievements } from "./achievements.js";
+import { AiConfig } from "./ai-config.js";
 
 /* app.js — 视图路由、事件绑定与整体交互控制（async，接入 Supabase） */
 
@@ -100,6 +101,17 @@ function setLoading(btn, loading) {
     btn.textContent = btn.dataset.origText || btn.textContent;
     btn.disabled = false;
   }
+}
+
+async function functionErrorMessage(error, fallback) {
+  try {
+    const payload = await error?.context?.json();
+    if (payload?.msg) return payload.msg;
+    if (payload?.message) return payload.message;
+  } catch {
+    // Supabase 的错误响应不一定保留可读取的 JSON body。
+  }
+  return error?.message || fallback;
 }
 
 // ---------- 视图切换 ----------
@@ -353,6 +365,7 @@ function updateTextCounter() {
 
 function initUpload() {
   renderSampleGrid();
+  renderApiSettings();
   updateTextCounter();
   $("#course-text").addEventListener("input", updateTextCounter);
   $("#course-file").addEventListener("change", (e) => {
@@ -390,25 +403,41 @@ function initUpload() {
 
     let result = null;
     let genStatusMsg = null;
-    if (mode === "ai" && session.isGuest) {
+    const aiConfig = AiConfig.getConfig();
+    if (mode === "ai" && session.isGuest && !aiConfig.hasCustomKey) {
       genStatusMsg = "⚠️ AI 生成功能需要登录账号，已使用本地规则算法生成。";
     } else if (mode === "ai") {
       try {
         const { data, error } = await supabase.functions.invoke(
           "generate-course-ai",
           {
-            body: { title, category, text, ownerUsername: session.username },
+            body: {
+              title,
+              category,
+              text,
+              ownerUsername: session.username,
+              ...AiConfig.getRequestBodyFields(),
+            },
           },
         );
         if (error) throw error;
         if (data && data.ok) {
           result = data;
           genStatusMsg = `✅ AI 生成成功！\n本次使用模型：${data.provider || "AI"}`;
+        } else if (aiConfig.hasCustomKey) {
+          errEl.textContent = `自有 API 调用失败：${data && data.msg ? data.msg : "未知错误"}`;
+          setLoading(btn, false);
+          return;
         } else {
           genStatusMsg = `⚠️ AI 生成失败：${data && data.msg ? data.msg : "未知错误"}\n已自动切换为规则算法生成。`;
         }
       } catch (err) {
-        genStatusMsg = `⚠️ AI 接口调用失败：${err?.message || err}\n已自动切换为规则算法生成。`;
+        if (aiConfig.hasCustomKey) {
+          errEl.textContent = `自有 API 调用失败：${await functionErrorMessage(err, "请检查 Key、额度与网络后重试")}`;
+          setLoading(btn, false);
+          return;
+        }
+        genStatusMsg = `⚠️ AI 接口调用失败：${await functionErrorMessage(err, "未知错误")}\n已自动切换为规则算法生成。`;
       }
     }
     if (!result) {
@@ -449,6 +478,60 @@ function initUpload() {
       setLoading(btn, false);
     }
   });
+}
+
+function renderApiSettings() {
+  const picker = $("#api-provider-picker");
+  const keyInput = $("#api-key-input");
+  if (!picker || !keyInput) return;
+
+  picker.innerHTML = "";
+  Object.entries(AiConfig.providers).forEach(([provider, info]) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "api-provider-btn";
+    button.dataset.provider = provider;
+    button.textContent = info.label;
+    button.addEventListener("click", () => {
+      AiConfig.selectProvider(provider);
+      syncApiSettings();
+    });
+    picker.appendChild(button);
+  });
+
+  keyInput.addEventListener("input", (event) => {
+    const { provider } = AiConfig.getConfig();
+    AiConfig.setKey(provider, event.target.value);
+    syncApiSettings(false);
+  });
+  syncApiSettings();
+}
+
+function syncApiSettings(refreshInput = true) {
+  const config = AiConfig.getConfig();
+  $all(".api-provider-btn").forEach((button) => {
+    button.classList.toggle("active", button.dataset.provider === config.provider);
+    button.setAttribute("aria-pressed", String(button.dataset.provider === config.provider));
+  });
+  $("#api-provider-name").textContent = config.providerInfo.label;
+  $("#api-key-input").placeholder = config.providerInfo.placeholder;
+  if (refreshInput) $("#api-key-input").value = config.apiKey;
+  const link = $("#api-key-link");
+  link.href = config.providerInfo.signupUrl;
+  link.textContent = `${config.providerInfo.signupText} ↗`;
+  $("#api-guide-title").textContent = `如何申请 ${config.providerInfo.label} Key`;
+  const guideSteps = $("#api-guide-steps");
+  guideSteps.replaceChildren(
+    ...config.providerInfo.guideSteps.map((step) => {
+      const item = document.createElement("li");
+      item.textContent = step;
+      return item;
+    }),
+  );
+  $("#api-key-status").textContent = config.hasCustomKey
+    ? `${config.providerInfo.label} · 已填写`
+    : "可选 · 本次会话保存";
+  $("#ai-api-settings").classList.toggle("has-key", config.hasCustomKey);
 }
 
 // ---------- 课程详情 ----------
@@ -757,7 +840,7 @@ function buildEditCard(course, q, idx) {
       </div>
       <p class="ai-rewrite-error"></p>
     `;
-  if (!session.isGuest) card.appendChild(aiBox);
+  if (!session.isGuest || AiConfig.getConfig().hasCustomKey) card.appendChild(aiBox);
   card.appendChild(saveBtn);
 
   aiBox.querySelector(".ai-rewrite-btn").addEventListener("click", async (e) => {
@@ -782,6 +865,7 @@ function buildEditCard(course, q, idx) {
             userPrompt: promptText,
             courseTitle: course.title,
             courseCategory: course.category,
+            ...AiConfig.getRequestBodyFields(),
           },
         },
       );
@@ -795,7 +879,9 @@ function buildEditCard(course, q, idx) {
       toast(`AI 改写成功！（${data.provider}）`);
       await renderEditPanel();
     } catch (err) {
-      errEl.textContent = "AI 改写出错：" + (err.message || err);
+      errEl.textContent =
+        "AI 改写出错：" +
+        (await functionErrorMessage(err, "请检查 API 配置后重试"));
     } finally {
       btn.disabled = false;
       btn.textContent = originalLabel;
