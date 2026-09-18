@@ -9,7 +9,7 @@
     ]
   },
   "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs+plugin-react@6.0.2_vite@8.0.13_@types+node@22.19.19_esbuild_7566b0b52fc446a904e24ba883da17fa/node_modules/vinext/dist/shims/internal/app-route-prefetch-policy.js": {
-    "file": "_next/static/chunks/app-route-prefetch-policy-gVcuB13U.js",
+    "file": "_next/static/chunks/app-route-prefetch-policy-LAgeDTyH.js",
     "name": "app-route-prefetch-policy",
     "src": "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs+plugin-react@6.0.2_vite@8.0.13_@types+node@22.19.19_esbuild_7566b0b52fc446a904e24ba883da17fa/node_modules/vinext/dist/shims/internal/app-route-prefetch-policy.js",
     "isDynamicEntry": true,
@@ -18,7 +18,7 @@
     ]
   },
   "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs+plugin-react@6.0.2_vite@8.0.13_@types+node@22.19.19_esbuild_7566b0b52fc446a904e24ba883da17fa/node_modules/vinext/dist/shims/layout-segment-context.js": {
-    "file": "_next/static/chunks/layout-segment-context-BjvqdayP.js",
+    "file": "_next/static/chunks/layout-segment-context-BUxHhC3y.js",
     "name": "layout-segment-context",
     "src": "../../../Users/a1234/Documents/Codex/2026-09-07/referenced-chatgpt-conversation-this-is-an/outputs/boss-translator/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs+plugin-react@6.0.2_vite@8.0.13_@types+node@22.19.19_esbuild_7566b0b52fc446a904e24ba883da17fa/node_modules/vinext/dist/shims/layout-segment-context.js",
     "isDynamicEntry": true,
@@ -50,7 +50,7 @@
     "name": "rolldown-runtime"
   },
   "app/page.tsx": {
-    "file": "_next/static/chunks/page-9pjQRPR3.js",
+    "file": "_next/static/chunks/page-BUiHun65.js",
     "name": "page",
     "src": "app/page.tsx",
     "isDynamicEntry": true,
@@ -64,7 +64,7 @@
     ]
   },
   "virtual:vinext-app-browser-entry": {
-    "file": "_next/static/chunks/index-DXrq9thq.js",
+    "file": "_next/static/chunks/index-ejVu7ge5.js",
     "name": "index",
     "src": "virtual:vinext-app-browser-entry",
     "isEntry": true,
