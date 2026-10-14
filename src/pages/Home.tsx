@@ -61,6 +61,14 @@ const games: Game[] = [
 
 const productSlots: ProductSlot[] = [
   {
+    title: "关系使用说明书",
+    eyebrow: "在确定关系之前，认真聊一次",
+    description: "12 个中立情境题，加上基于回答的追问，整理自己的需求、边界和可协商条件；也可以两个人轮流完成一份本机双人报告。",
+    icon: "spark",
+    accent: "product-card--rose",
+    url: "/relationship-fit/",
+  },
+  {
     title: "老板翻译机",
     eyebrow: "把模糊指令变成行动",
     description: "粘贴老板聊天记录和最新一句话，结合业务背景拆成具体任务、交付物、优先级和确认回复；支持智谱 GLM、DeepSeek 和截图识别。",
@@ -113,7 +121,7 @@ function ProductCard({ product, index }: { product: ProductSlot; index: number }
   const content = (
     <>
       <div className="product-card__top">
-        <span className="product-card__index">0{index + 1}</span>
+        <span className="product-card__index">{String(index + 1).padStart(2, "0")}</span>
         <span className="product-card__icon"><Icon name={product.icon} size={28} /></span>
       </div>
       <div>
