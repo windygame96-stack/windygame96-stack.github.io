@@ -3,6 +3,7 @@ import Home from "@/pages/Home";
 import SharedBlackCat from "@/pages/SharedBlackCat";
 import RelationshipFit from "@/pages/RelationshipFit";
 import LifeDrive from "@/pages/LifeDrive";
+import TestsHub from "@/pages/TestsHub";
 
 const PROJECT_PATHS = ["super-broccoli", "lure_for_fitness", "hub111", "ELEV-9", "zique-word-mahjong"];
 
@@ -10,6 +11,7 @@ export default function App() {
   const isBlackCat = window.location.pathname.startsWith("/shared-black-cat");
   const isRelationshipFit = window.location.pathname.startsWith("/relationship-fit");
   const isLifeDrive = window.location.pathname.startsWith("/life-drive");
+  const isTestsHub = window.location.pathname.startsWith("/tests");
   useEffect(() => {
     const project = PROJECT_PATHS.find((name) => window.location.pathname.startsWith(`/${name}`));
     if (project) {
@@ -19,6 +21,7 @@ export default function App() {
   }, []);
 
   if (isBlackCat) return <SharedBlackCat />;
+  if (isTestsHub) return <TestsHub />;
   if (isRelationshipFit) return <RelationshipFit />;
   if (isLifeDrive) return <LifeDrive />;
   return <Home />;
