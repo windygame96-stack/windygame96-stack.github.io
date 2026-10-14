@@ -61,6 +61,14 @@ const games: Game[] = [
 
 const productSlots: ProductSlot[] = [
   {
+    title: "生活源动力测试",
+    eyebrow: "找出你反复靠近的东西",
+    description: "从最近一年的真实选择出发完成 10 道题，识别当前主动力、辅助动力和并列倾向，并获得具体的充电方式与失衡提醒。",
+    icon: "chart",
+    accent: "product-card--paper",
+    url: "/life-drive/",
+  },
+  {
     title: "关系使用说明书",
     eyebrow: "在确定关系之前，认真聊一次",
     description: "12 个中立情境题，加上基于回答的追问，整理自己的需求、边界和可协商条件；也可以两个人轮流完成一份本机双人报告。",

@@ -20,6 +20,7 @@
   --violet: #b49bff;
   --coral: #ff8a63;
   --rose: #ffb8ca;
+  --paper: #f4e4df;
 }
 
 .dark {
@@ -87,6 +88,7 @@ button { color: inherit; }
 .product-card--violet { background: var(--violet); }
 .product-card--coral { background: var(--coral); }
 .product-card--rose { background: var(--rose); }
+.product-card--paper { background: var(--paper); }
 .product-card__top { display: flex; align-items: start; justify-content: space-between; }
 .product-card__index { font: 500 12px/1 "DM Mono", monospace; }
 .product-card__icon { width: 62px; height: 62px; display: grid; place-items: center; border-radius: 50%; border: 1px solid #171713; background: rgba(255,255,255,.35); }
