@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import "./RelationshipFit.css";
+import RelationshipReport from "./RelationshipReport";
 
 type Importance = "low" | "medium" | "high";
 type Flexibility = "willing" | "conditional" | "unwilling";
@@ -39,11 +40,6 @@ const questions: Question[] = [
   { id: "intimacy", short: "身体亲近", text: "你们想要的身体亲近程度或表达喜爱的方式不同，你希望怎样处理？", options: ["当下直接表达愿意或不愿意", "商量彼此舒服的表达方式", "给彼此时间后再确认", "依情境决定并保留改变主意的空间"] },
 ];
 
-const labels = {
-  importance: { low: "不太重要", medium: "比较重要", high: "非常重要" },
-  flexibility: { willing: "愿意调整", conditional: "有条件", unwilling: "不愿调整" },
-};
-
 const emptyAnswer = (): Answer => ({ option: -1, importance: "medium", flexibility: "conditional", basis: "hypothesis", note: "" });
 const safeStore = (key: string, value: unknown) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private mode */ } };
 const safeRead = <T,>(key: string, fallback: T): T => { try { return JSON.parse(localStorage.getItem(key) || "") as T; } catch { return fallback; } };
@@ -58,39 +54,6 @@ function makeFollowups(answers: Record<string, Answer>) {
         ? `最近一次遇到“${q.short}”相关的情况时，你具体做了什么？结果怎样？`
         : `关于“${q.short}”，什么条件会让你觉得这个安排可以接受？`,
     }));
-}
-
-function Report({ profiles, stage, onReset }: { profiles: Profile[]; stage: Stage; onReset: () => void }) {
-  const [personA, personB] = profiles;
-  const aligned: Question[] = [];
-  const discuss: Question[] = [];
-  if (personB) questions.forEach((q) => (personA.answers[q.id].option === personB.answers[q.id].option ? aligned : discuss).push(q));
-  const high = questions.filter((q) => personA.answers[q.id].importance === "high");
-
-  return (
-    <main className="rf-report">
-      <header className="rf-report__hero">
-        <span className="rf-pill">你的报告 · 不是关系判决</span>
-        <h1>{personB ? "你们的关系讨论地图" : `${personA.name || "你"}的关系使用说明书`}</h1>
-        <p>{personB ? "这里整理的是双方当前表达的共同点和需要聊清的差异，不代表谁对谁错，也不预测关系结果。" : "这是一份基于当前回答的自我整理。设想只代表此刻期待，有经历支持的回答也只适用于你描述的情境。"}</p>
-      </header>
-
-      {!personB && <section className="rf-report__grid">
-        <article><span>你很看重</span><h2>{high.length ? high.map((q) => q.short).join("、") : "目前没有特别突出的单项"}</h2><p>重要不等于不可协商，具体边界仍由你自己确认。</p></article>
-        <article><span>你的回答依据</span><h2>{questions.filter((q) => personA.answers[q.id].basis === "experience").length} 项来自经历</h2><p>其余回答属于当前设想，不会被写成稳定行为。</p></article>
-      </section>}
-
-      {personB && <>
-        <section className="rf-report__section"><p className="rf-kicker">有证据的共同点</p><h2>{aligned.length ? aligned.map((q) => q.short).join("、") : "暂时没有完全相同的答案"}</h2><p>答案相同也不保证实际相处顺利，可以继续确认彼此对选项的具体理解。</p></section>
-        <section className="rf-report__section"><p className="rf-kicker">优先讨论</p><div className="rf-topic-list">{discuss.slice(0, 5).map((q) => <div key={q.id}><strong>{q.short}</strong><span>{personA.name}：{q.options[personA.answers[q.id].option]}</span><span>{personB.name}：{q.options[personB.answers[q.id].option]}</span><em>{personA.answers[q.id].importance === "high" || personB.answers[q.id].importance === "high" ? "至少一方非常重视" : "差异不等于冲突"}</em></div>)}</div></section>
-        <section className="rf-report__section"><p className="rf-kicker">三个可以直接聊的问题</p><ol className="rf-prompts"><li>你们对“承诺”的具体理解是什么，哪些事情需要提前确认？</li><li>遇到忙碌或冲突时，最低限度的联系和返回方式是什么？</li><li>{stage === "partnered" ? "最近一次相似分歧里，各自做了什么？下次愿意试一个什么小变化？" : "在进一步投入之前，各自最不希望被默认的事情是什么？"}</li></ol></section>
-      </>}
-
-      <section className="rf-report__section"><p className="rf-kicker">证据说明</p><div className="rf-evidence">{profiles.flatMap((p) => questions.map((q) => ({ p, q, a: p.answers[q.id] }))).filter(({ a }) => a.importance === "high").map(({ p, q, a }) => <div key={`${p.name}-${q.id}`}><strong>{p.name} · {q.short}</strong><span>{labels.importance[a.importance]} · {labels.flexibility[a.flexibility]} · {a.basis === "experience" ? "有具体经历" : "当前设想"}</span>{a.note && <p>{a.note}</p>}</div>)}</div></section>
-
-      <footer className="rf-report__footer"><button onClick={() => window.print()}>打印或保存 PDF</button><button className="secondary" onClick={onReset}>重新开始</button><a href="/">返回 LAB</a></footer>
-    </main>
-  );
 }
 
 export default function RelationshipFit() {
@@ -128,7 +91,7 @@ export default function RelationshipFit() {
   const startSecond = () => { setProfiles((all) => [...all, { name: "B", answers: {}, followups: {} }]); setPerson(1); setIndex(0); setFollowIndex(0); setScreen("quiz"); };
   const reset = () => { localStorage.removeItem("rf-screen"); localStorage.removeItem("rf-mode"); localStorage.removeItem("rf-stage"); localStorage.removeItem("rf-profiles"); setProfiles([{ name: "我", answers: {}, followups: {} }]); setScreen("intro"); setPerson(0); setIndex(0); };
 
-  if (screen === "report") return <Report profiles={profiles} stage={stage} onReset={reset} />;
+  if (screen === "report") return <RelationshipReport profiles={profiles} questions={questions} stage={stage} onReset={reset} />;
 
   return <main className="rf-shell">
     <a className="rf-brand" href="/"><span>RF</span> Relationship Fit</a>

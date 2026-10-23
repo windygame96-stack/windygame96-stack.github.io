@@ -80,3 +80,25 @@
 
 @media(max-width:700px){.rf-mode-grid,.rf-options,.rf-report__grid,.rf-evidence{grid-template-columns:1fr}.rf-meta{grid-template-columns:1fr}.rf-intro,.rf-quiz{padding-top:104px}.rf-intro h1{font-size:49px}.rf-topic-list>div{grid-template-columns:1fr}.rf-handoff h1{font-size:40px}.rf-report{padding:70px 18px}.rf-report__section{padding:22px}.rf-report__footer{align-items:stretch;flex-direction:column}.rf-report__footer a{margin:14px auto}.rf-report__footer button{width:100%}}
 @media print{.rf-report{padding:20px;background:#fff}.rf-report__footer{display:none}.rf-report__section{break-inside:avoid}}
+
+.rf-insight { padding:28px 0; border-bottom:1px solid var(--line); }
+.rf-insight header { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-bottom:20px; }
+.rf-insight header > span { color:#a4425a; font:500 14px/1 "DM Mono",monospace; }
+.rf-insight h3 { margin:0; font-size:25px; }
+.rf-insight header > b { margin-left:auto; padding:7px 10px; border-radius:8px; background:var(--soft); font-size:12px; }
+.rf-answer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr)); gap:12px; }
+.rf-answer-grid > div { min-width:0; padding:20px; border-radius:12px; background:#fff4f6; }
+.rf-answer-grid small { display:block; color:var(--muted); font-size:12px; line-height:1.8; }
+.rf-answer-grid strong { display:block; margin:10px 0; font-size:19px; }
+.rf-answer-grid p,.rf-insight > p { line-height:1.8; }
+.rf-answer-grid blockquote { white-space:pre-wrap; overflow-wrap:anywhere; margin:14px 0 0; padding:12px; border-left:3px solid var(--rose); background:white; line-height:1.8; }
+.rf-guidance-row { display:grid; grid-template-columns:110px 1fr; gap:16px; padding:20px 0; border-top:1px solid var(--line); }
+.rf-guidance-row > b { color:#a4425a; font-size:14px; line-height:1.8; }
+.rf-guidance-row p { margin:0; line-height:1.9; overflow-wrap:anywhere; }
+.rf-focus-button { margin-top:12px; padding:12px 0; color:#9d3d55!important; text-decoration:underline; text-underline-offset:5px; border:0; background:transparent; cursor:pointer; }
+.rf-plan { scroll-margin-top:24px; }
+.rf-plan label { display:block; margin:25px 0; color:var(--muted); font-size:14px; }
+.rf-plan select { display:block; width:100%; padding:12px; margin-top:10px; color:var(--ink); border:1px solid var(--line); border-radius:8px; background:white; font:inherit; }
+.rf-plan-note { padding:16px; background:var(--soft); border-radius:10px; }
+@media(max-width:700px){.rf-guidance-row{grid-template-columns:1fr;gap:8px}.rf-insight header>b{margin-left:0}.rf-answer-grid>div{padding:16px}.rf-report__hero h1{font-size:36px}}
+@media print{.rf-focus-button{display:none}.rf-answer-grid>div{break-inside:avoid}.rf-report__section{break-inside:auto}}

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import "./LifeDrive.css";
+import LifeActionGuide from "./LifeActionGuide";
 
 type DriveKey = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H";
 type Screen = "intro" | "quiz" | "result";
@@ -59,7 +60,7 @@ function Result({ answers, restart }: { answers: DriveKey[]; restart: () => void
   const max = Math.max(...Object.values(counts));
   const main = primary.map((key) => drives[key]);
   const support = secondary.map((key) => drives[key]);
-  const summary = `${main.map((item) => item.name).join("＋")}是你当前最明显的生活源动力${support.length ? `，${support.map((item) => item.name).join("＋")}更像辅助实现方式` : ""}。`;
+  const summary = `你在这些题里更常选择${main.map((item) => item.name).join("＋")}${support.length ? `，其次是${support.map((item) => item.name).join("＋")}` : ""}。`;
 
   const copyResult = async () => {
     const text = `我的生活源动力：${summary}\n${main.map((item) => `${item.key} ${item.name}：${item.line}`).join("\n")}\nhttps://www.escapefromhongye.xyz/life-drive/`;
@@ -67,18 +68,19 @@ function Result({ answers, restart }: { answers: DriveKey[]; restart: () => void
   };
 
   return <main className="ld-result">
-    <header className="ld-result__head"><div><p>DIAGNOSIS · 10 / 10</p><h1>数出你的<br />内在动力</h1></div><span>RESULTS<br />01</span></header>
+    <header className="ld-result__head"><div><p>REFLECTION · 10 / 10</p><h1>看懂选择<br />找到下一步</h1></div><span>RESULTS<br />02</span></header>
     <section className="ld-ranking">
       <div><small>{primary.length > 1 ? "并列第一" : "第一名"}</small><strong>{main.map((item) => item.name).join("＋")}</strong><p>当前主动力</p></div>
-      <div><small>第二名</small><strong>{support.map((item) => item.name).join("＋") || "—"}</strong><p>辅助实现方式</p></div>
+      <div><small>次高计数</small><strong>{support.map((item) => item.name).join("＋") || "暂无其他非零项"}</strong><p>同样值得照顾的需要</p></div>
       <div><small>结果说明</small><strong>{primary.length > 1 ? "存在并列" : "当前聚焦"}</strong><p>并列代表多种需要同样突出</p></div>
     </section>
-    <section className="ld-summary"><p>你的组合解读</p><h2>{summary}</h2><span>主动力回答“什么让努力值得”，辅助动力更像你偏好的实现路径。它们会随人生阶段和环境变化。</span></section>
+    <section className="ld-summary"><p>先看你的选择，再决定怎么用</p><h2>{summary}</h2><span>最高计数不等于永远最重要，次高计数也不一定是实现最高项的手段。下面通过真实场景和一次小实验核对。</span></section>
+    <LifeActionGuide answers={answers} primary={primary} secondary={secondary} names={drives} questions={questions} />
     <section className="ld-drive-cards">
       {main.map((drive) => <article key={drive.key} className="ld-drive-card">
         <div className="ld-drive-card__title"><span>{drive.key}</span><div><small>PRIMARY DRIVE</small><h2>{drive.name}</h2></div></div>
         <blockquote>{drive.line}</blockquote>
-        <dl><div><dt>你真正需要</dt><dd>{drive.need}</dd></div><div><dt>容易充电的状态</dt><dd>{drive.charged}</dd></div><div><dt>容易耗尽的状态</dt><dd>{drive.drained}</dd></div><div><dt>需要留意</dt><dd>{drive.caution}</dd></div></dl>
+        <dl><div><dt>这一需要的含义</dt><dd>{drive.need}</dd></div><div><dt>可核对的充电情境</dt><dd>{drive.charged}</dd></div><div><dt>可核对的耗尽情境</dt><dd>{drive.drained}</dd></div><div><dt>自查提醒 · 并非已发生的判断</dt><dd>{drive.caution}</dd></div></dl>
         <div className="ld-actions"><small>今天可以做</small>{drive.actions.map((action, index) => <p key={action}><b>0{index + 1}</b>{action}</p>)}</div>
       </article>)}
     </section>
