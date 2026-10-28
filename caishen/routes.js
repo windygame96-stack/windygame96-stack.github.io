@@ -8,7 +8,7 @@ showStory=function(day=state.day,review=false){
 function showRoutePicker(after=null){
  if(!Game.canChooseRoute(state)){toast('本周同行已确定，重开可以体验其他路线。');return}
  routePickerAfter=after;
- modal('第二夜起，你想与谁同行？',`<p class="small muted">第一天是共通序幕。第二夜起进入所选角色的独立剧情，读完第二夜后本周路线固定。商业协作不受影响，也不代表必须恋爱。</p><div class="route-picker">${GODS.map((g,i)=>`<button class="route-option" data-a="selectRoute" data-g="${i}"><img src="${IMG(i)}" alt="${g.name}"><b>${g.name}</b><small>${i===0?'守住钱袋，也听你说心里的难处。':Game.Routes[i].subtitle}</small><span>与他同行 →</span></button>`).join('')}</div>`);
+ modal('第二夜起，你想与谁同行？',`<p class="small muted">第一天是共通序幕。第二夜起进入所选角色的独立剧情，读完第二夜后本周路线固定。商业协作不受影响，也不代表必须恋爱。</p><div class="route-picker">${GODS.map((g,i)=>`<button class="route-option" data-a="selectRoute" data-g="${i}"><img src="${IMG(i,true)}" alt="${g.name}" decoding="async"><b>${g.name}</b><small>${i===0?'守住钱袋，也听你说心里的难处。':Game.Routes[i].subtitle}</small><span>与他同行 →</span></button>`).join('')}</div>`);
 }
 function selectRoute(g,after=routePickerAfter){let r=perform('chooseRoute',{g});if(!r.ok)return;routePickerAfter=null;close();if(after)after()}
 function finishPrologue(){let ctx=prologueContext;if(!ctx)return;prologueContext=null;ctx.onDone?.()}
