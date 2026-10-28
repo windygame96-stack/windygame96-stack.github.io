@@ -1224,8 +1224,8 @@ const oldBegin=begin;begin=function(){close();state=Game.fresh();state.presentat
 function startTutorial(force=true){if(!state||state.ending){toast('请先开启一局七日之约，再体验新手教学。');return}close();let p=presentData();if(force||!p.tutorial||p.tutorial.status!=='active')p.tutorial={status:'active',step:0,version:2};else p.tutorial.status='active';persist();drawGuide()}
 const GUIDE=[
 {title:'新庙主，先跟我走一圈。',text:'我是陈九公。先祈福、再经营和接委托，最后去见他。每一步都由你亲手做，也可以随时跳过。',action:'带我上香 →',g:3},
-{title:'第一步 · 点燃你的心愿',text:'选一位财神和愿望，点「点燃香火」。香火会引来客流，求财还会增加今日收益。',target:'[data-a="light"]',tab:'shrine',g:4},
-{title:'把香，亲手敬上去。',text:'向上滑动香火，或点击「敬香」。完成后愿望才会生效，神明也会记住你的心意。',target:'#incenseArea',tab:'shrine',g:0},
+{title:'第一步 · 点燃你的心愿',text:'选一位财神和愿望，点「开始上香」，进入女主的互动窗口。香火会引来客流，求财还会增加今日收益。',target:'[data-a="light"]',tab:'shrine',g:4},
+{title:'把香，亲手敬上去。',text:'在上香窗口点燃香火，再向上拖动女主手中的香，或点击「双手敬香」。完成后愿望才会生效。',target:'#incenseArea',tab:'shrine',g:0},
 {title:'第二步 · 开门做生意',text:'元宝是手头现金，净资产还要算上建筑和债务。现在去经营，选一位合伙人。',action:'去经营 →',g:2},
 {title:'选一位今天的合伙人',text:'点选任一财神立绘，或使用协作下拉框。商业合作不需要恋爱好感。',target:'#businessCast',tab:'business',g:2},
 {title:'收下今日第一笔收入',text:'先祈愿、安排协作，再领收益。收支会单独记账，每天只能领一次。',target:'[data-a="collect"]',tab:'business',g:2},
