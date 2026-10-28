@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/hooks/useTheme";
+import caishenCover from "../../caishen/assets/home-cover-v1.webp";
 
 type IconName = "spark" | "book" | "wave" | "chart" | "game" | "arrow" | "sun" | "moon";
 
@@ -10,6 +11,7 @@ interface Game {
   url: string;
   image: string;
   tag: string;
+  ensemble?: boolean;
 }
 
 interface ProductSlot {
@@ -56,6 +58,14 @@ const games: Game[] = [
     url: "https://www.escapefromhongye.xyz/zique-word-mahjong",
     image: "/assets/zique-cover.svg",
     tag: "多人文字",
+  },
+  {
+    title: "财神偏爱我",
+    description: "白天经营财神庙，晚上和五位财神谈恋爱。上香、鉴宝、摸黑虎，在七日相处里解锁 17 种结局与专属插画。",
+    url: "/caishen/",
+    image: caishenCover,
+    tag: "恋爱养成 · 经营",
+    ensemble: true,
   },
 ];
 
@@ -150,7 +160,7 @@ function ProductCard({ product, index }: { product: ProductSlot; index: number }
 
 function GameCard({ game, index }: { game: Game; index: number }) {
   return (
-    <motion.a href={game.url} target="_blank" rel="noopener noreferrer" className="game-card" variants={fadeUp} transition={{ duration: 0.45, delay: Math.min(index * 0.06, 0.24) }}>
+    <motion.a href={game.url} target="_blank" rel="noopener noreferrer" className={`game-card${game.ensemble ? " game-card--ensemble" : ""}`} variants={fadeUp} transition={{ duration: 0.45, delay: Math.min(index * 0.06, 0.24) }}>
       <div className="game-card__visual">
         <img src={game.image} alt="" loading="lazy" />
         <span className="game-card__tag">{game.tag}</span>

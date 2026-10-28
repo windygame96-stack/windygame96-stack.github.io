@@ -172,3 +172,14 @@ button { color: inherit; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* The new six-person game cover retains the complete illustration. */
+.game-card.game-card--ensemble { grid-column: span 12; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.game-card.game-card--ensemble .game-card__visual { height: 300px; background: #c79555; }
+.game-card--ensemble .game-card__visual::before { content: ""; position: absolute; inset: -20px; background: url('/caishen/assets/home-cover-v1.webp') center 40% / cover; filter: blur(16px); opacity: .5; }
+.game-card--ensemble .game-card__visual img { position: relative; object-fit: contain; }
+.game-card--ensemble .game-card__body { justify-content: center; }
+@media (max-width: 680px) {
+ .game-card.game-card--ensemble { display: flex; flex-direction: column; }
+ .game-card.game-card--ensemble .game-card__visual { height: 260px; }
+}

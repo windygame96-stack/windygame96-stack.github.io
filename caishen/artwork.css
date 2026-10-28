@@ -1,0 +1,37 @@
+/* Festive hand-painted buildings and objects. */
+.village{min-height:470px;background:radial-gradient(ellipse at 50% 80%,#d7dba1 0 28%,transparent 65%),linear-gradient(#f8d990,#fff0c9 54%,#bad09a);isolation:isolate}
+.estate-scene{position:absolute;inset:80px 0 46px;pointer-events:none;overflow:hidden}
+.estate-scene:before{content:"";position:absolute;left:10%;right:10%;bottom:-12%;height:57%;border-radius:50%;background:radial-gradient(ellipse,#f4dda8 30%,#b3c893 70%);box-shadow:0 -2px 0 #fff4cf88}
+.estate-path{position:absolute;left:44%;width:15%;height:50%;bottom:-15%;background:linear-gradient(90deg,#ccb47c,#f6e4ba,#ccb47c);transform:perspective(90px) rotateX(25deg);border-radius:50% 50% 0 0}
+.estate-building{position:absolute;filter:drop-shadow(0 10px 6px #6c48262b);transition:filter .4s;transform-origin:50% 90%}
+.estate-building img{width:100%;height:100%;object-fit:contain;display:block;user-select:none}
+.estate-temple{width:58%;height:83%;left:21%;bottom:14%;z-index:1}
+.estate-tea{width:41%;height:63%;left:-1%;bottom:0;z-index:2}
+.estate-treasure{width:41%;height:63%;right:-1%;bottom:0;z-index:2}
+.estate-building.level-0{filter:grayscale(.85) sepia(.3) brightness(.72);opacity:.65}
+.estate-building.level-2{filter:drop-shadow(0 5px 10px #d5a33e66)}
+.estate-building.level-3{filter:drop-shadow(0 0 15px #ffc64ba6) saturate(1.15)}
+.estate-closed{position:absolute;left:32%;bottom:14%;padding:3px 7px;background:#675849;color:#fff6dc;font-size:11px;border:1px solid #e6c990;border-radius:3px}
+.estate-blessing{position:absolute;right:22%;top:17%;color:#f4ae26;font-size:28px;text-shadow:0 0 8px #fff;animation:art-twinkle 3s ease-in-out infinite}
+.village .building-hit.a{top:62%;left:42%}.village .building-hit.b{top:81%;left:9%}.village .building-hit.c{top:81%;right:7%}
+.village .village-note{font-size:10px;bottom:7px}
+.building-art{height:210px;margin:-8px -8px 18px;background:radial-gradient(ellipse at 50% 75%,#e5d79d88,transparent 68%);border-bottom:1px solid #cfa45c66}
+.building-art img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 6px #68482422);transition:transform .35s}
+.building-card:hover .building-art img{transform:translateY(-4px)}
+.building-art.level-0 img{filter:grayscale(.8) opacity(.65)}
+.building-art.level-3 img{filter:drop-shadow(0 0 9px #e8af4e99)}
+.mg-tiger{min-height:245px;padding:8px 12px 20px;border-radius:20px;background:radial-gradient(ellipse at 50% 80%,#c6b77c66,transparent 62%),linear-gradient(#fff5d9,#ead7a4)}
+.mg-tiger .tiger-art{display:block;width:100%;height:240px;object-fit:contain;transform-origin:50% 75%;animation:mg-breathe 3s ease-in-out infinite;pointer-events:none;user-select:none}
+.mg-tiger.mood-rub .tiger-art{animation:mg-nuzzle 1.9s ease-in-out infinite}.mg-tiger.mood-play .tiger-art{animation:mg-roll 2.3s ease-in-out infinite}.mg-tiger.mood-feed .tiger-art{animation:mg-eager 1.2s ease-in-out infinite}
+.mg-tiger .mg-spark{right:7%;top:9%}.mg-tiger .mg-ball{bottom:9px}
+.tiger-zone .tiger-art{width:100%;height:100%;object-fit:contain}
+.mg-relic{height:245px;background:radial-gradient(ellipse at 50% 70%,#cfab6866,transparent 65%),linear-gradient(#fff9e9,#efe0bd)}
+.mg-relic>.relic-art{width:90%;height:200px;object-fit:contain;display:block;filter:drop-shadow(0 8px 6px #72513026);animation:art-relic 4s ease-in-out infinite;user-select:none;pointer-events:none}
+.mg-relic i{margin-top:0;position:relative;z-index:1}.mg-relic strong{z-index:2;background:#fff4d5d9}
+.mg-demo>span:has(img){width:160px;height:140px;font-size:0;animation:none}.mg-demo img{width:100%;height:100%;object-fit:contain}
+.artifact .museum-art{max-width:100%;width:220px;height:155px;object-fit:contain;user-select:none}
+.artifact:has(.museum-art){height:190px}
+@keyframes art-relic{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes art-twinkle{0%,100%{opacity:.4;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+@media(max-width:700px){.village{min-height:405px}.estate-scene{inset:90px -8px 43px}.village .building-hit.a{top:59%;left:38%}.village .building-hit.b{top:79%;left:5%}.village .building-hit.c{top:79%;right:3%}.building-art{height:220px}.mg-tiger .tiger-art{height:210px}.mg-tiger{min-height:230px}.mg-relic{height:225px}.mg-relic>.relic-art{height:180px}}
+@media(prefers-reduced-motion:reduce){.estate-blessing,.mg-tiger .tiger-art,.mg-relic>.relic-art{animation:none!important}.building-art img{transition:none}}
