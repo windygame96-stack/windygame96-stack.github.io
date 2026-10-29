@@ -9,32 +9,36 @@ const DIALOGUES=[
     {
       "who": "旁白",
       "text": "工资刚到账，房租和几笔日常扣款便挨个跳出来。你还没看清余额，手机先提醒电量不足。",
-      "g": 0,
-      "mood": "平静"
+      "g": null,
+      "mood": "平静",
+      "hideGod": true
     },
     {
       "who": "你",
       "text": "财神爷，今晚能不能管管我？钱没留住，想开的茶铺也一直没开成。",
       "g": null,
-      "mood": "平静"
+      "mood": "平静",
+      "hideGod": true
     },
     {
       "who": "旁白",
       "text": "你抱着那份改了很多遍的茶铺计划进庙躲雨。神像前供着两块饼，其中一块忽然被黑虎叼走。",
-      "g": 0,
-      "mood": "平静"
+      "g": null,
+      "mood": "平静",
+      "hideGod": true
     },
     {
       "who": "你",
       "text": "……财神庙还养真老虎？",
       "g": null,
-      "mood": "平静"
+      "mood": "平静",
+      "hideGod": true
     },
     {
       "who": "赵公明",
-      "text": "别跑。它叼着饼，不会来叼你。",
+      "text": "站住，别跑。它嘴里有饼，顾不上你。到本君这边来。",
       "g": 0,
-      "mood": "平静"
+      "mood": "沉声制止"
     },
     {
       "who": "旁白",
@@ -50,15 +54,15 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "听见了。你说想让钱留得久些，也想做自己的生意。先坐，衣服都湿了。",
+      "text": "听见了。求留住钱，还求开自己的铺子，两件事倒说得清楚。坐下，把湿袖子拧干。本君没叫你站着回话。",
       "g": 0,
-      "mood": "平静"
+      "mood": "不动声色的关照"
     },
     {
       "who": "曹宝",
-      "text": "坐这边，凳子是干的。顺便问一句，你会看账吗？",
+      "text": "这边请，凳子我擦过了。雨还没停，不如陪我看一页账？放心，先不考你。",
       "g": 2,
-      "mood": "平静"
+      "mood": "笑着探问"
     },
     {
       "who": "你",
@@ -68,9 +72,9 @@ const DIALOGUES=[
     },
     {
       "who": "曹宝",
-      "text": "这里确实在招临时庙主。我是曹宝，账在我这儿。庙里现钱二百二十元宝，旧欠三百，还有一间能开门的茶楼。",
+      "text": "既然被你看出来，我就不藏了。曹宝，管账。现钱二百二十元宝，旧欠三百，一间茶楼还能开门。临时庙主一职，确实空着。你先听条件，不急着点头。",
       "g": 2,
-      "mood": "平静"
+      "mood": "温声摊牌"
     },
     {
       "who": "你",
@@ -80,21 +84,21 @@ const DIALOGUES=[
     },
     {
       "who": "萧升",
-      "text": "财神也得付茶钱、修屋顶。几位前任只管等拨款，茶楼不开，珍宝阁落灰，客人自然不来。",
+      "text": "屋顶不会因为住着财神就免收瓦钱。前几任倒很有仙气，等拨款，等客来，连灰都等出三层。你若也打算这么干，茶就当我请你。",
       "g": 1,
-      "mood": "平静"
+      "mood": "淡淡挖苦"
     },
     {
       "who": "陈九公",
-      "text": "七日后要交经营账册。再不开门做生意，这座庙就保不住日常开支了。",
+      "text": "还有七天就交账啦！你真会开茶铺？那太好了，我去喊街坊！哎，先别喊是吧？行，你先说，我听着！",
       "g": 3,
-      "mood": "平静"
+      "mood": "赶忙接话"
     },
     {
       "who": "姚少司",
-      "text": "先别被他们的账吓跑。你带着计划，我们有铺子，可以坐下谈谈。",
+      "text": "瞧，一个递账本，一个已经想跑出去揽客。先别怕，我们缺个会做茶的，你恰好缺间铺子。这巧合值不值得坐下聊聊？",
       "g": 4,
-      "mood": "平静"
+      "mood": "笑着打圆场"
     },
     {
       "who": "旁白",
@@ -110,15 +114,15 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "旧欠记在庙里，用经营收入偿还，不会转到你个人名下。报酬和分账写清楚，你想退出也可以。",
+      "text": "旧欠由庙里偿还，不转到你名下。这条写进契约，本君署名。你的报酬、分账和退出办法，也一项项写明。看清楚，再答。",
       "g": 0,
-      "mood": "平静"
+      "mood": "郑重划清责任"
     },
     {
       "who": "曹宝",
-      "text": "庙里用元宝记账，你人间的银行卡另算。家里要用的钱，别糊里糊涂拿来填铺子的账。",
+      "text": "还有一处，得请你亲自答应。庙里的元宝与人间银行卡分开记，家用不填公账。你若想偷偷垫钱，可瞒不过我这本账。",
       "g": 2,
-      "mood": "平静"
+      "mood": "温柔设问"
     },
     {
       "who": "你",
@@ -128,33 +132,33 @@ const DIALOGUES=[
     },
     {
       "who": "萧升",
-      "text": "萧升，管招宝。进货、识物、和商贩谈价，找我。有人拿祖传三天的盆来，我替你问问传了几代。",
+      "text": "萧升，招宝的。进货、验物、谈价，都能找我。尤其那种祖传三天的聚宝盆，记得留给我，我想听听他祖上这三天怎么过的。",
       "g": 1,
-      "mood": "平静"
+      "mood": "漫不经心的自荐"
     },
     {
       "who": "陈九公",
-      "text": "陈九公，管招财。找客人、送货、跑街坊，我都熟！就是有时跑快了，你记得喊我吃饭。",
+      "text": "陈九公！跑街坊、找客人、送货，这城里我闭着眼都熟！你只管把茶做好，跑腿叫我。还有，开饭也叫我，别把这个落下！",
       "g": 3,
-      "mood": "平静"
+      "mood": "笑着拍胸脯"
     },
     {
       "who": "姚少司",
-      "text": "姚少司，管利市。机会和新消息我去找。有没有用，咱们问清楚再试，别听一句吉利话就掏钱。",
+      "text": "姚少司，利市的。好消息归我找，坏条件也归我打听。吉利话我会说，先掏钱就算了，我还想多蹭你几杯茶呢。",
       "g": 4,
-      "mood": "平静"
+      "mood": "眨眼卖关子"
     },
     {
       "who": "曹宝",
-      "text": "我陪你安排收支。留多少进货、多少付工钱，先让这几天过得稳当。",
+      "text": "我管收支，替你留住进货与工钱。至于每天何时对账，等你方便再定。我这张凳子，先给你留着。",
       "g": 2,
-      "mood": "平静"
+      "mood": "含笑接过话"
     },
     {
       "who": "赵公明",
-      "text": "至于想靠赌一把，把窟窿全补上的事，先来找我。钱急用时，人更容易被话哄住。",
+      "text": "若有人劝你赌一把补窟窿，叫他来见本君。越急着用钱，越不能把钱袋交给一句好听话。记住了？",
       "g": 0,
-      "mood": "平静"
+      "mood": "语气一沉"
     },
     {
       "who": "你",
@@ -164,9 +168,9 @@ const DIALOGUES=[
     },
     {
       "who": "萧升",
-      "text": "管饭可以。同事以外的事，等熟一点再说。",
+      "text": "管饭可以。至于只做同事，掌柜现在就把话说满，往后可不好改口。",
       "g": 1,
-      "mood": "平静"
+      "mood": "挑眉逗弄"
     },
     {
       "who": "旁白",
@@ -182,9 +186,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "旧命簿，得核过档才能说清。先收好，今晚把屋顶和饭解决，别让一页纸吓住你。",
+      "text": "旧命簿，待本君查过旧档再答你。先合上。漏雨的屋顶、没吃的晚饭，哪一样都比这页纸更急。天塌不下来。",
       "g": 0,
-      "mood": "平静"
+      "mood": "稳稳压住惊慌"
     },
     {
       "who": "你",
@@ -214,9 +218,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "先等一等。茶叶、炭、今天帮忙的工钱，付完再看还剩多少。",
+      "text": "且慢。茶叶、炭、伙计工钱，逐项付完。剩下的，才轮到新茶具。",
       "g": 0,
-      "mood": "平静"
+      "mood": "抬手按住钱匣"
     },
     {
       "who": "你",
@@ -226,9 +230,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "高兴可以。我怕你把明早买茶的钱也买成杯子，客人来了，只能请人喝空气。",
+      "text": "本君没拦你高兴。只是明早茶叶钱都成了杯子，你打算请客人喝什么？仙气？",
       "g": 0,
-      "mood": "平静"
+      "mood": "一本正经的揶揄"
     },
     {
       "who": "旁白",
@@ -244,9 +248,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "嗯。先把已经答应付的钱留出来，剩下的再商量。",
+      "text": "嗯，先留答应给别人的钱。一文也别混。余下怎么花，你说，本君听着。",
       "g": 0,
-      "mood": "平静"
+      "mood": "耐心等你动笔"
     },
     {
       "who": "你",
@@ -268,9 +272,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "你想停，就把取消入口找出来。别只关提醒，钱还会照扣。",
+      "text": "要停就找取消入口。只关提醒，那钱照扣。这小东西倒会躲，本君陪你找。",
       "g": 0,
-      "mood": "平静"
+      "mood": "俯身盯着屏幕"
     },
     {
       "who": "旁白",
@@ -286,9 +290,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "这按钮藏得比黑虎叼走的梳子还深，找它倒花了些本事。",
+      "text": "藏成这样。黑虎叼走本君的梳子，都没它难找。",
       "g": 0,
-      "mood": "平静"
+      "mood": "难得有些不服气"
     },
     {
       "who": "旁白",
@@ -318,9 +322,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "先陪我出去透口气。",
+      "text": "随本君出来。先离开这摊子，透口气。",
       "g": 0,
-      "mood": "平静"
+      "mood": "沉声唤你"
     },
     {
       "who": "你",
@@ -330,9 +334,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "我听见修瓦的报价了。你急着把庙撑起来，我知道。",
+      "text": "修瓦的报价，本君听到了。你急着撑住这座庙，这份心，本君领。但别拿自己去赌。",
       "g": 0,
-      "mood": "平静"
+      "mood": "放缓声音"
     },
     {
       "who": "旁白",
@@ -342,9 +346,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "这句差一点，会让人想再付一回。输了的钱也不会因为你多押一次，就答应回来。",
+      "text": "又是差一点。它哄你再付一回，可输了的钱，何曾答应下回一定回来？",
       "g": 0,
-      "mood": "平静"
+      "mood": "盯住那张彩头单"
     },
     {
       "who": "你",
@@ -354,9 +358,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "先问屋顶哪块必须今天修，哪些能分着做。再问工匠能不能把材料和工钱列开，咱们核清。",
+      "text": "先去找工匠。哪处漏雨必须修，哪处可以缓，材料与工钱各多少，当面列清。本君同你去。",
       "g": 0,
-      "mood": "平静"
+      "mood": "当即安排"
     },
     {
       "who": "你",
@@ -366,9 +370,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "就按能承受的安排商量，或者暂时少开几张桌。缺的钱要想办法，可吃饭、进货的钱先别押进去。",
+      "text": "那就少开几张桌，按撑得住的数来。办法可以再找，吃饭与进货的钱，一文都不押。",
       "g": 0,
-      "mood": "平静"
+      "mood": "定下底线"
     },
     {
       "who": "旁白",
@@ -384,9 +388,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "肯说的，我就听。怕钱不够，不是什么难以启齿的事。",
+      "text": "怕钱不够，尽管说。本君在这里，难道只听得了你报喜？",
       "g": 0,
-      "mood": "平静"
+      "mood": "压低了声音"
     },
     {
       "who": "旁白",
@@ -402,9 +406,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "可以。它归它，我也在。",
+      "text": "可以。虎归虎。本君也在，不必事事先找它。",
       "g": 0,
-      "mood": "平静"
+      "mood": "别开目光"
     }
   ],
   [
@@ -422,9 +426,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "印从哪里来，客人从哪里来，没做到怎么处理，他说清楚了吗？",
+      "text": "印出何处，客从何来，做不到如何赔？三件事，他可曾说清？",
       "g": 0,
-      "mood": "平静"
+      "mood": "接过单据审视"
     },
     {
       "who": "你",
@@ -440,9 +444,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "这是已经停用的旧印。有人借这个名义卖保证，我得去核查。",
+      "text": "停用的旧印，竟拿到这里收钱。单据留下，本君查。后续付款，先停。",
       "g": 0,
-      "mood": "平静"
+      "mood": "神色冷下来"
     },
     {
       "who": "你",
@@ -452,9 +456,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "问过、核过、发现不对再停，很值得写。你不必为了显得从没犯错，让后来的人看不见这件事。",
+      "text": "查过才发现不对，也照实写。你是庙主，不是要交一张从不犯错的脸面。后面的人，得看得见这处坑。",
       "g": 0,
-      "mood": "平静"
+      "mood": "郑重纠正"
     },
     {
       "who": "旁白",
@@ -470,9 +474,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "我看到了。先把时间和收款方式记好，能联系谁、能查哪些记录，我们一项项来。",
+      "text": "看到了。手别抖。先记时间、收款方式，再查联系人与往来。一项项办，本君没走。",
       "g": 0,
-      "mood": "平静"
+      "mood": "稳住你的手"
     },
     {
       "who": "你",
@@ -482,9 +486,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "我担心。但要你以后还肯来告诉我，今晚就不能只顾着责备。",
+      "text": "担心。也有气。但若本君今夜只顾责备，下回你还肯把收据拿出来吗？",
       "g": 0,
-      "mood": "平静"
+      "mood": "坦白得很低"
     },
     {
       "who": "旁白",
@@ -500,9 +504,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "对，别先许诺。先停后续付款，把已经发生的说清，再去找可以处理的人。",
+      "text": "对，不许先许诺追回。先止付，记清已发生的事，再找能处理的人。能查到哪一步，就说哪一步。",
       "g": 0,
-      "mood": "平静"
+      "mood": "沉声确认"
     },
     {
       "who": "旁白",
@@ -520,9 +524,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "今天在集市看见你，只买了一张饼。",
+      "text": "集市上那一张饼，就是你今天的饭？",
       "g": 0,
-      "mood": "平静"
+      "mood": "看着桌上的饭"
     },
     {
       "who": "你",
@@ -532,9 +536,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "饭钱原本就在安排里。你一整天站着，先坐下来。",
+      "text": "坐下。饭钱早留在账里，少吃这一顿，庙也不会多出一片瓦。",
       "g": 0,
-      "mood": "平静"
+      "mood": "直接拉开椅子"
     },
     {
       "who": "旁白",
@@ -550,9 +554,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "配热汤，正好。你想省的地方，我们可以一起找，别只从你自己的饭里扣。",
+      "text": "配热汤吃。该省的本君陪你找，但账本翻到你这顿饭，先停。",
       "g": 0,
-      "mood": "平静"
+      "mood": "把热汤推近"
     },
     {
       "who": "你",
@@ -562,9 +566,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "算我想和你一起吃。",
+      "text": "算本君想同你吃。这个理由，够不够？",
       "g": 0,
-      "mood": "平静"
+      "mood": "硬着语气承认"
     },
     {
       "who": "旁白",
@@ -580,9 +584,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "有时问账，有时拦人赌钱。把饭等到你收摊再吃，是这几天才有的习惯。",
+      "text": "问账、拦赌，是职责。等到你收摊再动筷子，是本君这几日自己的事。",
       "g": 0,
-      "mood": "平静"
+      "mood": "有些不自在"
     },
     {
       "who": "旁白",
@@ -598,9 +602,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "它刚吃过。今晚这碗，我特意给你留的。",
+      "text": "它吃过了。这碗给你的，本君特意留的。别又让它占先。",
       "g": 0,
-      "mood": "平静"
+      "mood": "拦住伸向黑虎的勺子"
     },
     {
       "who": "旁白",
@@ -624,9 +628,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "先翻过来看。",
+      "text": "先看背面。正面有什么好盯的。",
       "g": 0,
-      "mood": "平静"
+      "mood": "掩饰着催促"
     },
     {
       "who": "旁白",
@@ -642,9 +646,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "你说急的时候容易忘。我就写短一点，能塞进手机壳。",
+      "text": "你说心急便忘，本君就写短些。塞得进手机壳，出门也好带。尺寸试过了。",
       "g": 0,
-      "mood": "平静"
+      "mood": "不太自然地解释"
     },
     {
       "who": "你",
@@ -654,9 +658,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "纸替你记着，决定还得你自己看。买错时也能回来商量，别因为贴着我的字，就不敢承认。",
+      "text": "纸能记字，不能替你作主。买错了也来找本君，别贴着我的字，反倒学会瞒我。",
       "g": 0,
-      "mood": "平静"
+      "mood": "认真叮嘱"
     },
     {
       "who": "旁白",
@@ -672,9 +676,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "它看钱袋。你看我，就够了。",
+      "text": "它看钱袋。你看本君，就够了。",
       "g": 0,
-      "mood": "平静"
+      "mood": "目光没有避开"
     },
     {
       "who": "旁白",
@@ -690,9 +694,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "那就慢慢商量。你不用为了让我喜欢，立刻变成什么都安排得好的人。",
+      "text": "慢慢来。本君喜欢你，又不是等你把每笔账都做对了才算数。",
       "g": 0,
-      "mood": "平静"
+      "mood": "语气放柔"
     },
     {
       "who": "旁白",
@@ -708,9 +712,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "我留了时间。专门等你。",
+      "text": "时间留好了。专门等你，不是顺路。",
       "g": 0,
-      "mood": "平静"
+      "mood": "郑重补上一句"
     }
   ],
   [
@@ -728,9 +732,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "后悔进门了吗？",
+      "text": "这扇门，你可后悔进过？照实说。",
       "g": 0,
-      "mood": "平静"
+      "mood": "静静等你回答"
     },
     {
       "who": "你",
@@ -752,9 +756,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "只找到旧档的编号。为什么空着，得往后逐件核实，现在还不能下结论。",
+      "text": "只查到旧档编号。空白因何而来，尚无确证。本君不会拿猜测答你，待核实后再说。",
       "g": 0,
-      "mood": "平静"
+      "mood": "谨慎回答"
     },
     {
       "who": "你",
@@ -770,9 +774,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "庙里的事可以继续做，人间的打算也别耽搁。你想留、想回去试自己的茶铺，都可以谈。",
+      "text": "庙里的事继续办，你人间的打算也继续做。留下或回去开茶铺，由你选。本君要听真话。",
       "g": 0,
-      "mood": "平静"
+      "mood": "将选择交还给你"
     },
     {
       "who": "你",
@@ -782,9 +786,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "你愿意说，我就听。不过，我想谈的不光这些。",
+      "text": "愿意说，本君便听。只是今夜，本君还想谈一件私事。",
       "g": 0,
-      "mood": "平静"
+      "mood": "打断自己的公事语气"
     },
     {
       "who": "旁白",
@@ -794,9 +798,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "这几日，我总记着你什么时候收摊。你来问账，我高兴。你只来坐一会儿，我也高兴。",
+      "text": "这几日，本君总记着你何时收摊。你来问账，便高兴；什么也不问，只坐一会儿，也高兴。账里解释不了。",
       "g": 0,
-      "mood": "平静"
+      "mood": "郑重又有些生涩"
     },
     {
       "who": "你",
@@ -806,9 +810,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "我想见你，和那本账结了多少没有关系。",
+      "text": "本君想见你。那本账结得多少，都不改这句话。",
       "g": 0,
-      "mood": "平静"
+      "mood": "直视着你"
     },
     {
       "who": "旁白",
@@ -818,9 +822,9 @@ const DIALOGUES=[
     },
     {
       "who": "赵公明",
-      "text": "往后愿不愿意同我一起过？忙的时候一起办事，闲的时候，一起吃饭。",
+      "text": "往后，可愿同本君一起过？忙时一道办事，闲时一道吃饭。这个约，得你亲口答应。",
       "g": 0,
-      "mood": "平静"
+      "mood": "郑重求一个回答"
     }
   ]
 ];
@@ -835,9 +839,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "好。你管茶楼，我先找人修屋顶。今晚先吃口热的。",
+        "text": "准。明早你管茶楼，本君管屋顶。契约写完就吃饭，不许拿空肚子熬夜。",
         "g": 0,
-        "mood": "平静"
+        "mood": "简短应允"
       }
     ],
     [
@@ -849,9 +853,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "我知道你累。今晚可以先歇，账明早再看。可没看清就签下名字的事，别急。",
+        "text": "累了便先歇，没人逼你今夜算清。但不看条件就落款，本君不许你这么糟蹋自己的名字。",
         "g": 0,
-        "mood": "平静"
+        "mood": "严厉里留着余地"
       }
     ]
   ],
@@ -865,9 +869,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "好。你想添东西时，我陪你去挑。今晚先把腿歇一歇。",
+        "text": "这就对了。茶具改日陪你挑。今晚先坐稳，腿都站僵了，还想逞强？",
         "g": 0,
-        "mood": "平静"
+        "mood": "收起账本"
       }
     ],
     [
@@ -879,9 +883,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "也可能明日客少。已经答应别人的工钱不能跟着赌，先把那一笔放回去。",
+        "text": "若明日客少呢？伙计的工钱不能陪你赌客流。那一笔，放回去。",
         "g": 0,
-        "mood": "平静"
+        "mood": "不容含糊"
       },
       {
         "who": "旁白",
@@ -901,9 +905,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "我陪你去问。钱袋你自己收好，想回头时喊我一声。",
+        "text": "走，本君陪你问。钱袋自己握紧。若又想回那个摊子，先看本君一眼。",
         "g": 0,
-        "mood": "平静"
+        "mood": "站在你身侧"
       }
     ],
     [
@@ -915,9 +919,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "正因为舍不得那一次，才更该先停。今天这笔我不能替你算成能赢的钱。",
+        "text": "舍不得那一次，更该停。你想听本君说下一次会赢？这句话，本君不会说。",
         "g": 0,
-        "mood": "平静"
+        "mood": "毫不退让"
       },
       {
         "who": "旁白",
@@ -937,9 +941,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "我会署名说明旧印的问题。你已经知道的，就按知道的写。",
+        "text": "旧印的问题，本君署名说明。你知道多少便写多少，别替旁人遮，也别替自己多认。",
         "g": 0,
-        "mood": "平静"
+        "mood": "落笔署名"
       }
     ],
     [
@@ -951,9 +955,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "你可以不向街坊公开自己的私事。但明知单子有问题，还拿它收别人的钱，我不能答应。",
+        "text": "私事可以不向街坊公开。可明知是假保证，还借它收别人的钱？这一步，本君不会让。",
         "g": 0,
-        "mood": "平静"
+        "mood": "明确拒绝"
       },
       {
         "who": "旁白",
@@ -973,9 +977,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "往后说一声。你来当庙主，也该有吃饭和歇脚的时候。",
+        "text": "以后累了就说。庙主也得吃饭歇脚，这条若没人写，本君补上。",
         "g": 0,
-        "mood": "平静"
+        "mood": "终于松了眉头"
       }
     ],
     [
@@ -987,9 +991,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "钱还没安排好，可以再算。你今天没好好吃饭，不能拖成明天的账。",
+        "text": "钱没算好，尚可重算。今日的饭，不能拖成明日的账。先吃。",
         "g": 0,
-        "mood": "平静"
+        "mood": "把筷子放到你手里"
       },
       {
         "who": "旁白",
@@ -1009,9 +1013,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "好。想要哪盏就说，我们一起看价。",
+        "text": "好。想看哪盏，指给本君。价一起问，别自己走远。",
         "g": 0,
-        "mood": "平静"
+        "mood": "藏不住期待"
       }
     ],
     [
@@ -1023,9 +1027,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "不可以。你拿着它，是为了想起先看清楚，不能把我的名字当成稳赢的保证。",
+        "text": "不可。本君的名字不替谁担保稳赢。这张符是提醒你看清楚，不是准你借钱冒险。",
         "g": 0,
-        "mood": "平静"
+        "mood": "当即否决"
       },
       {
         "who": "旁白",
@@ -1045,9 +1049,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "好。明日收摊后，我来找你。",
+        "text": "好。明日收摊，本君来接你。往后也一样。",
         "g": 0,
-        "mood": "平静"
+        "mood": "笑意终于露出来"
       },
       {
         "who": "旁白",
@@ -1065,9 +1069,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "好。有要商量的事，仍可以来找我。",
+        "text": "明白。合伙的事照旧。日后有难处，仍来找本君，不必避着。",
         "g": 0,
-        "mood": "平静"
+        "mood": "收好自己的心意"
       },
       {
         "who": "旁白",
@@ -1085,9 +1089,9 @@ const REPLIES=[
       },
       {
         "who": "赵公明",
-        "text": "到了安稳的地方，来信告诉我。",
+        "text": "路上当心。到了安稳处，寄封信来。本君等着。",
         "g": 0,
-        "mood": "平静"
+        "mood": "克制地叮嘱"
       },
       {
         "who": "旁白",
@@ -1150,7 +1154,7 @@ function paintStoryBackground(v){
  if(img.complete&&img.naturalWidth)img.onload();
 }
 function theatreFrame(){return `<div class="vn-stage" id="vnStage"><img class="vn-background" id="vnBackground" alt="" decoding="async"><div class="vn-backdrop-shade" aria-hidden="true"></div><div class="vn-moon"></div><div class="vn-dust">${Array.from({length:14},(_,i)=>`<i style="--n:${i}"></i>`).join('')}</div><div class="vn-landscape">${sceneSVG()}</div><div class="vn-location" id="vnLocation"></div><div class="vn-cast" id="vnCast"></div><div class="vn-letter" id="vnLetter"></div><div class="vn-toolbar"><button data-a="vnHistory">前文</button><button data-a="vnBack">上一句</button><button id="vnAuto" data-a="vnAuto">自动</button><button data-a="vnSkip">快进至选择</button><button data-a="close">离开 ×</button></div><div class="vn-lower"><div class="vn-choice-list" id="storyChoices"></div><button class="vn-dialogue" data-a="vnNext" aria-label="点击显示完整句子或继续下一句"><span class="vn-name" id="vnName"></span><span class="vn-mood" id="vnMood"></span><span class="vn-text" id="vnText"></span><span class="vn-hint" id="vnHint">点击继续 ▾</span></button><div class="vn-progress" id="vnProgress"></div></div><div class="vn-history hidden" id="vnHistory"></div></div>`}
-showStory=function(day=state.day,review=false){let record=state.story.find(s=>s.day===day),data=presentData(),cursor=data.vn;modal(Game.getStory(state,day).place,theatreFrame(),'vn-shell');$('modal').classList.add('vn-dialog');vn={day,index:!review&&!record&&cursor?.day===day?Math.min(cursor.index,DIALOGUES[day-1].length):0,frames:(Game.getStory(state,day).frames||DIALOGUES[day-1]).map(x=>({...x})),baseLength:(Game.getStory(state,day).frames||DIALOGUES[day-1]).length,chapter:Game.getStory(state,day),record,review,auto:false,complete:false,atChoice:false,actor:0,previous:null};$('vnLocation').textContent=Game.getStory(state,day).place+' · '+Game.getStory(state,day).title;paintVN()};
+showStory=function(day=state.day,review=false){let record=state.story.find(s=>s.day===day),data=presentData(),cursor=data.vn;modal(Game.getStory(state,day).place,theatreFrame(),'vn-shell');$('modal').classList.add('vn-dialog');vn={day,index:!review&&!record&&cursor?.day===day?Math.min(cursor.index,DIALOGUES[day-1].length):0,frames:(Game.getStory(state,day).frames||DIALOGUES[day-1]).map(x=>({...x})),baseLength:(Game.getStory(state,day).frames||DIALOGUES[day-1]).length,chapter:Game.getStory(state,day),record,review,auto:false,complete:false,atChoice:false,actor:null,previous:null};$('vnLocation').textContent=Game.getStory(state,day).place+' · '+Game.getStory(state,day).title;paintVN()};
 const HEROINE_IMG=()=>'assets/heroine-modern-web-v1.webp';
 const portraitWarmups=new Map();
 function warmNextPortrait(v,current){
@@ -1160,23 +1164,36 @@ function warmNextPortrait(v,current){
  const warm=()=>{if(vn!==v||!$('vnCast'))return;const img=new Image();img.fetchPriority='low';img.decoding='async';portraitWarmups.set(next,img);img.onerror=()=>portraitWarmups.delete(next);img.src=IMG(next)};
  if('requestIdleCallback' in window)requestIdleCallback(warm,{timeout:1500});else setTimeout(warm,600);
 }
-function paintStoryCast(v,frame){
+function storyActorAt(v,frame){
+ if(frame.hideGod)return null;
  const speaker=GODS.findIndex(g=>g.name===frame.who);
- let actor=speaker>=0?speaker:Number.isInteger(frame.g)?frame.g:v.actor;v.actor=actor;
- let cast=$('vnCast');cast.classList.add('with-heroine');
- if(!cast.querySelector('.vn-heroine'))cast.innerHTML=`<img class="vn-heroine" decoding="async" fetchpriority="high" src="${HEROINE_IMG()}" alt="你 · 现代女主"><img class="vn-god portrait-loading" decoding="async" fetchpriority="high" alt=""><span class="vn-portrait-status" role="status"></span>`;
- let god=cast.querySelector('.vn-god'),status=cast.querySelector('.vn-portrait-status');
- if(cast.dataset.actor!==String(actor)){
-  cast.dataset.actor=String(actor);god.classList.add('portrait-loading');god.classList.remove('god-enters');
-  god.alt=GODS[actor].name;status.textContent=GODS[actor].name+'正在走近…';status.hidden=false;
-  const reveal=()=>{if(cast.isConnected&&cast.dataset.actor===String(actor)){god.classList.remove('portrait-loading');god.classList.add('god-enters');status.hidden=true;warmNextPortrait(v,actor)}};
-  god.onload=()=>god.decode().then(reveal,()=>{});
-  god.onerror=()=>{if(cast.dataset.actor===String(actor))status.textContent=GODS[actor].name+'的立绘暂未加载，仍可继续对话'};
-  god.src=IMG(actor);if(god.complete&&god.naturalWidth)god.onload();
+ if(speaker>=0)return speaker;
+ if(Number.isInteger(frame.g)&&frame.g>=0&&frame.g<GODS.length)return frame.g;
+ // Derive from the visible timeline, not the actor left over after going back.
+ for(let i=Math.min(v.index,v.frames.length-1);i>=0;i--){const f=v.frames[i];if(f.hideGod)return null;const g=GODS.findIndex(x=>x.name===f.who);if(g>=0)return g;if(Number.isInteger(f.g)&&f.g>=0&&f.g<GODS.length)return f.g}
+ return null;
+}
+function paintStoryCast(v,frame){
+ const actor=storyActorAt(v,frame);v.actor=actor;
+ const cast=$('vnCast');cast.classList.add('with-heroine');
+ if(!cast.querySelector('.vn-heroine'))cast.innerHTML=`<img class="vn-heroine" decoding="async" fetchpriority="high" src="${HEROINE_IMG()}" alt="你 · 现代女主"><span class="vn-portrait-status" role="status" hidden></span>`;
+ const status=cast.querySelector('.vn-portrait-status');let god=cast.querySelector('.vn-god');
+ cast.classList.toggle('heroine-only',actor===null);
+ if(actor===null){if(god){god.onload=god.onerror=null;god.remove()}delete cast.dataset.actor;status.hidden=true;status.textContent=''}
+ else{
+  if(!god){god=document.createElement('img');god.className='vn-god portrait-loading';god.decoding='async';god.fetchPriority='high';cast.insertBefore(god,status)}
+  if(cast.dataset.actor!==String(actor)){
+   cast.dataset.actor=String(actor);god.classList.add('portrait-loading');god.classList.remove('god-enters');
+   god.alt=GODS[actor].name;status.textContent=GODS[actor].name+'正在走近…';status.hidden=false;
+   const reveal=()=>{if(vn===v&&god.isConnected&&cast.dataset.actor===String(actor)){god.classList.remove('portrait-loading');god.classList.add('god-enters');status.hidden=true;warmNextPortrait(v,actor)}};
+   god.onload=()=>god.decode().then(reveal,reveal);
+   god.onerror=()=>{if(vn===v&&god.isConnected&&cast.dataset.actor===String(actor))status.textContent=GODS[actor].name+'的立绘暂未加载，仍可继续对话'};
+   god.src=IMG(actor);if(god.complete&&god.naturalWidth)god.onload();
+  }
  }
- let isHeroine=['你','你的决定','你的选择'].includes(frame.who),narrator=frame.who==='旁白';
+ const isHeroine=['你','你的决定','你的选择'].includes(frame.who),narrator=frame.who==='旁白';
  cast.dataset.speaker=narrator?'narrator':isHeroine?'heroine':'god';cast.classList.toggle('narrating',narrator);
- cast.querySelector('.vn-heroine').classList.toggle('is-speaking',isHeroine);god.classList.toggle('is-speaking',!narrator&&!isHeroine);
+ cast.querySelector('.vn-heroine').classList.toggle('is-speaking',isHeroine);god?.classList.toggle('is-speaking',!narrator&&!isHeroine);
 }
 
 function replyFrames(v,i){return v.chapter.choices[i].replyFrames||REPLIES[v.day-1][i];}
@@ -1209,7 +1226,16 @@ function emitParticles(anchor,symbol='✦',count=12){if(!anchor||reduced())retur
 function scenePulse(kind){let stage=$('vnStage')||$('view');if(stage){stage.classList.remove('scene-pulse');void stage.offsetWidth;stage.classList.add('scene-pulse');emitParticles(stage,kind==='heart'?'♥':'✦',10)}}
 let reactionTimer;
 function reaction(g,title,text,kind='gold'){document.querySelector('.role-reaction')?.remove();let el=document.createElement('aside');el.className='role-reaction '+kind;el.setAttribute('role','status');el.innerHTML=`<img src="${IMG(g,true)}" alt="${GODS[g].name}"><div><small>${title}</small><p>${escapeHTML(text)}</p><button class="plain" data-a="dismissReaction">收下心意 ×</button></div>`;document.body.append(el);clearTimeout(reactionTimer);reactionTimer=setTimeout(()=>el.remove(),6500);}
-const basicPerform=perform;perform=function(a,p={},refresh=true){let prior=state?JSON.parse(JSON.stringify({cash:state.cash,incense:state.incense,love:state.love})):null;let r=basicPerform(a,p,refresh);if(r.ok){if(a==='collect'){emitParticles(document.querySelector('.resources'),'🪙',18);reaction(state.daily.collab>=0?state.daily.collab:2,'今日账已收好','“辛苦了。账收好，茶也给你留着。”');document.querySelector('.business-scene')?.classList.add('business-boom')}if(a==='upgrade'){scenePulse('gold');reaction(state.daily.collab>=0?state.daily.collab:3,'修缮完成','“又亮起来一处。你想做的事，我们慢慢完成。”');document.querySelector('.business-scene')?.classList.add('building-rise')}if(a==='order'){emitParticles(document.querySelector('.resources'),'✦',12);reaction(Game.orderGod(state)??2,'委托有回音','“这单办完，歇会儿再走。”')}if(a==='collab')reaction(p.g,'今日的合伙人',memoryLine(p.g));if(a==='pray'){emitParticles($('incenseArea'),'🧧',16);$('shrinePortrait')?.classList.add('prayer-appear');reaction(p.g,'心愿已送达，财神接单！',prayerReply(p.g,p.wish),'prayer')}if(a==='offer'){emitParticles($('offeringDrop'),'♥',12);reaction(p.g,'心意已收到','“'+p.item+'我收下了。下次来，不必每回都带礼物。”')}if(a==='game'){actorSay(r.text);emitParticles($('miniBoard'),p.win?'♥':'✦',12)}if(prior&&state.cash!==prior.cash)document.querySelector('.resource b')?.classList.add('counter-pop');tutorialEvent(a,p)}return r;};
+function voiceReaction(g,kind,item=''){
+ const replies={
+ collect:['今日账已核，辛苦。先坐下，别一结完账又跑出去。','账收妥了。掌柜今日很能干，夸完可别又给自己加活。','账结好了。现在能不能把对面的凳子，借我留给你一会儿？','结清啦！今天跑得值！来，歇一歇，晚饭我去端！','铜钱有了落处，今天的笑也别省。来坐，我请你喝茶。'],
+ upgrade:['这处修妥了。余下逐项来，本君同你盯着。','像样些了。掌柜的眼光，总算没让那张报价单独占风头。','又办成一件。账我来核，你先看看，这回修得可合心意？','你看，亮起来了！等开门我得叫街坊都来看，这可是咱们一起修的！','新地方，新彩头！放心，吉利话我说，花了多少也替你问清。'],
+ order:['这单办妥。回执收好，别光顾往下一单赶。','这单有个明白来回了。掌柜歇会儿，货单又不会自己逃。','委托核过了。下一笔先缓缓，你这杯茶已经等了一会儿。','送到啦！你的那份也算好！现在先歇，谁再喊顺路我都先问清！','回音到！这次靠的可不止一句吉利话。来，先把该收的收好。'],
+ offer:['这份'+item+'，本君收下。下回人来便好，别又花心思省自己的饭钱。','这份'+item+'倒很会挑。只是掌柜空手来，我也给倒茶，记住了。','这份'+item+'收好了。礼物记得，送礼的人更记得，下回不用回回带。','给我的'+item+'？太好了！等会儿，我把手擦干净，可别碰坏了！','哎呀，这份'+item+'给我？今日这张凳子果然没白留！不带礼物也一样留。']
+ };
+ return '“'+replies[kind][g]+'”';
+}
+const basicPerform=perform;perform=function(a,p={},refresh=true){let prior=state?JSON.parse(JSON.stringify({cash:state.cash,incense:state.incense,love:state.love})):null;let r=basicPerform(a,p,refresh);if(r.ok){if(a==='collect'){emitParticles(document.querySelector('.resources'),'🪙',18);reaction(state.daily.collab>=0?state.daily.collab:2,'今日账已收好',voiceReaction(state.daily.collab>=0?state.daily.collab:2,'collect'));document.querySelector('.business-scene')?.classList.add('business-boom')}if(a==='upgrade'){scenePulse('gold');reaction(state.daily.collab>=0?state.daily.collab:3,'修缮完成',voiceReaction(state.daily.collab>=0?state.daily.collab:3,'upgrade'));document.querySelector('.business-scene')?.classList.add('building-rise')}if(a==='order'){emitParticles(document.querySelector('.resources'),'✦',12);reaction(Game.orderGod(state)??2,'委托有回音',voiceReaction(Game.orderGod(state)??2,'order'))}if(a==='collab')reaction(p.g,'今日的合伙人',memoryLine(p.g));if(a==='pray'){emitParticles($('incenseArea'),'🧧',16);$('shrinePortrait')?.classList.add('prayer-appear');reaction(p.g,'心愿已送达，财神接单！',prayerReply(p.g,p.wish),'prayer')}if(a==='offer'){emitParticles($('offeringDrop'),'♥',12);reaction(p.g,'心意已收到',voiceReaction(p.g,'offer',p.item))}if(a==='game'){actorSay(r.text);emitParticles($('miniBoard'),p.win?'♥':'✦',12)}if(prior&&state.cash!==prior.cash)document.querySelector('.resource b')?.classList.add('counter-pop');tutorialEvent(a,p)}return r;};
 const OPENING=[
 {title:'有些命运，早被写好。',text:'而你的那一页，被人悄悄抹去了。',kind:'rain',g:null},
 {title:'一座快要倒闭的财神庙。',text:'三百元宝的旧债，七日为期。',kind:'temple',g:0},
