@@ -174,21 +174,9 @@ const DIALOGUES=[
     },
     {
       "who": "旁白",
-      "text": "你被逗笑，伸手接过庙门钥匙。桌角一本旧册被风翻开，写着你名字的那页，竟一片空白。",
+      "text": "你被逗笑，接过庙门钥匙。曹宝把约好的报酬与分工写下来，推到你面前。",
       "g": 0,
       "mood": "平静"
-    },
-    {
-      "who": "你",
-      "text": "这个怎么没写完？",
-      "g": null,
-      "mood": "平静"
-    },
-    {
-      "who": "赵公明",
-      "text": "旧命簿，待本君查过旧档再答你。先合上。漏雨的屋顶、没吃的晚饭，哪一样都比这页纸更急。天塌不下来。",
-      "g": 0,
-      "mood": "稳稳压住惊慌"
     },
     {
       "who": "你",
@@ -744,31 +732,19 @@ const DIALOGUES=[
     },
     {
       "who": "旁白",
-      "text": "他接过茶，杯垫正好压住桌角那本旧命簿。末页被风翻起，边缘露出一道浅浅的银痕。",
+      "text": "他接过茶，将核好的账本合上。杯中热气散开，你终于不用再盯着纸上的数字。",
       "g": 0,
       "mood": "平静"
     },
     {
       "who": "你",
-      "text": "这本还没查清？",
-      "g": null,
-      "mood": "平静"
-    },
-    {
-      "who": "赵公明",
-      "text": "只查到旧档编号。空白因何而来，尚无确证。本君不会拿猜测答你，待核实后再说。",
-      "g": 0,
-      "mood": "谨慎回答"
-    },
-    {
-      "who": "你",
-      "text": "那先收好。今天这七天的账，总算是我自己写明白的。",
+      "text": "这七天的账，总算是我自己写明白的。明天要做什么，也不再只有慌张。",
       "g": null,
       "mood": "平静"
     },
     {
       "who": "旁白",
-      "text": "他把旧册放入匣中，将已经核过的经营账本留在灯下。",
+      "text": "赵公明将账本放在一旁，目光仍停在你身上。",
       "g": 0,
       "mood": "平静"
     },
@@ -1154,7 +1130,14 @@ function paintStoryBackground(v){
  if(img.complete&&img.naturalWidth)img.onload();
 }
 function theatreFrame(){return `<div class="vn-stage" id="vnStage"><img class="vn-background" id="vnBackground" alt="" decoding="async"><div class="vn-backdrop-shade" aria-hidden="true"></div><div class="vn-moon"></div><div class="vn-dust">${Array.from({length:14},(_,i)=>`<i style="--n:${i}"></i>`).join('')}</div><div class="vn-landscape">${sceneSVG()}</div><div class="vn-location" id="vnLocation"></div><div class="vn-cast" id="vnCast"></div><div class="vn-letter" id="vnLetter"></div><div class="vn-toolbar"><button data-a="vnHistory">前文</button><button data-a="vnBack">上一句</button><button id="vnAuto" data-a="vnAuto">自动</button><button data-a="vnSkip">快进至选择</button><button data-a="close">离开 ×</button></div><div class="vn-lower"><div class="vn-choice-list" id="storyChoices"></div><button class="vn-dialogue" data-a="vnNext" aria-label="点击显示完整句子或继续下一句"><span class="vn-name" id="vnName"></span><span class="vn-mood" id="vnMood"></span><span class="vn-text" id="vnText"></span><span class="vn-hint" id="vnHint">点击继续 ▾</span></button><div class="vn-progress" id="vnProgress"></div></div><div class="vn-history hidden" id="vnHistory"></div></div>`}
-showStory=function(day=state.day,review=false){let record=state.story.find(s=>s.day===day),data=presentData(),cursor=data.vn;modal(Game.getStory(state,day).place,theatreFrame(),'vn-shell');$('modal').classList.add('vn-dialog');vn={day,index:!review&&!record&&cursor?.day===day?Math.min(cursor.index,DIALOGUES[day-1].length):0,frames:(Game.getStory(state,day).frames||DIALOGUES[day-1]).map(x=>({...x})),baseLength:(Game.getStory(state,day).frames||DIALOGUES[day-1]).length,chapter:Game.getStory(state,day),record,review,auto:false,complete:false,atChoice:false,actor:null,previous:null};$('vnLocation').textContent=Game.getStory(state,day).place+' · '+Game.getStory(state,day).title;paintVN()};
+const NARRATIVE_REVISION=2;
+function storyCursorIndex(cursor,day,g,total){
+ if(!cursor||cursor.day!==day||!Number.isInteger(cursor.index)||cursor.index<0)return 0;
+ let index=cursor.index;
+ if(!Number.isInteger(cursor.revision)||cursor.revision<NARRATIVE_REVISION){const removed=day===1?[28,29]:day===7?(g===0?[5,6]:[0,1]):[];index-=removed.filter(i=>i<cursor.index).length}
+ return Math.max(0,Math.min(index,total));
+}
+showStory=function(day=state.day,review=false){let record=state.story.find(s=>s.day===day),data=presentData(),chapter=Game.getStory(state,day),frames=chapter.frames||DIALOGUES[day-1];modal(chapter.place,theatreFrame(),'vn-shell');$('modal').classList.add('vn-dialog');vn={day,index:!review&&!record?storyCursorIndex(data.vn,day,Game.routeOf(state),frames.length):0,frames:frames.map(x=>({...x})),baseLength:frames.length,chapter,record,review,auto:false,complete:false,atChoice:false,actor:null,previous:null};$('vnLocation').textContent=chapter.place+' · '+chapter.title;paintVN()};
 const HEROINE_IMG=()=>'assets/heroine-modern-web-v1.webp';
 const portraitWarmups=new Map();
 function warmNextPortrait(v,current){
@@ -1203,7 +1186,7 @@ let chars=[...frame.text],n=0;v.fullText=frame.text;v.complete=false;function do
 if(reduced()){ $('vnText').textContent=frame.text;done();}else vnTypeTimer=setInterval(()=>{if(vn!==v){clearInterval(vnTypeTimer);return}n+=1;$('vnText').textContent=chars.slice(0,n).join('');if(n>=chars.length)done();},26);
 if(!v.record&&!v.review){dataCursor(v.day,v.index)}
 }
-function dataCursor(day,index){presentData().vn={day,index};persist()}
+function dataCursor(day,index){presentData().vn={day,index,revision:NARRATIVE_REVISION};persist()}
 function vnAdvance(){if(!vn||vn.atChoice)return;if(!vn.complete){clearInterval(vnTypeTimer);$('vnText').textContent=vn.fullText;vn.complete=true;$('vnHint').textContent='点击继续 ▾';return}vn.index++;paintVN()}
 chooseStory=function(i){if(!vn||!vn.atChoice||vn.record||vn.day!==state.day)return;let r=perform('story',{choice:i});if(!r.ok)return;let rec=state.story.find(x=>x.day===vn.day);vn.record=rec;vn.responded=true;vn.auto=false;$('vnAuto').textContent='自动';vn.frames.push(line('你的决定',vn.chapter.choices[i].label),...replyFrames(vn,i));presentData().vn=null;persist();paintVN();scenePulse('heart');};
 function vnHistory(){if(!vn)return;let box=$('vnHistory');box.classList.toggle('hidden');if(!box.classList.contains('hidden'))box.innerHTML=`<div class="row between"><h3>前尘回声</h3><button class="plain" data-a="vnHistory">关闭 ×</button></div>`+vn.frames.slice(0,Math.min(vn.index+1,vn.frames.length)).map(f=>`<p><b>${f.who}</b><span>${escapeHTML(f.text)}</span></p>`).join('');}
@@ -1237,14 +1220,14 @@ function voiceReaction(g,kind,item=''){
 }
 const basicPerform=perform;perform=function(a,p={},refresh=true){let prior=state?JSON.parse(JSON.stringify({cash:state.cash,incense:state.incense,love:state.love})):null;let r=basicPerform(a,p,refresh);if(r.ok){if(a==='collect'){emitParticles(document.querySelector('.resources'),'🪙',18);reaction(state.daily.collab>=0?state.daily.collab:2,'今日账已收好',voiceReaction(state.daily.collab>=0?state.daily.collab:2,'collect'));document.querySelector('.business-scene')?.classList.add('business-boom')}if(a==='upgrade'){scenePulse('gold');reaction(state.daily.collab>=0?state.daily.collab:3,'修缮完成',voiceReaction(state.daily.collab>=0?state.daily.collab:3,'upgrade'));document.querySelector('.business-scene')?.classList.add('building-rise')}if(a==='order'){emitParticles(document.querySelector('.resources'),'✦',12);reaction(Game.orderGod(state)??2,'委托有回音',voiceReaction(Game.orderGod(state)??2,'order'))}if(a==='collab')reaction(p.g,'今日的合伙人',memoryLine(p.g));if(a==='pray'){emitParticles($('incenseArea'),'🧧',16);$('shrinePortrait')?.classList.add('prayer-appear');reaction(p.g,'心愿已送达，财神接单！',prayerReply(p.g,p.wish),'prayer')}if(a==='offer'){emitParticles($('offeringDrop'),'♥',12);reaction(p.g,'心意已收到',voiceReaction(p.g,'offer',p.item))}if(a==='game'){actorSay(r.text);emitParticles($('miniBoard'),p.win?'♥':'✦',12)}if(prior&&state.cash!==prior.cash)document.querySelector('.resource b')?.classList.add('counter-pop');tutorialEvent(a,p)}return r;};
 const OPENING=[
-{title:'有些命运，早被写好。',text:'而你的那一页，被人悄悄抹去了。',kind:'rain',g:null},
+{title:'你只是进庙躲一场雨。',text:'结果，接下了五位财神的开店邀请。',kind:'rain',g:null},
 {title:'一座快要倒闭的财神庙。',text:'三百元宝的旧债，七日为期。',kind:'temple',g:0},
 {title:'五路财神，与你同局。',text:'有人守护秩序，有人试探真心。',kind:'cast',g:null},
 {title:'白天，把自己的生意做大。',text:'夜晚，听清那些没有写在账上的心意。',kind:'night',g:0},
 {title:'财神偏爱我',text:'这一次，你的人生，由你自己定价。',kind:'title',g:null}
 ];
 function opening(onDone){clearTimeout(openingTimer);openingDone=onDone;openingFrame=0;let d=$('introDialog');if(!d){d=document.createElement('dialog');d.id='introDialog';d.className='intro-dialog';d.setAttribute('aria-label','游戏开场动画');document.body.append(d);d.addEventListener('cancel',e=>{e.preventDefault();finishOpening()})}if(!d.open)d.showModal();paintOpening()}
-function paintOpening(){let d=$('introDialog'),f=OPENING[openingFrame];if(!f){finishOpening();return}d.innerHTML=`<div class="opening-shot ${f.kind} ${reduced()?'still':''}" data-frame="${openingFrame}"><div class="opening-rain">${Array.from({length:28},(_,i)=>`<i style="--n:${i}"></i>`).join('')}</div><div class="opening-moon"></div>${f.kind==='temple'?'<div class="opening-temple">'+sceneSVG()+'</div>':''}${f.kind==='cast'?'<div class="opening-cast">'+[1,2,0,3,4].map((g,i)=>`<img src="${IMG(g)}" alt="${GODS[g].name}" style="--i:${i}">`).join('')+'</div>':f.g!==null?`<img class="opening-person" src="${IMG(f.g)}" alt="${GODS[f.g].name}">`:''}${f.kind==='rain'?'<div class="empty-book"><span>命簿</span><i>你的名字，<br>还没有结局。</i></div>':''}<div class="opening-copy"><span class="eyebrow">序幕 · ${String(openingFrame+1).padStart(2,'0')} / 05</span><h1>${f.title}</h1><p>${f.text}</p></div><div class="opening-controls"><button data-a="skipOpening" class="plain">跳过开场 →</button><div>${OPENING.map((_,i)=>`<i class="${i===openingFrame?'on':''}"></i>`).join('')}</div><button data-a="nextOpening" class="btn outline">${openingFrame===4?'开启七日之约 →':'下一幕 →'}</button></div></div>`;d.querySelector('[data-a="nextOpening"]').focus({preventScroll:true});if(!reduced())openingTimer=setTimeout(()=>{openingFrame++;paintOpening()},4500)}
+function paintOpening(){let d=$('introDialog'),f=OPENING[openingFrame];if(!f){finishOpening();return}d.innerHTML=`<div class="opening-shot ${f.kind} ${reduced()?'still':''}" data-frame="${openingFrame}"><div class="opening-rain">${Array.from({length:28},(_,i)=>`<i style="--n:${i}"></i>`).join('')}</div><div class="opening-moon"></div>${f.kind==='temple'?'<div class="opening-temple">'+sceneSVG()+'</div>':''}${f.kind==='cast'?'<div class="opening-cast">'+[1,2,0,3,4].map((g,i)=>`<img src="${IMG(g)}" alt="${GODS[g].name}" style="--i:${i}">`).join('')+'</div>':f.g!==null?`<img class="opening-person" src="${IMG(f.g)}" alt="${GODS[f.g].name}">`:''}${f.kind==='rain'?'<div class="empty-book"><span>茶铺计划</span><i>一间小铺，<br>从今天开始。</i></div>':''}<div class="opening-copy"><span class="eyebrow">序幕 · ${String(openingFrame+1).padStart(2,'0')} / 05</span><h1>${f.title}</h1><p>${f.text}</p></div><div class="opening-controls"><button data-a="skipOpening" class="plain">跳过开场 →</button><div>${OPENING.map((_,i)=>`<i class="${i===openingFrame?'on':''}"></i>`).join('')}</div><button data-a="nextOpening" class="btn outline">${openingFrame===4?'开启七日之约 →':'下一幕 →'}</button></div></div>`;d.querySelector('[data-a="nextOpening"]').focus({preventScroll:true});if(!reduced())openingTimer=setTimeout(()=>{openingFrame++;paintOpening()},4500)}
 function finishOpening(){clearTimeout(openingTimer);$('introDialog')?.close();let cb=openingDone;openingDone=null;cb?.()}
 const oldBegin=begin;begin=function(){close();state=Game.fresh();state.presentation={introDone:false,tutorial:{status:'pending',step:0}};tab='temple';selectedGod=0;persist();render();window.scrollTo(0,0);opening(()=>{presentData().introDone=true;persist();startTutorial(false)})};
 function startTutorial(force=true){if(!state||state.ending){toast('请先开启一局七日之约，再体验新手教学。');return}close();let p=presentData();if(force||!p.tutorial||p.tutorial.status!=='active')p.tutorial={status:'active',step:0,version:2};else p.tutorial.status='active';persist();drawGuide()}
