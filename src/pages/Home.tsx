@@ -75,8 +75,8 @@ const productSlots: ProductSlot[] = [
   {
     title: "测试实验室",
     image: "/assets/tests-cover-v1.jpg",
-    eyebrow: "从动力，到关系",
-    description: "进入统一测试入口：用 10 道题找出当前生活源动力，或用情境题整理亲密关系中的需求、边界和可协商条件。",
+    eyebrow: "从动力、关系，到职场",
+    description: "进入统一测试入口：探索生活源动力、整理亲密关系，或用 20 道题复盘职场中的付出与回报。",
     icon: "chart",
     accent: "product-card--paper",
     url: "/tests/",

@@ -65,3 +65,5 @@
   .th-privacy { padding: 26px 22px; grid-template-columns: 1fr; gap: 12px; }
   .th-footer { align-items: flex-start; justify-content: center; flex-direction: column; gap: 16px; }
 }
+
+.th-card--work { background: #ffeadb; }
