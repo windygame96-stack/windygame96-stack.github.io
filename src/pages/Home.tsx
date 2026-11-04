@@ -1,7 +1,8 @@
 import { useState, type ReactNode } from "react";
+import { useLanguage, translate, type Language } from "@/lib/language";
 import { motion } from "framer-motion";
 import { useTheme } from "@/hooks/useTheme";
-import caishenCover from "../../caishen/assets/home-cover-v1.webp";
+const caishenCover = "/caishen/assets/home-cover-v1.webp";
 
 type IconName = "spark" | "book" | "wave" | "chart" | "game" | "arrow" | "sun" | "moon";
 
@@ -127,7 +128,8 @@ function Icon({ name, size = 22 }: { name: IconName; size?: number }) {
 
 const fadeUp = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } };
 
-function ProductCard({ product, index }: { product: ProductSlot; index: number }) {
+function ProductCard({ product, index, language }: { product: ProductSlot; index: number; language: Language }) {
+  const t = (text: string) => translate(text, language);
   const content = (
     <>
       <div className="product-card__top">
@@ -135,14 +137,14 @@ function ProductCard({ product, index }: { product: ProductSlot; index: number }
         <span className="product-card__icon"><Icon name={product.icon} size={28} /></span>
       </div>
       <div>
-        <p className="eyebrow">{product.eyebrow}</p>
-        <h3>{product.title}</h3>
-        <p className="product-card__description">{product.description}</p>
+        <p className="eyebrow">{t(product.eyebrow)}</p>
+        <h3>{t(product.title)}</h3>
+        <p className="product-card__description">{t(product.description)}</p>
       </div>
       {product.url ? (
-        <div className="product-card__status product-card__status--live">立即体验 <Icon name="arrow" size={16} /></div>
+        <div className="product-card__status product-card__status--live">{t("立即体验")} <Icon name="arrow" size={16} /></div>
       ) : (
-        <div className="product-card__status"><span /> 等待首个项目</div>
+        <div className="product-card__status"><span /> {t("等待首个项目")}</div>
       )}
     </>
   );
@@ -158,17 +160,18 @@ function ProductCard({ product, index }: { product: ProductSlot; index: number }
   );
 }
 
-function GameCard({ game, index }: { game: Game; index: number }) {
+function GameCard({ game, index, language }: { game: Game; index: number; language: Language }) {
+  const t = (text: string) => translate(text, language);
   return (
     <motion.a href={game.url} target="_blank" rel="noopener noreferrer" className={`game-card${game.ensemble ? " game-card--ensemble" : ""}`} variants={fadeUp} transition={{ duration: 0.45, delay: Math.min(index * 0.06, 0.24) }}>
       <div className="game-card__visual">
         <img src={game.image} alt="" loading="lazy" />
-        <span className="game-card__tag">{game.tag}</span>
+        <span className="game-card__tag">{t(game.tag)}</span>
       </div>
       <div className="game-card__body">
-        <h3>{game.title}</h3>
-        <p>{game.description}</p>
-        <span className="text-link">开始体验 <Icon name="arrow" size={18} /></span>
+        <h3>{t(game.title)}</h3>
+        <p>{t(game.description)}</p>
+        <span className="text-link">{t("开始体验")} <Icon name="arrow" size={18} /></span>
       </div>
     </motion.a>
   );
@@ -176,22 +179,24 @@ function GameCard({ game, index }: { game: Game; index: number }) {
 
 export default function Home() {
   const { toggleTheme, isDark } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
 
   return (
     <div className="site-shell">
       <header className="site-header">
-        <a href="#top" className="brand" onClick={closeMenu} aria-label="摸鱼之神温迪的 LAB 首页">
-          <span className="brand__mark">W</span><span>摸鱼之神温迪的 LAB</span>
+        <a href="#top" className="brand" onClick={closeMenu} aria-label={language === "en" ? "wendi’s Lab home" : "摸鱼之神温迪的 LAB 首页"}>
+          <span className="brand__mark">W</span><span>{t("摸鱼之神温迪的 LAB")}</span>
         </a>
-        <button className="menu-toggle" type="button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-label="打开导航"><span /><span /></button>
-        <nav className={menuOpen ? "site-nav site-nav--open" : "site-nav"} aria-label="主导航">
-          <a href="#games" onClick={closeMenu}>独立游戏</a>
-          <a href="#products" onClick={closeMenu}>产品实验</a>
-          <a href={xiaohongshuUrl} target="_blank" rel="noopener noreferrer">小红书 ↗</a>
+        <button className="menu-toggle" type="button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-label={t("打开导航")}><span /><span /></button>
+        <nav className={menuOpen ? "site-nav site-nav--open" : "site-nav"} aria-label={t("主导航")}>
+          <a href="#games" onClick={closeMenu}>{t("独立游戏")}</a>
+          <a href="#products" onClick={closeMenu}>{t("产品实验")}</a>
+          <a href={xiaohongshuUrl} target="_blank" rel="noopener noreferrer">{t("小红书 ↗")}</a>
           <a href="https://github.com/windygame96-stack" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-          <button className="theme-button" type="button" onClick={toggleTheme} aria-label={isDark ? "切换到浅色模式" : "切换到深色模式"}><Icon name={isDark ? "sun" : "moon"} size={19} /></button>
+          <button className="language-button" type="button" onClick={() => setLanguage(language === "zh" ? "en" : "zh")} aria-label={language === "zh" ? "Switch to English" : "切换到中文"}>{language === "zh" ? "EN" : "中文"}</button>
+          <button className="theme-button" type="button" onClick={toggleTheme} aria-label={t(isDark ? "切换到浅色模式" : "切换到深色模式")}><Icon name={isDark ? "sun" : "moon"} size={19} /></button>
         </nav>
       </header>
 
@@ -200,47 +205,48 @@ export default function Home() {
           <div className="hero__glow hero__glow--one" /><div className="hero__glow hero__glow--two" />
           <motion.div className="hero__content" initial="hidden" animate="visible" variants={fadeUp} transition={{ duration: 0.65 }}>
             <p className="hero__kicker"><Icon name="spark" size={17} /> SMALL IDEAS, REAL EXPERIENCES</p>
-            <h1>把脑洞，做成<br /><span>可以点开的东西。</span></h1>
-            <p className="hero__lead">这里是 wendi 的数字实验场。游戏只是第一章，接下来还有学习工具、音乐产品和智能 Agent。</p>
+            <h1>{t("把脑洞，做成")}<br /><span>{t("可以点开的东西。")}</span></h1>
+            <p className="hero__lead">{t("这里是 wendi 的数字实验场。游戏只是第一章，接下来还有学习工具、音乐产品和智能 Agent。")}</p>
             <div className="hero__actions">
-              <a className="button button--primary" href="#games"><Icon name="game" size={19} /> 开始玩游戏</a>
-              <a className="button button--ghost" href="#products">看看产品实验 <Icon name="arrow" size={19} /></a>
+              <a className="button button--primary" href="#games"><Icon name="game" size={19} /> {t("开始玩游戏")}</a>
+              <a className="button button--ghost" href="#products">{t("看看产品实验")} <Icon name="arrow" size={19} /></a>
             </div>
           </motion.div>
           <motion.div className="hero__note" initial={{ opacity: 0, rotate: 2, y: 18 }} animate={{ opacity: 1, rotate: -2, y: 0 }} transition={{ duration: 0.55, delay: 0.35 }}>
-            <span>NOW EXPANDING</span><strong>PLAY<br />LEARN<br />BUILD</strong><small>持续增加中 ↗</small>
+            <span>NOW EXPANDING</span><strong>PLAY<br />LEARN<br />BUILD</strong><small>{t("持续增加中 ↗")}</small>
           </motion.div>
         </section>
 
         <section className="section" id="games">
           <div className="section-heading">
-            <div><p className="eyebrow">THE GAME SHELF</p><h2>熟悉的游戏，原样保留。</h2></div>
-            <p><strong>{games.length}</strong> 个可玩作品，从文字麻将到叙事解谜。每一个都会在新主页里继续被看见。</p>
+            <div><p className="eyebrow">THE GAME SHELF</p><h2>{t("熟悉的游戏，原样保留。")}</h2></div>
+            <p><strong>{games.length}</strong> {t("个可玩作品，从文字麻将到叙事解谜。每一个都会在新主页里继续被看见。")}</p>
           </div>
+          {language === "en" && <p className="language-note">Game and tool interfaces may currently be available in Chinese only.</p>}
           <motion.div className="game-grid" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
-            {games.map((game, index) => <GameCard key={game.title} game={game} index={index} />)}
+            {games.map((game, index) => <GameCard key={game.url} game={game} index={index} language={language} />)}
           </motion.div>
         </section>
 
         <section className="section section--products" id="products">
           <div className="section-heading section-heading--divided">
-            <div><p className="eyebrow">BEYOND GAMES</p><h2>产品实验，新区域。</h2></div>
-            <p>为游戏之外的网页留出一块正式空间。以后只需新增一条项目配置，就能把公开作品接进来。</p>
+            <div><p className="eyebrow">BEYOND GAMES</p><h2>{t("产品实验，新区域。")}</h2></div>
+            <p>{t("为游戏之外的网页留出一块正式空间。以后只需新增一条项目配置，就能把公开作品接进来。")}</p>
           </div>
           <motion.div className="product-grid" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.18 }}>
-            {productSlots.map((product, index) => <ProductCard key={product.title} product={product} index={index} />)}
+            {productSlots.map((product, index) => <ProductCard key={product.url} product={product} index={index} language={language} />)}
           </motion.div>
         </section>
 
         <section className="manifesto">
-          <Icon name="spark" size={28} /><p>作品不必属于同一个分类，<br />只要它值得被打开一次。</p>
-          <a href="https://github.com/windygame96-stack" target="_blank" rel="noopener noreferrer">在 GitHub 看制作现场 <Icon name="arrow" size={18} /></a>
+          <Icon name="spark" size={28} /><p>{t("作品不必属于同一个分类，")}<br />{t("只要它值得被打开一次。")}</p>
+          <a href="https://github.com/windygame96-stack" target="_blank" rel="noopener noreferrer">{t("在 GitHub 看制作现场")} <Icon name="arrow" size={18} /></a>
         </section>
       </main>
 
       <footer className="site-footer">
-        <a href="#top" className="brand"><span className="brand__mark">W</span><span>摸鱼之神温迪的 LAB</span></a>
-        <a className="footer-social" href={xiaohongshuUrl} target="_blank" rel="noopener noreferrer">小红书 @摸鱼之神温迪 ↗</a>
+        <a href="#top" className="brand"><span className="brand__mark">W</span><span>{t("摸鱼之神温迪的 LAB")}</span></a>
+        <a className="footer-social" href={xiaohongshuUrl} target="_blank" rel="noopener noreferrer">{t("小红书 @摸鱼之神温迪 ↗")}</a>
         <span>© {new Date().getFullYear()} wendi</span>
       </footer>
     </div>

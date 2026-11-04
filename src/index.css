@@ -52,6 +52,15 @@ button { color: inherit; }
 .theme-button { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); cursor: pointer; transition: transform .2s ease, background .2s ease; }
 .theme-button:hover { transform: rotate(10deg); background: var(--lime); color: #171713; }
 .menu-toggle { display: none; }
+.language-button { min-width: 44px; min-height: 38px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 99px; background: var(--surface); cursor: pointer; white-space: nowrap; }
+.language-button:hover { border-color: var(--text); }
+.language-button:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+.language-note { margin: -18px 0 28px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+html:lang(en) .site-nav { gap: 20px; }
+html:lang(en) .hero h1 { font-size: clamp(44px, 6vw, 76px); }
+html:lang(en) .game-card__body h3 { overflow-wrap: anywhere; }
+html:lang(en) .product-card h3 { font-size: clamp(26px, 3vw, 34px); }
+@media (max-width: 680px) { .site-nav .language-button { align-self: flex-start; } }
 
 .hero { max-width: 1180px; min-height: 680px; margin: 0 auto; padding: 92px 24px 76px; position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 270px; align-items: center; gap: 64px; }
 .hero::after { content: ""; position: absolute; left: 24px; right: 24px; bottom: 0; border-bottom: 1px solid var(--line); }
