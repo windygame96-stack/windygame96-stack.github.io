@@ -44,7 +44,7 @@ export function translate(text: string, language: Language): string {
   return language === 'en' ? english[text] ?? text : text;
 }
 
-export function useLanguage() {
+export function useLanguage(updateMetadata = true) {
   const [language, setLanguage] = useState<Language>(() => {
     const query = new URLSearchParams(window.location.search).get('lang');
     if (query === 'en' || query === 'zh') return query;
@@ -54,14 +54,27 @@ export function useLanguage() {
   useEffect(() => {
     try { localStorage.setItem('wendi-language', language); } catch {}
     document.documentElement.lang = language === 'en' ? 'en' : 'zh-CN';
-    document.title = language === 'en' ? 'wendi’s Lab · Games & Experiments' : '摸鱼之神温迪的 LAB · 游戏与产品实验';
+    if (updateMetadata) document.title = language === 'en' ? 'wendi’s Lab · Games & Experiments' : '摸鱼之神温迪的 LAB · 游戏与产品实验';
     const description = language === 'en' ? 'Explore wendi’s indie games, learning tools and digital experiments.' : 'wendi 的数字实验场：独立游戏、教育产品、音乐工具与智能 Agent。';
-    document.querySelector('meta[name="description"]')?.setAttribute('content', description);
-    document.querySelector('meta[property="og:title"]')?.setAttribute('content', document.title);
-    document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
+    if (updateMetadata) {
+      document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+      document.querySelector('meta[property="og:title"]')?.setAttribute('content', document.title);
+      document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
+    }
     const url = new URL(window.location.href);
     url.searchParams.set('lang', language);
     window.history.replaceState(null, '', url);
-  }, [language]);
-  return { language, setLanguage, t: (text: string) => translate(text, language) };
+  }, [language, updateMetadata]);
+  const chooseLanguage = (next: Language) => {
+    const url = new URL(window.location.href); url.searchParams.set('lang', next);
+    window.history.replaceState(null, '', url);
+    try { localStorage.setItem('wendi-language', next); } catch {}
+    setLanguage(next);
+  };
+  useEffect(() => {
+    const change = (event: Event) => { const next = (event as CustomEvent).detail; if (next === 'en' || next === 'zh') setLanguage(next); };
+    window.addEventListener('wendi-language-change', change);
+    return () => window.removeEventListener('wendi-language-change', change);
+  }, []);
+  return { language, setLanguage: chooseLanguage, t: (text: string) => translate(text, language) };
 }

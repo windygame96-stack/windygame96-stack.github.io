@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import { Generator } from '../../projects/learning-workshop/js/generator.js';
+const english = 'Gravity is the force that attracts objects toward each other. Mass is the amount of matter in an object. Energy is the ability to do work. Kinetic energy is the energy of motion. Potential energy is stored energy due to position. Friction is a force that opposes motion between surfaces.';
+const result = Generator.generateCourse({ text: english, title: 'Physics', ownerUsername: 'local-test' });
+assert.equal(result.ok, true);
+const questions = Object.values(result.course.levels).flat();
+assert.ok(questions.some((q) => q.answer === 'Kinetic energy' || q.options?.includes('Kinetic energy')));
+assert.ok(questions.some((q) => q.type === 'choice' && q.stem.startsWith('Which term')));
+assert.ok(questions.some((q) => q.type === 'match' && q.stem === 'Match each term with its definition.'));
+assert.equal(Generator.generateCourse({ text: '酸度是葡萄酒中酸性物质带来的清新口感。单宁是葡萄酒中带来涩感的酚类物质。酒体是酒液在口中的重量感。', title: 'Test', ownerUsername: 'local-test' }).ok, true);
+assert.equal(Generator.generateCourse({ text: '', title: 'Empty', ownerUsername: 'local-test' }).ok, false);
+console.log('English terms, complete multi-word answers, English question prompts, Chinese compatibility and empty-input validation passed');

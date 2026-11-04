@@ -16,6 +16,7 @@ interface Game {
 }
 
 interface ProductSlot {
+  image: string;
   title: string;
   eyebrow: string;
   description: string;
@@ -29,7 +30,7 @@ const games: Game[] = [
     title: "逃离宏业电子厂",
     description: "在空无一人的工厂里探索线索、破解密码，想办法赶在一切失控前逃出去。",
     url: "https://www.escapefromhongye.xyz/super-broccoli",
-    image: "https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=escape+game+factory+setting+pixel+art+style&sign=045d48518ed6589b3a4bbb74d800b983",
+    image: "/assets/factory-cover-v1.jpg",
     tag: "叙事解谜",
   },
   {
@@ -73,6 +74,7 @@ const games: Game[] = [
 const productSlots: ProductSlot[] = [
   {
     title: "测试实验室",
+    image: "/assets/tests-cover-v1.jpg",
     eyebrow: "从动力，到关系",
     description: "进入统一测试入口：用 10 道题找出当前生活源动力，或用情境题整理亲密关系中的需求、边界和可协商条件。",
     icon: "chart",
@@ -81,6 +83,7 @@ const productSlots: ProductSlot[] = [
   },
   {
     title: "老板翻译机",
+    image: "/assets/boss-cover-v1.jpg",
     eyebrow: "把模糊指令变成行动",
     description: "粘贴老板聊天记录和最新一句话，结合业务背景拆成具体任务、交付物、优先级和确认回复；支持智谱 GLM、DeepSeek 和截图识别。",
     icon: "wave",
@@ -89,6 +92,7 @@ const productSlots: ProductSlot[] = [
   },
   {
     title: "学习工坊",
+    image: "/assets/learning-cover-v1.jpg",
     eyebrow: "把资料变成练习",
     description: "把教材、文章或笔记粘贴进来，自动变成由浅入深的练习题；边学边答，进度和错题都会帮你记住。",
     icon: "book",
@@ -97,6 +101,7 @@ const productSlots: ProductSlot[] = [
   },
   {
     title: "有只黑猫",
+    image: "/assets/cat-cover-v1.jpg",
     eyebrow: "两个人的异步陪伴",
     description: "输入同一个房间号，共同照顾一只会回应互动的黑猫。每间房只留两张位置，十几秒也能留下‘我来过’。",
     icon: "spark",
@@ -132,6 +137,8 @@ function ProductCard({ product, index, language }: { product: ProductSlot; index
   const t = (text: string) => translate(text, language);
   const content = (
     <>
+      <div className="product-card__visual"><img src={product.image} alt="" loading="lazy" /></div>
+      <div className="product-card__body">
       <div className="product-card__top">
         <span className="product-card__index">{String(index + 1).padStart(2, "0")}</span>
         <span className="product-card__icon"><Icon name={product.icon} size={28} /></span>
@@ -146,11 +153,12 @@ function ProductCard({ product, index, language }: { product: ProductSlot; index
       ) : (
         <div className="product-card__status"><span /> {t("等待首个项目")}</div>
       )}
+      </div>
     </>
   );
 
   return product.url ? (
-    <motion.a href={product.url} target="_blank" rel="noopener noreferrer" className={`product-card product-card--live ${product.accent}`} variants={fadeUp} transition={{ duration: 0.45, delay: index * 0.08 }}>
+    <motion.a href={`${product.url}${product.url.includes('?') ? '&' : '?'}lang=${language}`} target="_blank" rel="noopener noreferrer" className={`product-card product-card--live ${product.accent}`} variants={fadeUp} transition={{ duration: 0.45, delay: index * 0.08 }}>
       {content}
     </motion.a>
   ) : (
@@ -222,7 +230,7 @@ export default function Home() {
             <div><p className="eyebrow">THE GAME SHELF</p><h2>{t("熟悉的游戏，原样保留。")}</h2></div>
             <p><strong>{games.length}</strong> {t("个可玩作品，从文字麻将到叙事解谜。每一个都会在新主页里继续被看见。")}</p>
           </div>
-          {language === "en" && <p className="language-note">Game and tool interfaces may currently be available in Chinese only.</p>}
+          {language === "en" && <p className="language-note">Some game interfaces and stories are currently available in Chinese only.</p>}
           <motion.div className="game-grid" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
             {games.map((game, index) => <GameCard key={game.url} game={game} index={index} language={language} />)}
           </motion.div>

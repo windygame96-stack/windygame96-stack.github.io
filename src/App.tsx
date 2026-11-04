@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useLanguage } from "@/lib/language";
 import Home from "@/pages/Home";
 import SharedBlackCat from "@/pages/SharedBlackCat";
 import RelationshipFit from "@/pages/RelationshipFit";
@@ -8,6 +9,8 @@ import TestsHub from "@/pages/TestsHub";
 const PROJECT_PATHS = ["super-broccoli", "lure_for_fitness", "hub111", "ELEV-9", "zique-word-mahjong"];
 
 export default function App() {
+  const { language, setLanguage } = useLanguage(false);
+  const languageControl = <button className="subpage-language" type="button" onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')} aria-label={language === 'zh' ? 'Switch to English' : '切换到中文'}>{language === 'zh' ? 'EN' : '中文'}</button>;
   const isBlackCat = window.location.pathname.startsWith("/shared-black-cat");
   const isRelationshipFit = window.location.pathname.startsWith("/relationship-fit");
   const isLifeDrive = window.location.pathname.startsWith("/life-drive");
@@ -20,8 +23,8 @@ export default function App() {
     }
   }, []);
 
-  if (isBlackCat) return <SharedBlackCat />;
-  if (isTestsHub) return <TestsHub />;
+  if (isBlackCat) return <>{languageControl}<SharedBlackCat /></>;
+  if (isTestsHub) return <>{languageControl}<TestsHub /></>;
   if (isRelationshipFit) return <RelationshipFit />;
   if (isLifeDrive) return <LifeDrive />;
   return <Home />;

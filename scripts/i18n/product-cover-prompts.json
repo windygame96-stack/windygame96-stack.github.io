@@ -1,0 +1,11 @@
+{
+  "tool": "Built-in imagegen",
+  "sharedPrompt": "Landscape website card cover, 3:2 aspect ratio. Clean bold composition, no text, logos or watermarks.",
+  "assets": [
+    { "path": "assets/factory-cover-v1.jpg", "prompt": "An abandoned Chinese electronics factory at dusk, a locked exit and scattered cryptic notes. Atmospheric pixel art, teal shadows and amber light." },
+    { "path": "assets/tests-cover-v1.jpg", "prompt": "Colorful question cards, branching paths and small mirrors symbolizing self-discovery. Playful editorial illustration in lilac, coral and cream." },
+    { "path": "assets/boss-cover-v1.jpg", "prompt": "Tangled chat bubbles becoming a neat checklist. Playful editorial illustration in lavender, black and lime." },
+    { "path": "assets/learning-cover-v1.jpg", "prompt": "An open textbook transforming into quiz cards and steps of learning. Playful editorial illustration in lime green, cream and charcoal." },
+    { "path": "assets/cat-cover-v1.jpg", "prompt": "A little black cat by a moonlit window with two cups nearby. Cozy illustration in burnt orange, midnight blue and cream." }
+  ]
+}

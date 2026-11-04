@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import "./LifeDrive.css";
 import LifeActionGuide from "./LifeActionGuide";
+import { currentLanguage, tr } from "@/lib/subpage-language";
 
 type DriveKey = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H";
 type Screen = "intro" | "quiz" | "result";
@@ -64,7 +65,10 @@ function Result({ answers, restart }: { answers: DriveKey[]; restart: () => void
 
   const copyResult = async () => {
     const text = `我的生活源动力：${summary}\n${main.map((item) => `${item.key} ${item.name}：${item.line}`).join("\n")}\nhttps://www.escapefromhongye.xyz/life-drive/`;
-    await navigator.clipboard?.writeText(text);
+    const localized = currentLanguage() === 'en'
+      ? `My life motivations: ${main.map((item) => tr(item.name)).join(' + ')}${support.length ? `; followed by ${support.map((item) => tr(item.name)).join(' + ')}` : ''}.\n${main.map((item) => `${item.key} ${tr(item.name)}: ${tr(item.line)}`).join('\n')}\nhttps://www.escapefromhongye.xyz/life-drive/?lang=en`
+      : text;
+    await navigator.clipboard?.writeText(localized);
   };
 
   return <main className="ld-result">

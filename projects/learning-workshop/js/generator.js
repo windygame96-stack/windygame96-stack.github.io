@@ -62,6 +62,9 @@ export const Generator = (() => {
   // 尝试从句子中抽取 term/definition 结构化模式
   function extractPair(sentence) {
     let m;
+    // Keep English terms whole instead of applying Chinese character slicing.
+    m = sentence.match(/^([A-Za-z][A-Za-z0-9'’() \-]{1,70}?)(?:\s*:\s*|\s+(?:is defined as|refers to|means|is|are)\s+)(.{3,})$/i);
+    if (m) return { term: m[1].trim(), definition: m[2].trim() };
     // 术语：解释 / 术语:解释
     m = sentence.match(/^([^：:，,。]{1,12})[：:]\s*(.{2,})$/);
     if (m) return { term: m[1].trim(), definition: m[2].trim() };
@@ -159,7 +162,9 @@ export const Generator = (() => {
     const distractors = shuffle(pool).slice(0, 3);
     while (distractors.length < 3) distractors.push("（无）");
     const options = shuffle([item.term, ...distractors]);
-    const stem = item.hasPair
+    const stem = item.hasPair && !/[\u3400-\u9fff]/.test(item.term)
+      ? `Which term best matches "${item.definition}"?`
+      : item.hasPair
       ? `以下哪一项与"${item.definition}"最相关？`
       : item.sentence.split(item.term).join("____");
     return {
@@ -180,7 +185,9 @@ export const Generator = (() => {
       questions.push({
         id: uid("q"),
         type: "match",
-        stem: "请将左侧术语与右侧释义正确匹配",
+        stem: group.every((item) => !/[\u3400-\u9fff]/.test(item.term))
+          ? "Match each term with its definition."
+          : "请将左侧术语与右侧释义正确匹配",
         pairs: group.map((g) => ({ term: g.term, definition: g.definition })),
       });
     }
