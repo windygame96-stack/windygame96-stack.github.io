@@ -3,3 +3,7 @@ work/
 **/.env.local
 **/.DS_Store
 projects/learning-workshop/dist/
+
+/dist-life-drive/
+
+/dist/

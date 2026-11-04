@@ -1,4 +1,4 @@
-import { tr } from "@/lib/subpage-language";
+import { tr, currentLanguage } from "@/lib/subpage-language";
 import { useEffect, useState } from "react";
 import "./TestsHub.css";
 type TestStatus = {
@@ -7,24 +7,7 @@ type TestStatus = {
   active: boolean;
 };
 function readLifeDriveStatus(): TestStatus {
-  try {
-    const answers = JSON.parse(localStorage.getItem("life-drive-answers-v1") || "[]") as string[];
-    if (answers.length >= 10) return {
-      label: "查看结果",
-      detail: "已完成 10 / 10",
-      active: true
-    };
-    if (answers.length > 0) return {
-      label: "继续测试",
-      detail: `已完成 ${answers.length} / 10`,
-      active: true
-    };
-  } catch {/* use default */}
-  return {
-    label: "开始测试",
-    detail: "约 3 分钟",
-    active: false
-  };
+ return currentLanguage() === 'en' ? { label:'Enter code', detail:'10 questions · Full report', active:false } : { label:'输入口令开始', detail:'10题 · 完整报告与图片下载', active:false };
 }
 function readRelationshipStatus(): TestStatus {
   try {
@@ -90,7 +73,7 @@ export default function TestsHub() {
       <div><span>{tr("\u60F3\u66F4\u5B8C\u6574\u5730\u8BA4\u8BC6\u5F53\u524D\u7684\u81EA\u5DF1")}</span><strong>{tr("\u4E24\u4E2A\u90FD\u505A\uFF0C\u7ED3\u679C\u5206\u5F00\u7406\u89E3")}</strong></div>
       <div><span>想梳理“工作付出与回报是否跟上”</span><strong>试试中国职场复盘 · 需密码</strong></div>
     </section>
-    <section className="th-privacy"><strong>{tr("答案属于你")}</strong><p>{tr("生活源动力和关系测试把进度保存在当前浏览器；职场复盘只在当前页面内存计算，刷新即清空。测试答案不上传服务器，换设备不会自动同步。")}</p></section>
+    <section className="th-privacy"><strong>{tr("答案属于你")}</strong><p>{tr("生活源动力与职场复盘仅在当前页面内存计算，刷新或退出会清空；关系测试保留原有本地保存方式。测试答案不上传服务器，换设备不会自动同步。")}</p></section>
     <footer className="th-footer"><a href="/">{tr("\u2190 \u8FD4\u56DE\u6478\u9C7C\u4E4B\u795E\u6E29\u8FEA\u7684 LAB")}</a><span>03 TESTS · MORE LATER</span></footer>
   </main>;
 }

@@ -8,7 +8,9 @@
     "dev": "pnpm dev:client",
     "build:client": "vite build && mv dist/app.html dist/index.html",
     "build": "rm -rf dist && pnpm build:client",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:life-drive": "node scripts/build-life-drive.mjs",
+    "test:life-drive": "node --test tests/life-drive-static.test.mjs"
   },
   "vite": {
     "server": {

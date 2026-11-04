@@ -1,0 +1,9 @@
+export const driveKeys = ['A','B','C','D','E','F','G','H'] as const;
+export type DriveKey = typeof driveKeys[number];
+export type Question = { title: string; options: Record<DriveKey,string> };
+export type Drive = { key: DriveKey; name: string; line: string; need: string; charged: string; drained: string; caution: string; actions: string[] };
+export type Scene = { title:string; scene:string; why:string; check:string };
+export type Job = { title:string; task:string; fit:string; trap:string; try:string; requirement:string; source:string };
+export type Dilemma = { title:string; thought:string; move:string; question:string };
+export type DriveReport = { id:string; combination:string; subtitle:string; intro:string; tension:string; charge:Scene[]; drain:Scene[]; jobs:Job[]; dilemmas:Dilemma[]; closing:string };
+export type Content = { assessmentVersion:string; reportVersion:string; questions:Question[]; drives:Record<DriveKey,Drive>; reports:DriveReport[]; singles:Record<DriveKey,DriveReport>; sources:Record<string,[string,string]> };
