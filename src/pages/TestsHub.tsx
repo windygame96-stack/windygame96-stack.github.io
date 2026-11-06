@@ -40,7 +40,7 @@ export default function TestsHub() {
     };
   }, []);
   return <main className="th-shell">
-    <header className="th-nav"><a href="/">WENDI'S LAB</a><span>SELF TESTS · 03</span></header>
+    <header className="th-nav"><a href="/">WENDI'S LAB</a><span>SELF TESTS · 04</span></header>
     <section className="th-hero">
       <p>TESTS · FOR CONVERSATION</p>
       <h1>{tr("\u6709\u4E9B\u95EE\u9898\uFF0C")}<br /><i>{tr("\u503C\u5F97\u8BA4\u771F\u95EE\u81EA\u5DF1\u3002")}</i></h1>
@@ -65,6 +65,12 @@ export default function TestsHub() {
         <div className="th-card__body"><p>从最近半年的真实工作经历出发</p><h2>付出与回报<br />中国职场复盘</h2><span>先选你看重的方面，再答7道体验题和2道评级题，点选自动下一题。</span></div>
         <footer><div><strong>输入密码开始</strong><small>1 页偏好 · 7＋2 题 · 自动翻页</small></div><b>→</b></footer>
       </a>
+      <a className="th-card th-card--ai-career" href="/ai-career/">
+        <header><span>04</span><small>SELF · AI POSSIBILITIES</small></header>
+        <div className="th-card__diagram"><span>方向</span><i /><span>方式</span><i /><span>行动</span></div>
+        <div className="th-card__body"><p>从你在乎、擅长和愿意尝试的事出发</p><h2>AI时代<br />职业可能性测试</h2><span>18题探索6种原型、30个工作方向和4种发展模式，带走一个30分钟体验任务。</span></div>
+        <footer><div><strong>输入口令开始</strong><small>18题 · 点选自动下一题</small></div><b>→</b></footer>
+      </a>
     </section>
     <section className="th-compare">
       <p>{tr("\u600E\u4E48\u9009\u62E9")}</p>
@@ -73,8 +79,9 @@ export default function TestsHub() {
       <div><span>{tr("\u60F3\u66F4\u5B8C\u6574\u5730\u8BA4\u8BC6\u5F53\u524D\u7684\u81EA\u5DF1")}</span><strong>{tr("\u4E24\u4E2A\u90FD\u505A\uFF0C\u7ED3\u679C\u5206\u5F00\u7406\u89E3")}</strong></div>
       <div><span>想梳理“工作付出与回报是否跟上”</span><strong>试试中国职场复盘 · 需密码</strong></div>
     </section>
-    <section className="th-privacy"><strong>{tr("答案属于你")}</strong><p>{tr("生活源动力与职场复盘仅在当前页面内存计算，刷新或退出会清空；关系测试保留原有本地保存方式。测试答案不上传服务器，换设备不会自动同步。")}</p></section>
-    <footer className="th-footer"><a href="/">{tr("\u2190 \u8FD4\u56DE\u6478\u9C7C\u4E4B\u795E\u6E29\u8FEA\u7684 LAB")}</a><span>03 TESTS · MORE LATER</span></footer>
+    <section className="th-compare th-compare--ai"><div><span>想探索“AI时代可以做什么、怎样开始”</span><strong>试试AI职业可能性 · 需口令</strong></div></section>
+    <section className="th-privacy"><strong>{tr("答案属于你")}</strong><p>{tr("生活源动力与职场复盘仅在当前页面内存计算，刷新或退出会清空；AI职业测试默认仅在本页计算，也可自愿保存进度7天；关系测试保留原有本地保存方式。测试答案不上传服务器，换设备不会自动同步。")}</p></section>
+    <footer className="th-footer"><a href="/">{tr("\u2190 \u8FD4\u56DE\u6478\u9C7C\u4E4B\u795E\u6E29\u8FEA\u7684 LAB")}</a><span>04 TESTS · MORE LATER</span></footer>
   </main>;
 }
 

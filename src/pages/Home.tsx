@@ -76,7 +76,7 @@ const productSlots: ProductSlot[] = [
     title: "测试实验室",
     image: "/assets/tests-cover-v1.jpg",
     eyebrow: "从动力、关系，到职场",
-    description: "进入统一测试入口：探索生活源动力、整理亲密关系，或快速测算工作性价比与跳槽探索优先级。",
+    description: "进入统一测试入口：探索生活驱动力、亲密关系、职场回报，以及AI时代的职业可能性。",
     icon: "chart",
     accent: "product-card--paper",
     url: "/tests/",
