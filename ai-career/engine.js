@@ -1,6 +1,6 @@
-import {questions,careers,prototypes,modes} from './data.js';
-export const VERSION='2.0.0';
-export const COVERAGE={drive:3,work:3,ability:4,ai:3};
+import {questions,careers,prototypes,modes} from './data.js?v=2.1.0';
+export const VERSION='2.1.0';
+export const COVERAGE={drive:3,work:3,ability:0,ai:0};
 const clamp=v=>Math.max(0,Math.min(1,v));
 const mean=a=>a.length?a.reduce((s,n)=>s+n,0)/a.length:null;
 export function validAnswers(a,complete=false){return Array.isArray(a)&&a.length<=questions.length&&(!complete||a.length===questions.length)&&Array.from(a).every((v,i)=>v===null||(Number.isInteger(v)&&v>=0&&v<questions[i].options.length));}
@@ -8,24 +8,31 @@ export function restoreAnswers(saved,now=Date.now()){return saved?.version===VER
 export function buildProfile(a){
  if(!validAnswers(a,true))throw Error('请完成或跳过全部18题');
  const traits={},counts=Object.fromEntries('ABCDEFGH'.split('').map(k=>[k,0]));
- questions.forEach((q,i)=>{if(a[i]===null)return;const o=q.options[a[i]];if(q.kind==='drive')counts[o.key]++;else traits[q.key]=o.value;});
- const groups=[['drive',0,4],['work',4,8],['ability',8,13],['ai',13,16]];
- const coverage=Object.fromEntries(groups.map(([k,start,end])=>[k,{answered:a.slice(start,end).filter(v=>v!==null).length,total:end-start,needed:COVERAGE[k]}]));
- const missing=groups.filter(([k])=>coverage[k].answered<coverage[k].needed).map(([k])=>k);
+ questions.forEach((q,i)=>{if(a[i]===null)return;const o=q.options[a[i]];if(q.kind==='drive')counts[o.key]++;else if(o.value!==null)traits[q.key]=o.value;});
+ const indices={drive:[0,1,2,3],work:[4,5,6,7],ability:[8,9,10,11,12,13],ai:[14,15]};
+ const coverage=Object.fromEntries(Object.entries(indices).map(([k,ix])=>[k,{answered:ix.filter(i=>a[i]!==null&&(questions[i].kind==='drive'||questions[i].options[a[i]].value!==null)).length,total:ix.length,needed:COVERAGE[k]}]));
+ const missing=['drive','work'].filter(k=>coverage[k].answered<COVERAGE[k]);
  const max=Math.max(...Object.values(counts));const primary=max?'ABCDEFGH'.split('').filter(k=>counts[k]===max):[];
- return {traits,counts,coverage,missing,primary,answered:a.filter(v=>v!==null).length,total:18};
+ return {traits,counts,coverage,missing,primary,completeEvidence:coverage.ability.answered===6&&coverage.ai.answered===2,answered:a.filter(v=>v!==null).length,total:18};
 }
 function weighted(values,weights){let sum=0,total=0;for(const [k,w]of Object.entries(weights)){if(typeof values[k]==='number'){sum+=values[k]*w;total+=w;}}return total?sum/total:null;}
 function preference(p,c){const t=p.traits;const parts=[];if(t.activity!==undefined)parts.push([(t.activity===c.prototype||t.activity===c.id)?1:(c.also||[]).includes(t.activity)?.75:.2,.45]);for(const [key,w]of [['social',.25],['management',.15],['business',.15]])if(t[key]!==undefined)parts.push([1-Math.abs(t[key]-c[key]),w]);return parts.length?parts.reduce((s,[v,w])=>s+v*w,0)/parts.reduce((s,[,w])=>s+w,0):null;}
 export function components(profile,c){
  const t=profile.traits;const M=profile.coverage.drive.answered?c.drives.reduce((s,k)=>s+profile.counts[k],0)/profile.coverage.drive.answered:null;
- const A=weighted(t,c.skills),W=preference(profile,c);
+ const knownSkills=Object.keys(c.skills).filter(k=>typeof t[k]==='number');
+ const evidenceCoverage=knownSkills.reduce((s,k)=>s+c.skills[k],0)/Object.values(c.skills).reduce((s,w)=>s+w,0);
+ const A=knownSkills.length===Object.keys(c.skills).length?weighted(t,c.skills):null,W=preference(profile,c);
  // AI杠杆仅是编辑假设：意愿、核验投入，以及AI可能补上的技术实现门槛。
- const foundation=weighted(t,Object.fromEntries(Object.entries(c.skills).filter(([k])=>k!=='tech')));
+ const foundationSkills=Object.fromEntries(Object.entries(c.skills).filter(([k])=>k!=='tech'));
+ const foundation=Object.keys(foundationSkills).every(k=>typeof t[k]==='number')?weighted(t,foundationSkills):null;
  const bridge=typeof t.tech==='number'&&foundation!==null?foundation*c.bridge*(1-t.tech):null;
  const L=typeof t.ai==='number'&&typeof t.verify==='number'&&bridge!==null?.4*t.ai+.2*t.verify+.4*t.ai*bridge:null;
- const values=[M,A,W,L];const score=values.every(v=>v!==null)?clamp(.25*M+.4*A+.2*W+.15*L):null;
- return {M,A,W,L,bridge,score};
+ const values=[M,A,W,L];const combined=values.every(v=>v!==null)?clamp(.25*M+.4*A+.2*W+.15*L):null;
+ const interest=M!==null&&W!==null?clamp(.55*M+.45*W):null;
+ // Unknown practice never becomes zero or triggers weight redistribution. All directions
+ // use the same interest-only metric until all six practice areas and AI items are known.
+ const score=profile.completeEvidence?combined:interest;
+ return {M,A,W,L,bridge,score,combined,interest,evidenceCoverage,missingSkills:Object.keys(c.skills).filter(k=>typeof t[k]!=='number')};
 }
 export function recommendModes(profile){
  const t=profile.traits;const missing=['stability','goal','social','management','business'].filter(k=>t[k]===undefined);
@@ -45,14 +52,14 @@ function startup(profile,ranked,modeResult){
 }
 export function score(a){
  const profile=buildProfile(a),modeResult=recommendModes(profile);
- if(profile.missing.length)return {...profile,status:'insufficient',ranked:[],prototypeScores:[],topPrototypes:[],recommendations:[],modeResult,startup:{status:'insufficient',title:'先补充回答，再看创业路径',note:'信息不足时不生成创业判断。',paths:[]}};
+ if(profile.missing.length)return {...profile,status:'insufficient',metric:'interest',ranked:[],prototypeScores:[],topPrototypes:[],recommendations:[],modeResult,startup:{status:'insufficient',title:'先补充回答，再看创业路径',note:'信息不足时不生成创业判断。',paths:[]}};
  const ranked=careers.map(c=>({...c,...components(profile,c)})).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));
  const prototypeScores=prototypes.map(p=>({...p,...components(profile,{...p,prototype:p.id,also:[]})})).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));
  const top=prototypeScores[0].score;const topPrototypes=prototypeScores.filter(p=>top-p.score<=.03);
  const first=ranked[0];const remaining=ranked.filter(c=>c.id!==first.id);
- const potential=[...remaining].sort((a,b)=>((b.M*.25+b.W*.2+b.L*.15+.4*Math.min(1,b.A+.25))-(a.M*.25+a.W*.2+a.L*.15+.4*Math.min(1,a.A+.25)))||a.id.localeCompare(b.id))[0];
+ const potential=remaining.find(c=>c.missingSkills.length>0)||remaining[0];
  const rest=remaining.filter(c=>c.id!==potential.id);const topIds=new Set(topPrototypes.map(p=>p.id));
  const surprise=rest.find(c=>!topIds.has(c.prototype)&&first.score-c.score<=.2)||rest[0];
- const recommendations=[{...first,tier:'优先探索',tierNote:'本次综合线索较突出，先用一件小作品验证。'},{...potential,tier:'潜力方向',tierNote:'考虑补上一小步能力后的探索线索，当前仍需学习与作品证据。'},{...surprise,tier:'意外可能',tierNote:'从其他方向扩展视野；不代表比其余方向更适合你。'}];
- return {...profile,status:'ready',ranked,prototypeScores,topPrototypes,recommendations,modeResult,startup:startup(profile,ranked,modeResult)};
+ const recommendations=[{...first,tier:'优先探索',tierNote:profile.completeEvidence?'本次综合线索较突出，先用一件小作品验证。':'本次兴趣线索较突出，不代表已经具备从业准备。'},{...potential,tier:'补证后再看',tierNote:profile.completeEvidence?'相关自评已有线索，仍需不同任务的小作品核验。':'这是兴趣线索；先补上缺少的实践证据，再判断从业准备。'},{...surprise,tier:'意外可能',tierNote:'从其他方向扩展视野；不代表比其余方向更适合你。'}];
+ return {...profile,status:'ready',metric:profile.completeEvidence?'combined':'interest',ranked,prototypeScores,topPrototypes,recommendations,modeResult,startup:startup(profile,ranked,modeResult)};
 }
