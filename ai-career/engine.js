@@ -1,5 +1,5 @@
-import {questions,careers,prototypes,modes} from './data.js?v=2.1.0';
-export const VERSION='2.1.0';
+import {questions,careers,prototypes,modes} from './data.js?v=2.2.0';
+export const VERSION='2.2.0';
 export const COVERAGE={drive:3,work:3,ability:0,ai:0};
 const clamp=v=>Math.max(0,Math.min(1,v));
 const mean=a=>a.length?a.reduce((s,n)=>s+n,0)/a.length:null;
