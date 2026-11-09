@@ -1,58 +1,43 @@
-import { useEffect, useState } from "react";
-import { priorityQuestions, topicDecision, topicGuides, type RelationshipProfile, type RelationshipQuestion } from "./relationshipGuidance";
+import { useEffect, useMemo, useState } from "react";
+import { priorityQuestions, type RelationshipProfile, type RelationshipQuestion } from "./relationshipGuidance";
 import { answered } from "./relationshipFlow";
+import { buildRelationshipCard } from "./relationshipCardModel";
+import RelationshipShareCard from "./RelationshipShareCard";
+import "./RelationshipCard.css";
 
-const importanceLabels = { low: "不太重要", medium: "比较重要", high: "你选的重点", unknown: "未标重要性" };
-const flexibilityLabels = { willing: "愿意调整", conditional: "有条件调整", unwilling: "不愿调整", unknown: "调整意愿未补充" };
+type ReportProps = { profiles: RelationshipProfile[]; questions: RelationshipQuestion[]; stage: "pre_relationship" | "partnered"; onReset: () => void; onEdit?: (person?: number) => void };
+const bridges: Record<string, string> = {
+  contact: "各说一个忙时能做到的联系办法，双方都接受再试一周。",
+  support: "关心前先问一句：要我听、一起想办法，还是给你空间？",
+  conflict: "先确认还能不能聊；需要暂停时，一起约好再聊的时间。",
+  repair: "先听失约带来的影响，再商量一个做得到的补救。",
+  space: "先保留各自的重要安排，再约一段共同时间。",
+  money: "先各报能承担的预算，再决定活动和分担方式。",
+  chores: "把一件家务的负责人、完成标准和补位方式说清楚。",
+  family: "先问哪些话能对亲友说、由谁说，不擅自转述。",
+  commitment: "各说清目前愿意承诺什么；没说好的部分继续留着聊。",
+  future: "只选一个重要的未来议题，先听清各自希望和不愿意的部分。",
+  privacy: "逐项询问愿不愿分享；不愿意或撤回时就停止。",
+  intimacy: "以当下都愿意为前提；不确定或不愿意就停下。",
+};
 
-type ReportProps = { profiles: RelationshipProfile[]; questions: RelationshipQuestion[]; stage: "pre_relationship" | "partnered"; onReset: () => void; onEdit?: () => void };
-export default function RelationshipReport(props: ReportProps) {
-  const covered = props.questions.filter((q) => props.profiles.every((p) => answered(p, q.id)));
-  if (covered.length < 6) return <main className="rf-report"><header className="rf-report__hero"><span className="rf-pill">回答还不够</span><h1>先补几道，再看建议。</h1><p>{props.profiles.length === 2 ? "双方共同回答" : "已回答"} {covered.length} / 12 题。至少 6 个有效话题才展示行动建议；这是产品的信息量门槛，不是科学标准。</p><p>跳过的题不会被当成某一种偏好，也不会据此判断你们是否合适。</p></header><footer className="rf-report__footer">{props.onEdit && <button onClick={props.onEdit}>返回补答</button>}<button onClick={props.onReset}>重新开始</button><a href="/tests/">返回测试实验室</a></footer></main>;
-  return <ReportContent {...props} questions={covered} />;
-}
-
-function ReportContent({ profiles, questions, stage, onReset, onEdit }: ReportProps) {
+export default function RelationshipReport({ profiles, questions, stage, onReset, onEdit }: ReportProps) {
+  const [person, setPerson] = useState(0);
+  const cards = useMemo(() => profiles.map(buildRelationshipCard), [profiles]);
   const pair = profiles.length === 2;
-  const ordered = priorityQuestions(questions, profiles);
-  const [focus, setFocus] = useState(ordered[0].id);
-  const [expanded, setExpanded] = useState(false);
+  const card = cards[person];
+  const common = questions.filter((q) => profiles.every((p) => answered(p, q.id)));
+  const differences = pair ? priorityQuestions(common, profiles).filter((q) => profiles[0].answers[q.id].option !== profiles[1].answers[q.id].option).slice(0, 3) : [];
   useEffect(() => { window.scrollTo({ top: 0 }); }, []);
-  const current = questions.find((q) => q.id === focus)!;
-  const guide = topicGuides[focus];
-  const decision = topicDecision(current, profiles);
-  const firmDifference = profiles.some((p) => p.answers[focus].flexibility === "unwilling") && (!pair || profiles[0].answers[focus].option !== profiles[1].answers[focus].option);
-  const agreed = pair ? questions.filter((q) => profiles[0].answers[q.id].option === profiles[1].answers[q.id].option) : [];
 
-  function topicCard(q: RelationshipQuestion, position: number) {
-    const suggestion = topicDecision(q, profiles);
-    return <article className="rf-insight" key={q.id}>
-      <header><span>0{position + 1}</span><h3>{q.short}</h3><b>{suggestion.label}</b></header>
-      <div className="rf-answer-grid">{profiles.map((p) => {
-        const a = p.answers[q.id];
-        return <div key={p.name}><small>{pair ? p.name : "你的选择"} · {importanceLabels[a.importance]} · {flexibilityLabels[a.flexibility]}</small><strong>{q.options[a.option]}</strong><p>{topicGuides[q.id].meanings[a.option]}。</p><small>{a.basis === "experience" ? "你自报依据经历；未独立验证" : a.basis === "hypothesis" ? "当前期待，不能说明真实行为" : "未补充经历依据；仅描述本次选择"}</small>
-          {!pair && a.note.trim() && <blockquote>你的补充：{a.note}</blockquote>}
-          {!pair && p.followups[q.id]?.trim() && <blockquote>你的追问记录：{p.followups[q.id]}</blockquote>}
-        </div>;
-      })}</div>
-      <p>{suggestion.text}</p>
-      <div className="rf-guidance-row"><b>先核对</b><p>{topicGuides[q.id].check}</p></div>
-      <button className="rf-focus-button" onClick={() => { setFocus(q.id); document.getElementById("rf-plan")?.scrollIntoView({ behavior: "smooth" }); }}>用这一项制定行动 →</button>
-    </article>;
-  }
-
-  return <main className="rf-report">
-    <header className="rf-report__hero"><span className="rf-pill">{pair ? "双方共同回答" : "已回答"} {questions.length} / 12 题</span><h1>{pair ? "你们的关系行动指南" : "你的关系使用说明书"}</h1><p>{pair ? "把不同的期待说清楚，再共同决定下一步。" : `关于${ordered[0].short}，你更倾向“${ordered[0].options[profiles[0].answers[ordered[0].id].option]}”；可以先用下面的话术说明这个期待。`}</p><a href="/tests/">← 返回测试实验室</a></header>
-    <section className="rf-report__section"><p className="rf-kicker">先聊这几件事</p><h2>{ordered.slice(0, 3).map((q) => q.short).join("、")}</h2><p>挑一项往下看，拿走一句话术和一个可以尝试的安排。</p><details><summary>这些建议怎么来的？</summary><p>依据本次选择和你自愿补充的重点、调整意愿。没有填写的信息仍是未知；跳过的话题不作判断。先显示已标重点和明确边界，再看双方差异；同级按题目顺序，不代表轻重排名。</p><p>{pair ? "仅比较双方都回答的话题，私人补充不展示。" : "描述当前选择，不推断人格或未经说明的经历。"}相同选项也不证明实际行为一致。</p></details></section>
-    <section className="rf-report__section"><p className="rf-kicker">选择 → 理解 → 下一步</p>{ordered.slice(0, 3).map(topicCard)}{ordered.length > 3 && <button className="rf-focus-button" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>{expanded ? "收起其他主题" : `查看另外 ${ordered.length - 3} 个主题`}</button>}{expanded && ordered.slice(3).map((q, index) => topicCard(q, index + 3))}</section>
-    <section className="rf-report__section rf-plan" id="rf-plan"><p className="rf-kicker">一次只行动一件事</p><h2>{pair ? "先达成一个具体约定" : "写下一个可以直接说出的请求"}</h2>
-      <label>这次先处理<select value={focus} onChange={(e) => setFocus(e.target.value)}>{ordered.map((q) => <option key={q.id} value={q.id}>{q.short}</option>)}</select></label>
-      <div className="rf-guidance-row"><b>怎么开口</b><p>“关于{current.short}，我现在倾向{current.options[profiles[0].answers[focus].option]}。{pair ? `我看到你选了${current.options[profiles[1].answers[focus].option]}，想先听听你在什么情况下会这样选择。` : "这对我意味着什么，我还想用一次真实经历说清楚。"}我们先确认彼此不能接受的部分，再决定要不要试一个安排。”</p></div>
-      <div className="rf-guidance-row"><b>{firmDifference ? "先确认，不急着试行" : "可讨论的做法"}</b><p>{firmDifference ? `${decision.text}分别说出：这条要求具体是什么、为什么不能接受、有没有自愿接受的其他方式。若仍无共识，明确记录“尚未达成”，不要把沉默当成同意。` : guide.agreement}</p></div>
-      <div className="rf-guidance-row"><b>怎样复盘</b><p>{firmDifference ? "双方明确同意再谈的时间；如果有人不愿继续讨论，尊重这个决定，不重复施压。" : guide.review}</p></div>
-      <p className="rf-plan-note">{pair ? (stage === "partnered" ? "已交往：带上最近一次真实分歧，分别讲行为和影响，再谈下次做法。" : "确定关系前：可以讨论假设场景；未确认的承诺与长期方向继续标为未定。") : "没有恋爱经历也可以先把请求说具体；在朋友或家人相处中的经验可作参考，但不能直接当成恋爱中一定如此。"}</p>
-    </section>
-    {pair && <section className="rf-report__section"><p className="rf-kicker">可作为起点的共同选择</p><h2>{agreed.length ? agreed.map((q) => q.short).join("、") : "暂时没有相同选项"}</h2><p>{agreed.length ? "选项相同只能说明当前表达相近，仍需确认具体含义。" : "不同选项并不等于无法相处；请按上面的重要性、边界和接受条件逐项核对。"}</p></section>}
-    <footer className="rf-report__footer"><button onClick={() => window.print()}>打印或保存 PDF</button>{onEdit && <button className="secondary" onClick={onEdit}>返回修改答案</button>}<button className="secondary" onClick={onReset}>重新开始</button><a href="/tests/">返回测试实验室</a></footer>
+  return <main className="rf-report rc-report">
+    <header className="rc-page-head"><a href="/tests/">← 测试实验室</a><p>把关心，变成对方接得住的样子。</p><h1>{pair ? "你们各有一份相处说明书" : "给另一半的相处说明书"}</h1><span>{pair ? "选 A 或 B，分别下载各自的卡片。" : "下面的话都来自你的选择。觉得贴切，就存成图片发给 ta。"}</span></header>
+    {pair && <div className="rc-person-tabs" role="tablist" aria-label="选择谁的说明书">{cards.map((_, index) => <button role="tab" aria-selected={person === index} aria-controls={`rc-panel-${index}`} id={`rc-tab-${index}`} key={index} onClick={() => setPerson(index)}>{index === 0 ? "A 的说明书" : "B 的说明书"}</button>)}</div>}
+    <div role={pair ? "tabpanel" : undefined} id={`rc-panel-${person}`} aria-labelledby={pair ? `rc-tab-${person}` : undefined}>
+      {card.enough ? <RelationshipShareCard key={card.signature} card={card} label={pair ? (person === 0 ? "A" : "B") : undefined} /> : <section className="rc-not-enough"><h2>先补几道，再写这张卡。</h2><p>已回答 {card.coverage} / 12 题，至少回答 6 题才生成说明卡。{pair ? "这位的回答还不够，另一位可以单独查看。" : "跳过的部分不会被编成某种性格。"}</p>{onEdit && <button className="rf-primary" onClick={() => onEdit(person)}>返回补答</button>}</section>}
+    </div>
+    {card.enough && <details className="rc-evidence"><summary>为什么给我这个称号？查看选择依据</summary><p>这是本次回答对应的相处昵称，方便伴侣记住你的偏好，不是心理学人格类型。</p><p>{card.titleEvidence.length ? `昵称主要参考：${card.titleEvidence.map((id) => questions.find((q) => q.id === id)?.short).join("、")}。` : "联系、支持和冲突处理都未回答，因此暂不生成具体昵称。"}其他建议逐项来自下面的选择。</p><p>已回答 {card.coverage} / 12 题。{card.missing.length ? `未回答：${card.missing.join("、")}；这些部分不作判断。` : "全部题目已有选择。"}</p>{card.evidence.map((item) => <div key={item.id}><strong>{item.label}</strong><span>你选了：{item.answer}</span><p>写进说明书：{item.tip}</p></div>)}<small>重要性只影响生活小约定的展示顺序。卡片不包含私人补充或旧版追问。</small></details>}
+    {pair && <section className="rc-pair-notes"><h2>互相照顾，可以先从这里开始</h2>{common.length < 6 ? <p>双方共同回答的题目不足 6 道，先各看各的说明卡；暂不整理双人差异。</p> : differences.length ? differences.map((q) => <article key={q.id}><h3>{q.short}</h3><p><b>A 想要：</b>{cards[0].evidence.find((item) => item.id === q.id)?.tip}</p><p><b>B 想要：</b>{cards[1].evidence.find((item) => item.id === q.id)?.tip}</p><p className="rc-bridge">{profiles.every((p) => p.answers[q.id].flexibility === "unwilling") ? "双方都不愿调整，先确认能否接受这个差异，别急着答应折中。" : profiles.some((p) => p.answers[q.id].flexibility === "unwilling") ? "至少一方明确不愿调整。先听清边界，不默认让另一方全部迁就。" : bridges[q.id]}</p></article>) : <p>共同回答里没有不同选项。可以用一次真实场景，再确认彼此说的是不是同一回事。</p>}<small>{stage === "partnered" ? "从最近一次真实小事开始聊，一次只改一个安排。" : "还没确定的承诺与未来方向，别用期待代替对方的回答。"}</small></section>}
+    <footer className="rc-page-actions">{onEdit && <button onClick={() => onEdit(person)}>修改{pair ? (person === 0 ? " A" : " B") : "我"}的答案</button>}<button onClick={() => window.print()}>打印或保存 PDF</button><button onClick={onReset}>重新测试</button></footer>
   </main>;
 }
