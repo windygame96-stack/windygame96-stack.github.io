@@ -1,126 +1,122 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./RelationshipFit.css";
 import RelationshipReport from "./RelationshipReport";
+import { relationshipQuestions as questions } from "./relationshipQuestions";
+import { answered, blankAnswer, decodeSession, encodeSession, FLOW_STORAGE_KEY, initialSession, newProfile, SAVE_TTL, type Session } from "./relationshipFlow";
+import type { RelationshipAnswer, RelationshipProfile } from "./relationshipGuidance";
 
-type Importance = "low" | "medium" | "high";
-type Flexibility = "willing" | "conditional" | "unwilling";
-type Basis = "experience" | "hypothesis";
-type Mode = "solo" | "pair";
-type Stage = "pre_relationship" | "partnered";
-
-type Question = {
-  id: string;
-  short: string;
-  text: string;
-  options: string[];
-};
-
-type Answer = {
-  option: number;
-  importance: Importance;
-  flexibility: Flexibility;
-  basis: Basis;
-  note: string;
-};
-
-type Profile = { name: string; answers: Record<string, Answer>; followups: Record<string, string> };
-
-const questions: Question[] = [
-  { id: "contact", short: "联系频率", text: "你连续几天事务很多，与亲近的人见面减少，你通常希望怎样保持联系？", options: ["每天简短联系", "约定时间集中交流", "有空再联系", "根据当周情况共同商量"] },
-  { id: "support", short: "压力支持", text: "你遇到一件让自己烦心的事，对方愿意提供支持，你首先希望对方怎样做？", options: ["先听我讲", "一起想办法", "给我独处时间", "先问我此刻需要什么"] },
-  { id: "conflict", short: "处理分歧", text: "一段谈话中你们意见不同，情绪开始变强，你通常想怎样继续？", options: ["当场继续谈", "暂停并约时间再谈", "先用文字整理", "视问题和状态决定"] },
-  { id: "repair", short: "冲突修复", text: "你答应对方的事情没有做到，对方因此失望，你通常先做什么？", options: ["说明当时情况", "问对方受到什么影响", "提出补救办法", "先整理想法再回应"] },
-  { id: "space", short: "个人空间", text: "周末双方都有空，一方想一起活动，一方已有个人安排，你希望如何处理？", options: ["优先保留个人安排", "优先安排共同活动", "重新分配各自和共同时间", "看这件事对彼此的重要程度"] },
-  { id: "money", short: "共同支出", text: "你们计划一项共同活动，双方预算不同，你倾向怎样决定支出？", options: ["按相同比例或金额分担", "根据各自负担能力分担", "轮流承担并定期确认", "先调整活动和预算再商量"] },
-  { id: "chores", short: "生活分工", text: "假设你们需要长期共同处理家务或其他琐事，你更倾向哪种安排？", options: ["固定分工", "根据当周时间调整", "轮流负责", "先列清任务和标准再决定"] },
-  { id: "family", short: "亲友边界", text: "亲友对你们的一项安排有不同意见，你希望如何处理？", options: ["双方先讨论再回应亲友", "分别与各自亲友沟通", "邀请相关人一起谈", "根据事情与谁相关决定范围"] },
-  { id: "commitment", short: "关系承诺", text: "一段关系逐渐变得重要，你希望何时讨论关系形式、承诺或是否排他？", options: ["进一步投入前明确", "随相处逐步讨论", "有具体需要时再讨论", "目前还不确定"] },
-  { id: "future", short: "长期方向", text: "当一段关系可能持续较长时间，你希望怎样讨论居住、工作、婚姻或是否养育孩子？", options: ["尽早明确重要方向", "列出偏好并保留变化空间", "临近决定时再谈", "部分已有想法，其他未定"] },
-  { id: "privacy", short: "隐私边界", text: "对方提出共享位置、设备访问或私人聊天内容，你希望怎样决定？", options: ["分项约定范围与期限", "保留这些信息私密", "按具体用途临时提供", "还没想好，需要先讨论"] },
-  { id: "intimacy", short: "身体亲近", text: "你们想要的身体亲近程度或表达喜爱的方式不同，你希望怎样处理？", options: ["当下直接表达愿意或不愿意", "商量彼此舒服的表达方式", "给彼此时间后再确认", "依情境决定并保留改变主意的空间"] },
-];
-
-const emptyAnswer = (): Answer => ({ option: -1, importance: "medium", flexibility: "conditional", basis: "hypothesis", note: "" });
-const safeStore = (key: string, value: unknown) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private mode */ } };
-const safeRead = <T,>(key: string, fallback: T): T => { try { return JSON.parse(localStorage.getItem(key) || "") as T; } catch { return fallback; } };
-
-function makeFollowups(answers: Record<string, Answer>) {
-  return questions
-    .filter((q) => answers[q.id]?.importance === "high" || answers[q.id]?.flexibility === "unwilling")
-    .slice(0, 3)
-    .map((q) => ({
-      id: q.id,
-      question: answers[q.id]?.basis === "experience"
-        ? `最近一次遇到“${q.short}”相关的情况时，你具体做了什么？结果怎样？`
-        : `关于“${q.short}”，什么条件会让你觉得这个安排可以接受？`,
-    }));
+function readSaved() { try { const raw = localStorage.getItem(FLOW_STORAGE_KEY); const valid = decodeSession(raw); if (raw && !valid) localStorage.removeItem(FLOW_STORAGE_KEY); return valid; } catch { return null; } }
+function readLegacy(): RelationshipProfile[] | null {
+  try {
+    if (JSON.parse(localStorage.getItem("rf-screen") || "null") !== "report") return null;
+    const profiles = JSON.parse(localStorage.getItem("rf-profiles") || "null") as RelationshipProfile[];
+    if (!Array.isArray(profiles) || !profiles.length || profiles.length > 2) return null;
+    return profiles.every((p) => p && typeof p.name === "string" && p.answers && p.followups && questions.every((q) => {
+      const a = p.answers[q.id];
+      return a && answered(p, q.id) && ["low", "medium", "high"].includes(a.importance) && ["willing", "conditional", "unwilling"].includes(a.flexibility) && ["experience", "hypothesis"].includes(a.basis) && typeof a.note === "string" && (!p.followups[q.id] || typeof p.followups[q.id] === "string");
+    })) ? profiles : null;
+  } catch { return null; }
 }
 
 export default function RelationshipFit() {
-  const [screen, setScreen] = useState<"intro" | "quiz" | "followup" | "handoff" | "report">(() => safeRead("rf-screen", "intro"));
-  const [mode, setMode] = useState<Mode>(() => safeRead("rf-mode", "solo"));
-  const [stage, setStage] = useState<Stage>(() => safeRead("rf-stage", "pre_relationship"));
-  const [person, setPerson] = useState(0);
-  const [index, setIndex] = useState(0);
-  const [profiles, setProfiles] = useState<Profile[]>(() => safeRead("rf-profiles", [{ name: "我", answers: {}, followups: {} }]));
-  const current = profiles[person] || { name: person === 0 ? "A" : "B", answers: {}, followups: {} };
-  const answer = current.answers[questions[index]?.id] || emptyAnswer();
-  const followups = useMemo(() => makeFollowups(current.answers), [current.answers]);
-  const [followIndex, setFollowIndex] = useState(0);
-
-  useEffect(() => { safeStore("rf-screen", screen); safeStore("rf-mode", mode); safeStore("rf-stage", stage); safeStore("rf-profiles", profiles); }, [screen, mode, stage, profiles]);
+  const [restorable, setRestorable] = useState(readSaved);
+  const [legacy, setLegacy] = useState(readLegacy);
+  const [legacyView, setLegacyView] = useState(false);
+  const [legacyStage] = useState<"pre_relationship" | "partnered">(() => { try { return JSON.parse(localStorage.getItem("rf-stage") || "null") === "partnered" ? "partnered" : "pre_relationship"; } catch { return "pre_relationship"; } });
+  const [session, setSession] = useState<Session>(initialSession);
+  const [persist, setPersist] = useState(false);
+  const [saveError, setSaveError] = useState(false);
+  const [savedUntil, setSavedUntil] = useState<number | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const lock = useRef(false);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const current = session.profiles[session.person];
+  const question = questions[session.index];
+  const currentAnswer = current.answers[question.id] || blankAnswer();
+  const completed = questions.filter((q) => answered(current, q.id)).length;
+  const important = questions.filter((q) => current.answers[q.id]?.importance === "high");
 
   useEffect(() => {
-    const previousTitle = document.title;
-    document.title = "Relationship Fit · 关系使用说明书";
-    return () => { document.title = previousTitle; };
+    const oldTitle = document.title; document.title = "亲密关系说明书 · 简化版";
+    return () => { document.title = oldTitle; timers.current.forEach(clearTimeout); };
   }, []);
+  useEffect(() => { window.scrollTo({ top: 0 }); heading.current?.focus(); }, [session.screen, session.index, session.person]);
+  useEffect(() => {
+    if (!persist || !savedUntil) return;
+    if (savedUntil <= Date.now()) { try { localStorage.removeItem(FLOW_STORAGE_KEY); } catch { /* unavailable */ } setPersist(false); setSavedUntil(null); return; }
+    try { localStorage.setItem(FLOW_STORAGE_KEY, encodeSession(session, savedUntil - SAVE_TTL, savedUntil)); setSaveError(false); } catch { setSaveError(true); }
+  }, [session, persist, savedUntil]);
 
-  const updateProfile = (fn: (profile: Profile) => Profile) => setProfiles((all) => { const next = [...all]; next[person] = fn(next[person] || current); return next; });
-  const updateAnswer = (patch: Partial<Answer>) => updateProfile((p) => ({ ...p, answers: { ...p.answers, [questions[index].id]: { ...answer, ...patch } } }));
-  const begin = () => { setProfiles([{ name: mode === "pair" ? "A" : "我", answers: {}, followups: {} }]); setPerson(0); setIndex(0); setScreen("quiz"); };
-  const nextQuestion = () => {
-    if (answer.option < 0) return;
-    if (index < questions.length - 1) setIndex((v) => v + 1);
-    else { setFollowIndex(0); setScreen(followups.length ? "followup" : mode === "pair" && person === 0 ? "handoff" : "report"); }
-  };
-  const finishFollowup = () => {
-    if (followIndex < followups.length - 1) setFollowIndex((v) => v + 1);
-    else setScreen(mode === "pair" && person === 0 ? "handoff" : "report");
-  };
-  const startSecond = () => { setProfiles((all) => [...all, { name: "B", answers: {}, followups: {} }]); setPerson(1); setIndex(0); setFollowIndex(0); setScreen("quiz"); };
-  const reset = () => { localStorage.removeItem("rf-screen"); localStorage.removeItem("rf-mode"); localStorage.removeItem("rf-stage"); localStorage.removeItem("rf-profiles"); setProfiles([{ name: "我", answers: {}, followups: {} }]); setScreen("intro"); setPerson(0); setIndex(0); };
+  function updateAnswer(id: string, patch: Partial<RelationshipAnswer>) {
+    setSession((s) => ({ ...s, profiles: s.profiles.map((p, i) => i !== s.person ? p : { ...p, answers: { ...p.answers, [id]: { ...(p.answers[id] || blankAnswer()), ...patch } } }) }));
+  }
+  function choose(option: number) {
+    if (lock.current) return;
+    lock.current = true; setBusy(true);
+    updateAnswer(question.id, option < 0 ? blankAnswer() : { option });
+    timers.current.push(setTimeout(() => {
+      setSession((s) => ({ ...s, index: editing ? s.index : Math.min(s.index + 1, questions.length - 1), screen: editing || s.index === questions.length - 1 ? "review" : "quiz" }));
+      setEditing(false);
+      timers.current.push(setTimeout(() => { lock.current = false; setBusy(false); }, 180));
+    }, 180));
+  }
+  function begin() {
+    setSession((s) => ({ ...initialSession(), mode: s.mode, stage: s.stage, screen: "quiz", profiles: [newProfile(s.mode === "pair" ? "A" : "你")] }));
+  }
+  function edit(index: number) { setEditing(true); setSession((s) => ({ ...s, index, screen: "quiz" })); }
+  function togglePriority(id: string) {
+    if (current.answers[id]?.importance === "high") updateAnswer(id, { importance: "unknown", flexibility: "unknown", basis: "unknown" });
+    else if (important.length < 3) updateAnswer(id, { importance: "high" });
+  }
+  function setSaving(checked: boolean) {
+    setPersist(checked); setSaveError(false);
+    if (checked) setSavedUntil(Date.now() + SAVE_TTL);
+    else { setSavedUntil(null); setRestorable(null); try { localStorage.removeItem(FLOW_STORAGE_KEY); } catch { setSaveError(true); } }
+  }
+  function clear() {
+    for (const key of [FLOW_STORAGE_KEY, "rf-screen", "rf-mode", "rf-stage", "rf-profiles"]) { try { localStorage.removeItem(key); } catch { /* unavailable */ } }
+    setPersist(false); setSavedUntil(null); setRestorable(null); setLegacy(null); setLegacyView(false); setEditing(false); setSession(initialSession());
+  }
+  const savingControl = <div className="rf-saving"><label><input type="checkbox" checked={persist} onChange={(e) => setSaving(e.target.checked)} />在这台设备保留进度 7 天（可选）</label>{persist && <small>到期不再读取；取消勾选或点击“清除本机数据”可立即删除。</small>}{saveError && <p role="status">无法操作本机存储，本次仍可继续；共享设备请使用浏览器设置清除网站数据。</p>}<button onClick={clear}>清除本机数据</button></div>;
 
-  if (screen === "report") return <RelationshipReport profiles={profiles} questions={questions} stage={stage} onReset={reset} />;
+  if (legacyView && legacy) return <><div className="rf-legacy-bar">这是旧版已完成的回答，不会被当作新版答案。<button onClick={() => setLegacyView(false)}>返回简化版</button></div><RelationshipReport profiles={legacy} questions={questions} stage={legacyStage} onReset={clear} />{savingControl}</>;
+  if (session.screen === "report") return <><RelationshipReport profiles={session.profiles} questions={questions} stage={session.stage} onReset={clear} onEdit={() => setSession((s) => ({ ...s, screen: "review" }))} /><div className="rf-saving-footer">{savingControl}</div></>;
 
-  return <main className="rf-shell">
-    <a className="rf-brand" href="/"><span>RF</span> Relationship Fit</a>
-    {screen === "intro" && <section className="rf-intro">
-      <p className="rf-kicker">关系使用说明书 · 初版</p>
-      <h1>喜欢是直觉。<br /><i>合适，需要聊清楚。</i></h1>
-      <p className="rf-intro__lead">12 个中立情境题，加上最多 3 个基于回答的追问。它不会给你们打分，只帮你看清需求、边界和可以商量的条件。</p>
-      <div className="rf-mode-grid">
-        <button className={mode === "solo" ? "active" : ""} onClick={() => setMode("solo")}><strong>先了解自己</strong><span>生成一份个人关系使用说明书</span></button>
-        <button className={mode === "pair" ? "active" : ""} onClick={() => setMode("pair")}><strong>两人本机体验</strong><span>轮流作答，生成一份讨论地图</span></button>
-      </div>
-      {mode === "pair" && <div className="rf-stage"><span>你们目前</span><button className={stage === "pre_relationship" ? "active" : ""} onClick={() => setStage("pre_relationship")}>确定关系前</button><button className={stage === "partnered" ? "active" : ""} onClick={() => setStage("partnered")}>已经在一起</button></div>}
-      <div className="rf-consent"><strong>开始前知道这些</strong><p>本初版只把答案保存在当前浏览器，不上传服务器。两人模式需要轮流使用同一设备，交接时不会显示上一人的答案。请只回答你愿意记录的内容。</p></div>
-      <button className="rf-primary" onClick={begin}>开始，大约 6 分钟 <span>→</span></button>
-      <small>面向自报年满 18 岁的用户 · 不是心理诊断或关系成败预测</small>
+  return <main className="rf-shell rf-simple">
+    <a className="rf-brand" href="/tests/"><span>RF</span> 测试实验室</a>
+    {session.screen === "intro" && <section className="rf-intro">
+      <p className="rf-kicker">12 题 · 只需点选</p><h1 ref={heading} tabIndex={-1}>亲密关系，<br /><i>先看懂自己。</i></h1>
+      <p className="rf-intro__lead">看清你希望怎样相处，带走可以直接开口的建议。预计 3–5 分钟。</p>
+      <div className="rf-mode-grid"><button aria-pressed={session.mode === "solo"} className={session.mode === "solo" ? "active" : ""} onClick={() => setSession((s) => ({ ...s, mode: "solo" }))}><strong>自己测</strong><span>整理自己的相处偏好</span></button><button aria-pressed={session.mode === "pair"} className={session.mode === "pair" ? "active" : ""} onClick={() => setSession((s) => ({ ...s, mode: "pair" }))}><strong>两个人测</strong><span>同一设备轮流回答</span></button></div>
+      <p className="rf-intro-hint">回想最近一年的相处经历；没经历过就按期待选，也可以跳过。每题点一下就继续，不用写字。</p>
+      <button className="rf-primary" onClick={begin}>开始点选 →</button>
+      {restorable && <button className="rf-focus-button" onClick={() => { setSession(restorable); setPersist(true); try { const value = JSON.parse(localStorage.getItem(FLOW_STORAGE_KEY) || "null"); setSavedUntil(value.expiresAt); } catch { setSaving(true); } }}>继续已保存的简化版{restorable.screen === "report" ? "报告" : "进度"}</button>}
+      {legacy && <button className="rf-focus-button" onClick={() => setLegacyView(true)}>查看旧版报告</button>}
+      <small>仅供自我探索，面向成年人；不是心理诊断或关系成败预测。</small>
+      <details className="rf-privacy-details"><summary>答案和隐私</summary><p>默认只在本次页面里处理答案，刷新后清空；需要保留时可自愿保存 7 天。没有姓名、联系方式或文字经历填写，不上传答案。托管服务可能记录访问日志。</p><p>两人模式会在双方完成后展示共同选项和差异；交接时隐藏上一人的答案。共享设备仍应谨慎使用。</p></details>
+      {savingControl}
     </section>}
 
-    {screen === "quiz" && <section className="rf-quiz">
-      <header><span>{mode === "pair" ? `${current.name} 的独立作答` : "个人梳理"}</span><b>{index + 1} / {questions.length}</b></header>
-      <div className="rf-progress"><i style={{ width: `${((index + 1) / questions.length) * 100}%` }} /></div>
-      <p className="rf-kicker">{questions[index].short}</p><h1>{questions[index].text}</h1>
-      <div className="rf-options">{questions[index].options.map((option, i) => <button className={answer.option === i ? "active" : ""} onClick={() => updateAnswer({ option: i })} key={option}><span>{String.fromCharCode(65 + i)}</span>{option}</button>)}</div>
-      <div className="rf-meta"><label>这件事对你多重要？<select value={answer.importance} onChange={(e) => updateAnswer({ importance: e.target.value as Importance })}><option value="low">不太重要</option><option value="medium">比较重要</option><option value="high">非常重要</option></select></label><label>你愿意调整吗？<select value={answer.flexibility} onChange={(e) => updateAnswer({ flexibility: e.target.value as Flexibility })}><option value="willing">愿意调整</option><option value="conditional">有条件</option><option value="unwilling">不愿调整</option></select></label><label>回答依据<select value={answer.basis} onChange={(e) => updateAnswer({ basis: e.target.value as Basis })}><option value="hypothesis">现在的设想</option><option value="experience">具体经历</option></select></label></div>
-      <label className="rf-note">可选补充：什么条件会让你接受或不能接受？<textarea value={answer.note} maxLength={240} onChange={(e) => updateAnswer({ note: e.target.value })} placeholder="不需要写私人细节，一句话就够。" /></label>
-      <footer><button disabled={index === 0} onClick={() => setIndex((v) => v - 1)}>← 上一题</button><button className="rf-primary" disabled={answer.option < 0} onClick={nextQuestion}>{index === questions.length - 1 ? "进入追问" : "下一题 →"}</button></footer>
+    {session.screen === "quiz" && <section className="rf-quiz">
+      <header><span>{session.mode === "pair" ? `${current.name} 独立回答` : "你的相处偏好"}</span><b>第 {session.index + 1} / 12 题</b></header><div className="rf-progress"><i style={{ width: `${(session.index + 1) / 12 * 100}%` }} /></div>
+      <h1 ref={heading} tabIndex={-1}>{question.text}</h1><p className="rf-question-hint">选最接近你的一个，点选后自动继续。</p>
+      <div className="rf-options">{question.options.map((option, index) => <button key={option} disabled={busy} aria-pressed={currentAnswer.option === index} className={currentAnswer.option === index ? "active" : ""} onKeyDown={(e) => { if (e.repeat) e.preventDefault(); }} onClick={() => choose(index)}><span>{String.fromCharCode(65 + index)}</span>{option}{currentAnswer.option === index && <b aria-hidden="true">✓</b>}</button>)}</div>
+      <footer><button disabled={busy || (session.index === 0 && !editing)} onClick={() => editing ? setSession((s) => ({ ...s, screen: "review" })) : setSession((s) => ({ ...s, index: s.index - 1 }))}>{editing ? "← 返回复核" : "← 上一题"}</button><button className="rf-skip" disabled={busy} onClick={() => choose(-1)}>没想好，跳过 →</button></footer>
+      <small className="rf-answer-count" aria-live="polite">已回答 {completed} 题 · 尚未回答 {12 - completed} 题</small>
     </section>}
 
-    {screen === "followup" && <section className="rf-followup"><span className="rf-pill">证据追问 {followIndex + 1} / {followups.length}</span><p className="rf-kicker">因为你很在意 {questions.find((q) => q.id === followups[followIndex].id)?.short}</p><h1>{followups[followIndex].question}</h1><textarea autoFocus value={current.followups[followups[followIndex].id] || ""} maxLength={500} onChange={(e) => updateProfile((p) => ({ ...p, followups: { ...p.followups, [followups[followIndex].id]: e.target.value } }))} placeholder="写下你愿意记录的部分。也可以跳过。"/><div><button className="secondary" onClick={finishFollowup}>跳过</button><button className="rf-primary" onClick={finishFollowup}>保存并继续 →</button></div></section>}
+    {session.screen === "review" && <section className="rf-review">
+      <p className="rf-kicker">{session.mode === "pair" ? `${current.name} · ` : ""}最后看一眼</p><h1 ref={heading} tabIndex={-1}>选完就能看报告。</h1><p>已答 {completed} / 12 题。不用逐题确认；想改哪题，点“修改”即可。</p>
+      <div className="rf-review-actions"><button className="rf-primary" disabled={busy} onClick={() => setSession((s) => ({ ...s, screen: s.mode === "pair" && s.person === 0 ? "handoff" : "report" }))}>{session.mode === "pair" && session.person === 0 ? "完成，交给 B →" : "查看说明书 →"}</button><span>也可以先在下面选 1–3 个在意的话题（可跳过）。</span></div>
+      <div className="rf-review-list">{questions.map((q, index) => <div key={q.id}><div><strong>{q.short}</strong><span>{answered(current, q.id) ? q.options[current.answers[q.id].option] : "已跳过，报告不作判断"}</span></div><button onClick={() => edit(index)} aria-label={`修改${q.short}`}>修改</button></div>)}</div>
+      <details className="rf-priorities"><summary>让建议更贴近你：选在意的话题（可选）</summary><p>最多 3 项，只影响报告的阅读顺序；不选也能生成报告。</p><div className="rf-priority-chips">{questions.filter((q) => answered(current, q.id)).map((q) => <button key={q.id} aria-pressed={current.answers[q.id].importance === "high"} disabled={important.length >= 3 && current.answers[q.id].importance !== "high"} onClick={() => togglePriority(q.id)}>{current.answers[q.id].importance === "high" ? "✓ " : ""}{q.short}</button>)}</div>
+      {important.length > 0 && <details className="rf-optional"><summary>只为这 {important.length} 项补充边界和依据（可选）</summary>{important.map((q) => <fieldset key={q.id}><legend>{q.short}</legend><p>这项做法你愿意调整吗？</p><div className="rf-priority-chips">{([['unknown', '暂不补充'], ['willing', '愿意商量'], ['conditional', '看条件'], ['unwilling', '不愿调整']] as const).map(([key, text]) => <button key={key} aria-pressed={current.answers[q.id].flexibility === key} onClick={() => updateAnswer(q.id, { flexibility: key })}>{text}</button>)}</div><p>这个选择主要来自？</p><div className="rf-priority-chips">{([['unknown', '暂不补充'], ['experience', '实际经历'], ['hypothesis', '当前期待']] as const).map(([key, text]) => <button key={key} aria-pressed={current.answers[q.id].basis === key} onClick={() => updateAnswer(q.id, { basis: key })}>{text}</button>)}</div></fieldset>)}</details>}</details>
+      {session.mode === "pair" && session.person === 1 && <div className="rf-stage"><span>报告侧重</span><button aria-pressed={session.stage === "pre_relationship"} onClick={() => setSession((s) => ({ ...s, stage: "pre_relationship" }))}>确定关系前</button><button aria-pressed={session.stage === "partnered"} onClick={() => setSession((s) => ({ ...s, stage: "partnered" }))}>已经在一起</button></div>}
+      {savingControl}
+    </section>}
 
-    {screen === "handoff" && <section className="rf-handoff"><span className="rf-pill">A 已完成</span><h1>现在，把设备交给 B。</h1><p>A 的具体答案已隐藏。B 将独立完成同一组题，完成前不会看到 A 的选择。</p><button className="rf-primary" onClick={startSecond}>我是 B，开始作答 →</button><small>同一浏览器上的答案只用于生成这次本机报告。</small></section>}
+    {session.screen === "handoff" && <section className="rf-handoff"><p className="rf-kicker">A 已完成</p><h1 ref={heading} tabIndex={-1}>现在交给 B。</h1><p>A 的选择已隐藏。B 独立完成后，会生成双方都可看的报告。</p><button className="rf-primary" onClick={() => setSession((s) => ({ ...s, profiles: [s.profiles[0], newProfile("B")], person: 1, index: 0, screen: "quiz" }))}>我是 B，开始 →</button></section>}
   </main>;
 }

@@ -15,7 +15,7 @@ export default defineConfig({
   plugins: getPlugins(),
   build: {
     rollupOptions: {
-      input: "app.html",
+      input: { app: "app.html", relationship: "relationship.html" },
     },
   },
 });

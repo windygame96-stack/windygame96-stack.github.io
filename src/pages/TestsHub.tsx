@@ -1,6 +1,7 @@
 import { tr, currentLanguage } from "@/lib/subpage-language";
 import { useEffect, useState } from "react";
 import "./TestsHub.css";
+import { decodeSession, FLOW_STORAGE_KEY } from "./relationshipFlow";
 type TestStatus = {
   label: string;
   detail: string;
@@ -11,6 +12,8 @@ function readLifeDriveStatus(): TestStatus {
 }
 function readRelationshipStatus(): TestStatus {
   try {
+    const saved = decodeSession(localStorage.getItem(FLOW_STORAGE_KEY));
+    if (saved) return { label: saved.screen === "report" ? "查看报告" : "继续测试", detail: "已自愿保存到本机", active: true };
     const screen = JSON.parse(localStorage.getItem("rf-screen") || '"intro"') as string;
     if (screen === "report") return {
       label: "查看报告",
@@ -18,14 +21,14 @@ function readRelationshipStatus(): TestStatus {
       active: true
     };
     if (screen !== "intro") return {
-      label: "继续测试",
-      detail: "发现未完成进度",
-      active: true
+      label: "开始简化版",
+      detail: "12 题，只需点选",
+      active: false
     };
   } catch {/* use default */}
   return {
     label: "开始测试",
-    detail: "约 6 分钟",
+    detail: "12 题，只需点选",
     active: false
   };
 }
@@ -80,7 +83,7 @@ export default function TestsHub() {
       <div><span>想梳理“工作付出与回报是否跟上”</span><strong>试试中国职场复盘 · 需密码</strong></div>
     </section>
     <section className="th-compare th-compare--ai"><div><span>想探索“AI时代可以做什么、怎样开始”</span><strong>试试AI职业可能性 · 需口令</strong></div></section>
-    <section className="th-privacy"><strong>{tr("答案属于你")}</strong><p>{tr("生活源动力与职场复盘仅在当前页面内存计算，刷新或退出会清空；AI职业测试默认仅在本页计算，也可自愿保存进度7天；关系测试保留原有本地保存方式。测试答案不上传服务器，换设备不会自动同步。")}</p></section>
+    <section className="th-privacy"><strong>{tr("答案属于你")}</strong><p>{tr("生活源动力与职场复盘仅在当前页面内存计算，刷新或退出会清空；AI职业测试默认仅在本页计算，也可自愿保存进度7天；关系说明书默认仅在本页计算，也可自愿保存进度7天。测试答案不上传服务器，换设备不会自动同步。")}</p></section>
     <footer className="th-footer"><a href="/">{tr("\u2190 \u8FD4\u56DE\u6478\u9C7C\u4E4B\u795E\u6E29\u8FEA\u7684 LAB")}</a><span>04 TESTS · MORE LATER</span></footer>
   </main>;
 }

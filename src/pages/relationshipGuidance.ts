@@ -1,4 +1,4 @@
-export type RelationshipAnswer = { option: number; importance: "low" | "medium" | "high"; flexibility: "willing" | "conditional" | "unwilling"; basis: "experience" | "hypothesis"; note: string };
+export type RelationshipAnswer = { option: number; importance: "low" | "medium" | "high" | "unknown"; flexibility: "willing" | "conditional" | "unwilling" | "unknown"; basis: "experience" | "hypothesis" | "unknown"; note: string };
 export type RelationshipProfile = { name: string; answers: Record<string, RelationshipAnswer>; followups: Record<string, string> };
 export type RelationshipQuestion = { id: string; short: string; text: string; options: string[] };
 
@@ -43,6 +43,7 @@ export function topicDecision(q: RelationshipQuestion, profiles: RelationshipPro
   const same = answers[0].option === answers[1].option;
   if (!same && answers.every((a) => a.flexibility === "unwilling")) return { label: "先确认能否接受分歧", text: "双方表达不同且都不愿调整。先各自确认底线及继续相处的条件；这里不能直接给出折中承诺。" };
   if (!same && answers.some((a) => a.flexibility === "unwilling")) return { label: "先核对边界", text: "至少一方不愿调整。先核对边界是否被准确理解，另一方可以接受或拒绝，不默认由愿意调整的人承担全部改变。" };
+  if (!same && answers.some((a) => a.flexibility === "unknown")) return { label: "先问能否调整", text: "选择不同，但调整意愿尚未补充。先问清各自能接受什么，不能从漏填推断愿意让步。" };
   return same
     ? { label: "相同答案，仍需核对细节", text: "共同点只来自选项相同。先用同一个真实场景确认做法、频率和范围，再决定是否试行。" }
     : { label: "可以讨论试行条件", text: "双方尚未表明完全拒绝调整。先询问各自愿意接受的条件，只有都同意后才试行。" };

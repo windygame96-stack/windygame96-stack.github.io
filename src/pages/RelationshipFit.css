@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
-
 .rf-shell, .rf-report { --ink:#291d22; --muted:#76666c; --paper:#fffaf7; --rose:#ef6e8b; --soft:#f8e4e8; --line:#dfcdd2; min-height:100vh; color:var(--ink); background:radial-gradient(circle at 80% 8%, #ffe2e9 0, transparent 34%), var(--paper); font-family:"Noto Sans SC",sans-serif; }
 .rf-shell button, .rf-report button, .rf-shell select, .rf-shell textarea { font:inherit; color:inherit; }
 .rf-brand { position:fixed; z-index:5; top:24px; left:max(24px,calc((100vw - 1080px)/2)); display:flex; align-items:center; gap:10px; color:var(--ink); font:500 12px/1 "DM Mono",monospace; letter-spacing:.05em; }
@@ -102,3 +100,57 @@
 .rf-plan-note { padding:16px; background:var(--soft); border-radius:10px; }
 @media(max-width:700px){.rf-guidance-row{grid-template-columns:1fr;gap:8px}.rf-insight header>b{margin-left:0}.rf-answer-grid>div{padding:16px}.rf-report__hero h1{font-size:36px}}
 @media print{.rf-focus-button{display:none}.rf-answer-grid>div{break-inside:avoid}.rf-report__section{break-inside:auto}}
+
+/* The assessment also has a standalone entry with no remote fonts or tracking. */
+.rf-standalone { margin:0; min-width:280px; background:#fffaf7; font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }
+.rf-standalone * { box-sizing:border-box; }
+.rf-standalone button,.rf-standalone select { font:inherit; }
+.rf-standalone a { color:inherit; text-decoration:none; }
+.rf-standalone .rf-shell,.rf-standalone .rf-report { font-family:inherit; }
+.rf-standalone .rf-report h1,.rf-standalone .rf-report h2,.rf-standalone .rf-report h3,.rf-simple h1,.rf-simple strong { font-family:inherit; }
+.rf-simple :focus-visible,.rf-report :focus-visible,.rf-saving :focus-visible { outline:3px solid #9d3d55; outline-offset:4px; }
+.rf-simple h1[tabindex="-1"]:focus { outline:none; }
+.rf-simple .rf-intro,.rf-simple .rf-quiz,.rf-review { width:min(720px,calc(100% - 40px)); margin:0 auto; padding:108px 0 60px; }
+.rf-simple .rf-intro h1 { font-size:clamp(42px,7vw,64px); line-height:1.15; }
+.rf-simple .rf-intro__lead { margin:22px 0; font-size:16px; line-height:1.75; }
+.rf-simple .rf-mode-grid button { min-height:100px; padding:18px; }
+.rf-simple .rf-mode-grid strong { font-size:21px; }
+.rf-intro-hint,.rf-question-hint,.rf-review>p { color:var(--muted); font-size:16px; line-height:1.7; }
+.rf-simple .rf-intro>.rf-focus-button { display:block; }
+.rf-simple .rf-progress { margin:14px 0 25px; }
+.rf-simple .rf-quiz h1 { font-size:clamp(25px,4vw,36px); line-height:1.45; }
+.rf-simple .rf-options { grid-template-columns:1fr; margin:22px 0; }
+.rf-simple .rf-options button { min-height:60px; font-size:16px; line-height:1.5; }
+.rf-simple .rf-options button b { margin-left:auto; color:#9d3d55; }
+.rf-simple .rf-options button:disabled { cursor:wait; }
+.rf-simple .rf-quiz footer>button { min-height:44px; padding:8px; }
+.rf-skip { border:0; color:var(--muted); background:transparent; cursor:pointer; }
+.rf-answer-count { display:block; margin-top:16px; color:var(--muted); }
+.rf-review h1 { margin:0; font-size:clamp(28px,5vw,42px); }
+.rf-review-actions { display:flex; flex-wrap:wrap; align-items:center; gap:16px; margin:25px 0; }
+.rf-review-actions span { color:var(--muted); font-size:14px; }
+.rf-review-list>div { display:flex; gap:16px; align-items:center; padding:16px 0; border-bottom:1px solid var(--line); }
+.rf-review-list>div>div { flex:1; min-width:0; }
+.rf-review-list strong,.rf-review-list span { display:block; }
+.rf-review-list span { margin-top:7px; color:var(--muted); line-height:1.7; }
+.rf-review-list button { flex:none; padding:10px; min-height:44px; border:0; color:#9d3d55; background:transparent; cursor:pointer; }
+.rf-priorities,.rf-optional,.rf-privacy-details { margin-top:20px; padding:18px; border:1px solid var(--line); border-radius:12px; line-height:1.8; }
+.rf-priorities summary,.rf-optional summary,.rf-privacy-details summary { cursor:pointer; font-weight:600; }
+.rf-priority-chips { display:flex; flex-wrap:wrap; gap:8px; }
+.rf-priority-chips button { min-height:44px; padding:10px 14px; border:1px solid var(--line); border-radius:12px; background:white; cursor:pointer; }
+.rf-priority-chips button[aria-pressed="true"] { color:#7a2239; border:2px solid #a4425a; background:#ffe7ed; }
+.rf-priority-chips button:disabled { opacity:.4; cursor:default; }
+.rf-optional fieldset { margin:20px 0; padding:14px; border:1px solid var(--line); border-radius:12px; }
+.rf-optional legend { font-weight:700; }
+.rf-saving { margin:24px 0; padding:16px; border-top:1px solid #dfcdd2; color:#76666c; font:14px/1.8 system-ui,sans-serif; }
+.rf-saving label { display:flex; align-items:center; gap:10px; cursor:pointer; }
+.rf-saving input { width:18px; height:18px; }
+.rf-saving small { display:block; }
+.rf-saving button,.rf-legacy-bar button { min-height:44px; padding:8px 0; border:0; color:#9d3d55; background:transparent; cursor:pointer; text-decoration:underline; }
+.rf-saving-footer { padding:0 max(20px,calc((100vw - 980px)/2)) 20px; background:#fffaf7; }
+.rf-legacy-bar { padding:18px; color:#291d22; background:#f8e4e8; text-align:center; }
+.rf-report details { font-size:14px; color:var(--muted); line-height:1.8; }
+.rf-report details summary { cursor:pointer; }
+.rf-stage button[aria-pressed="true"] { background:#fff; border-color:var(--ink); font-weight:700; }
+@media(max-width:700px){.rf-simple .rf-brand{top:16px;left:20px}.rf-simple .rf-intro,.rf-simple .rf-quiz,.rf-review{padding-top:85px}.rf-simple .rf-mode-grid{grid-template-columns:1fr 1fr}.rf-simple .rf-mode-grid button{padding:14px;min-height:94px}.rf-simple .rf-mode-grid strong{font-size:19px}.rf-simple .rf-options button{padding:12px}.rf-simple .rf-quiz footer{gap:8px}.rf-simple .rf-quiz footer>button{font-size:14px}.rf-simple .rf-handoff h1{font-size:36px}.rf-report__footer{flex-wrap:wrap}.rf-priorities{padding:14px}}
+@media print{.rf-saving-footer,.rf-saving,.rf-legacy-bar{display:none}}
