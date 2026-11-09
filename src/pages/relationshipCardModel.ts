@@ -2,9 +2,9 @@ import { relationshipQuestions as questions } from "./relationshipQuestions";
 import { answered } from "./relationshipFlow";
 import type { RelationshipProfile } from "./relationshipGuidance";
 
-export const CARD_VERSION = "rf-card-1.0";
+export const CARD_VERSION = "rf-card-1.1";
 export type CardLine = { id: string; label: string; text: string };
-export type RelationshipCard = { version: string; signature: string; owner: string; title: string; subtitle: string; coverage: number; enough: boolean; titleEvidence: string[]; care: CardLine[]; upset: CardLine[]; avoid: CardLine[]; everyday: CardLine[]; boundaries: CardLine[]; quote: string; missing: string[]; evidence: { id: string; label: string; answer: string; tip: string }[] };
+export type RelationshipCard = { version: string; signature: string; owner: string; title: string; subtitle: string; coverage: number; enough: boolean; titleEvidence: string[]; boundaryPriority: string[]; care: CardLine[]; upset: CardLine[]; avoid: CardLine[]; everyday: CardLine[]; boundaries: CardLine[]; quote: string; missing: string[]; evidence: { id: string; label: string; answer: string; tip: string }[] };
 
 // Nicknames describe two selected preferences, not personality scores. Rows are
 // contact options and columns are support options. Missing answers stay missing.
@@ -62,13 +62,14 @@ export function buildRelationshipCard(profile: RelationshipProfile): Relationshi
   if (contact) avoid.push({ id: "contact", label: "联系时", text: avoidContact[option("contact")] });
   return {
     version: CARD_VERSION,
-    signature: `${CARD_VERSION}:${profile.name}:${valid.map((q) => `${q.id}:${option(q.id)}:${profile.answers[q.id].importance}`).join("|")}`,
+    signature: `${CARD_VERSION}:${profile.name}:${valid.map((q) => `${q.id}:${option(q.id)}:${profile.answers[q.id].importance}:${profile.answers[q.id].flexibility}`).join("|")}`,
     owner: profile.name,
     title,
     subtitle: summaryParts.join("，") || "我没回答的部分，请直接问我，别靠猜。",
     coverage: valid.length,
     enough,
     titleEvidence,
+    boundaryPriority: ["privacy", "intimacy"].filter((id) => has(id) && (profile.answers[id].importance === "high" || profile.answers[id].flexibility === "unwilling" || (id === "privacy" && option(id) === 1))),
     care: enough ? lines(["contact", "space"]) : [],
     upset: enough ? lines(["support", "conflict"]) : [],
     avoid: enough ? avoid : [],
@@ -88,4 +89,41 @@ export function cardSections(card: RelationshipCard): { title: string; items: Ca
     { title: "一起生活的小约定", items: card.everyday },
     { title: "再亲近，也请先问我", items: card.boundaries },
   ].filter((section) => section.items.length > 0);
+}
+
+export const POCKET_VERSION = "rf-pocket-1.0";
+const shortTips: Record<string, string[]> = {
+  contact: ["每天问候一句，忙时说一声。", "留一段完整时间，好好聊聊。", "不用秒回，有空再好好聊。", "先商量这周怎么联系。"],
+  space: ["保留我的个人安排，再约会。", "周末留点时间一起做些事。", "各留独处时间，也留约会时间。", "安排冲突，先问彼此多在意。"],
+  support: ["先听我说完，再问要不要建议。", "陪我把问题拆小，一起想办法。", "先让我静静，再约时间聊。", "先问我想被听、帮忙，还是独处。"],
+  conflict: ["我想当下聊清，也先问能否继续。", "先暂停，约好什么时候再聊。", "让我先写下来，再一起看。", "看彼此状态，决定继续或缓缓。"],
+  avoidSupport: ["别说“想太多”，别急着讲道理。", "别只说“没事”，陪我想一步。", "别追着问，也别一声不吭消失。", "别替我决定怎么安慰，先问我。"],
+  avoidContact: ["别让我一直猜下次何时联系。", "别总是零碎回复，却没空好好聊。", "别把没秒回，当成不在乎。", "别只按你的节奏要求我联系。"],
+  privacy: ["分享隐私前，先问范围和期限。", "别用查手机、定位来证明感情。", "临时分享用完就停。", "隐私没谈好，别替我答应。"],
+  intimacy: ["身体接触前，先问我愿不愿意。", "不舒服就换一种，或者停下。", "别催亲近，给我时间再确认。", "我可以随时改变主意。"],
+};
+
+export function pocketCardSections(card: RelationshipCard): { title: string; items: CardLine[] }[] {
+  const selectedIndex = (id: string) => {
+    const evidence = card.evidence.find((e) => e.id === id);
+    return evidence ? questions.find((q) => q.id === id)!.options.indexOf(evidence.answer) : -1;
+  };
+  const line = (id: string, source = id): CardLine[] => {
+    const index = selectedIndex(id);
+    return index >= 0 ? [{ id, label: "", text: shortTips[source][index] }] : [];
+  };
+  const care = [...line("contact"), ...line("space")];
+  const upset = selectedIndex("support") === 2 && selectedIndex("conflict") === 1
+    ? [{ id: "support-conflict", label: "", text: "先让我静静，约好时间再聊。" }]
+    : [...line("support"), ...line("conflict")];
+  // Explicitly retained privacy or marked boundaries take the limited two slots first.
+  const hazards = [...card.boundaryPriority.flatMap((id) => line(id)), ...line("support", "avoidSupport"), ...line("contact", "avoidContact"), ...line("privacy"), ...line("intimacy")];
+  const seen = new Set<string>();
+  const avoid = hazards.filter((item) => { if (seen.has(item.id)) return false; seen.add(item.id); return true; }).slice(0, 2);
+  const missing = (items: CardLine[], id: string) => items.length ? items : [{ id, label: "", text: "这部分没作答，请直接问我。" }];
+  return [
+    { title: "平时这样对我好", items: missing(care, "care-missing") },
+    { title: "闹别扭时这样哄", items: missing(upset, "upset-missing") },
+    { title: "不能踩的雷", items: missing(avoid, "avoid-missing") },
+  ];
 }

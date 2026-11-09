@@ -87,4 +87,19 @@ for (const q of questions) for (let option = 1; option < 4; option++) {
 }
 assert.doesNotMatch(JSON.stringify(model.buildRelationshipCard(a)), /PRIVATE_/);
 assert.notEqual(model.buildRelationshipCard(profile('A', 12)).signature, model.buildRelationshipCard(profile('B', 12)).signature);
+assert.deepEqual(model.pocketCardSections(titleA).map(s => s.title), ['平时这样对我好', '闹别扭时这样哄', '不能踩的雷']);
+for (let contact=0;contact<4;contact++) for (let support=0;support<4;support++) for (let conflict=0;conflict<4;conflict++) for (let space=0;space<4;space++) {
+  const p = profile('你',12);
+  Object.assign(p.answers.contact,{option:contact});Object.assign(p.answers.support,{option:support});Object.assign(p.answers.conflict,{option:conflict});Object.assign(p.answers.space,{option:space});
+  const sections=model.pocketCardSections(model.buildRelationshipCard(p));
+  assert.equal(sections.length,3);
+  sections.forEach(s=>{assert.ok(s.items.length<=2);s.items.forEach(item=>assert.ok(Array.from(item.text).length<=24));});
+}
+const privateBoundary=profile('你',12);privateBoundary.answers.privacy.option=1;
+assert.equal(model.pocketCardSections(model.buildRelationshipCard(privateBoundary))[2].items[0].text,'别用查手机、定位来证明感情。');
+assert.equal(model.pocketCardSections(quietCard)[1].items.length,1);
+assert.equal(model.pocketCardSections(quietCard)[1].items[0].text,'先让我静静，约好时间再聊。');
+assert.match(model.pocketCardSections(model.buildRelationshipCard(withoutAnchors))[1].items[0].text,/没作答/);
+assert.doesNotMatch(JSON.stringify(model.pocketCardSections(model.buildRelationshipCard(a))),/PRIVATE_/);
 console.log('PASS: answer contract, skip threshold, unknown metadata, priorities, pair privacy, expiry and restoration; 16 distinct nicknames, 48 option mappings, missing-anchor fallback and export data privacy');
+console.log('PASS: 256 compact-card combinations, three sections, at most two short tips each, explicit privacy boundary retained and unknown-answer fallback');

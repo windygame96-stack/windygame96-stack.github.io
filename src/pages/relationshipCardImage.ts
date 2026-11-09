@@ -1,4 +1,4 @@
-import { cardSections, type RelationshipCard } from "./relationshipCardModel";
+import { pocketCardSections, POCKET_VERSION, type RelationshipCard } from "./relationshipCardModel";
 
 const WIDTH = 1080;
 const FONT = '"PingFang SC","Microsoft YaHei",system-ui,sans-serif';
@@ -15,7 +15,7 @@ export async function renderRelationshipCard(card: RelationshipCard): Promise<{ 
   const ops: Op[] = [];
   const ink = "#392830", muted = "#77676d", rose = "#a74763";
   const margin = 64, inner = WIDTH - margin * 2;
-  let y = 62;
+  let y = 50;
   function text(value: string, x: number, top: number, width: number, size = 40, weight = 500, color = ink, lineHeight = Math.ceil(size * 1.48)) {
     ctx!.font = `${weight} ${size}px ${FONT}`;
     const lines: string[] = [];
@@ -37,35 +37,23 @@ export async function renderRelationshipCard(card: RelationshipCard): Promise<{ 
     lines.forEach((line, i) => ops.push({ kind: "text", text: line, x, y: top + i * lineHeight, size, weight, color }));
     return top + lines.length * lineHeight;
   }
-  y = text(`给想对我好的人${["A", "B"].includes(card.owner) ? ` · ${card.owner}` : ""}`, margin, y, inner, 30, 700, rose) + 26;
-  y = text("我的相处说明书", margin, y, inner, 40, 500, muted) + 20;
-  y = text(card.title, margin, y, inner, 82, 800, ink, 103) + 26;
-  y = text(card.subtitle, margin, y, inner, 42, 500, muted) + 36;
+  y = text(`我的相处速记卡${["A", "B"].includes(card.owner) ? ` · ${card.owner}` : ""}`, margin, y, inner, 30, 700, rose) + 20;
+  y = text(card.title, margin, y, inner, 78, 800, ink, 96) + 28;
 
-  for (const section of cardSections(card)) {
+  for (const section of pocketCardSections(card)) {
     const top = y;
     const box: RectOp = { kind: "rect", x: margin, y, w: inner, h: 0, color: "#ffffff", radius: 28 };
     ops.push(box);
-    y += 30;
-    y = text(section.title, margin + 32, y, inner - 64, 36, 800, rose) + 24;
+    y += 24;
+    y = text(section.title, margin + 32, y, inner - 64, 36, 800, rose) + 14;
     for (const item of section.items) {
-      y = text(item.label, margin + 32, y, inner - 64, 28, 700, muted) + 8;
-      y = text(item.text, margin + 32, y, inner - 64, 42, 500, ink, 60) + 26;
+      y = text(`· ${item.text}`, margin + 32, y, inner - 64, 44, 500, ink, 62) + 14;
     }
     box.h = y - top + 4;
-    y += 30;
+    y += 24;
   }
-  const quoteTop = y;
-  const quoteBox: RectOp = { kind: "rect", x: margin, y, w: inner, h: 0, color: "#49333e", radius: 28 };
-  ops.push(quoteBox);
-  y = text("这句话，我会更接得住", margin + 32, y + 30, inner - 64, 30, 700, "#f4bfd0") + 22;
-  y = text(`“${card.quote}”`, margin + 32, y, inner - 64, 46, 600, "#ffffff", 66) + 30;
-  quoteBox.h = y - quoteTop;
-  y += 32;
-  if (card.missing.length) y = text(`没回答的 ${card.missing.length} 项，请直接问我，别靠猜。`, margin, y, inner, 30, 500, muted) + 14;
-  y = text("这是我当前的偏好，也想听听你的需要。", margin, y, inner, 32, 600, ink) + 12;
-  y = text(`根据本次 ${card.coverage}/12 题整理 · 相处昵称不代表固定人格`, margin, y, inner, 27, 400, muted) + 12;
-  y = text(`Relationship Fit · ${card.version}`, margin, y, inner, 24, 400, muted) + 46;
+  y = text(`本次 ${card.coverage}/12 题的偏好，可随时再商量。`, margin, y + 2, inner, 27, 400, muted) + 6;
+  y = text(`Relationship Fit · ${POCKET_VERSION}`, margin, y, inner, 23, 400, muted) + 30;
   const height = Math.ceil(y);
   if (height > 9000 || WIDTH * height > 12000000) throw new Error("这份图片太长，当前浏览器可能无法保存；请先用页面打印保留。");
   canvas.width = WIDTH; canvas.height = height;
