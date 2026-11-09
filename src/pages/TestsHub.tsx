@@ -13,21 +13,21 @@ function readLifeDriveStatus(): TestStatus {
 function readRelationshipStatus(): TestStatus {
   try {
     const saved = decodeSession(localStorage.getItem(FLOW_STORAGE_KEY));
-    if (saved) return { label: saved.screen === "report" ? "查看报告" : "继续测试", detail: "已自愿保存到本机", active: true };
+    if (saved) return { label: "输入密码继续", detail: "需密码 · 已自愿保存进度", active: false };
     const screen = JSON.parse(localStorage.getItem("rf-screen") || '"intro"') as string;
     if (screen === "report") return {
-      label: "查看报告",
-      detail: "已有本机报告",
-      active: true
+      label: "输入密码查看",
+      detail: "需密码 · 已有本机报告",
+      active: false
     };
     if (screen !== "intro") return {
-      label: "开始简化版",
+      label: "输入密码开始",
       detail: "12 题，只需点选",
       active: false
     };
   } catch {/* use default */}
   return {
-    label: "开始测试",
+    label: "输入密码开始",
     detail: "12 题，只需点选",
     active: false
   };

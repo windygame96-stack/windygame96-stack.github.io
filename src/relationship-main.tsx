@@ -1,5 +1,5 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import RelationshipFit from "./pages/RelationshipFit";
+import RelationshipGate from "./pages/RelationshipGate";
 
-createRoot(document.getElementById("root")!).render(<StrictMode><RelationshipFit /></StrictMode>);
+createRoot(document.getElementById("root")!).render(<StrictMode><RelationshipGate /></StrictMode>);

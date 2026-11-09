@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useLanguage } from "@/lib/language";
 import Home from "@/pages/Home";
 import SharedBlackCat from "@/pages/SharedBlackCat";
-import RelationshipFit from "@/pages/RelationshipFit";
+import RelationshipGate from "@/pages/RelationshipGate";
 import LifeDrive from "@/pages/LifeDrive";
 import TestsHub from "@/pages/TestsHub";
 
@@ -25,7 +25,7 @@ export default function App() {
 
   if (isBlackCat) return <>{languageControl}<SharedBlackCat /></>;
   if (isTestsHub) return <>{languageControl}<TestsHub /></>;
-  if (isRelationshipFit) return <RelationshipFit />;
+  if (isRelationshipFit) return <RelationshipGate />;
   if (isLifeDrive) return <LifeDrive />;
   return <Home />;
 }

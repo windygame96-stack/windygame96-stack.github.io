@@ -1,0 +1,21 @@
+.rf-standalone { margin:0; min-width:280px; background:#fffaf7; font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }
+.rf-entry,.rf-entry * { box-sizing:border-box; }
+.rf-entry { min-height:100vh; min-height:100dvh; padding:80px 20px 40px; display:grid; align-content:center; justify-items:center; color:#392830; background:radial-gradient(circle at 80% 10%,#ffe2e9,transparent 45%),#fffaf7; font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }
+.rf-entry-back { position:absolute; left:24px; top:25px; color:#8c6574; font-size:14px; text-decoration:none; }
+.rf-entry-card { width:min(440px,100%); padding:32px; border:1px solid #edcad6; border-radius:24px; background:#fff; box-shadow:0 12px 45px #814a6510; }
+.rf-entry-mark { color:#b9728b; font-size:43px; }
+.rf-entry-card>p { margin:15px 0 10px; color:#a74763; font-size:14px; }
+.rf-entry-card h1 { margin:0 0 17px; font-size:32px; letter-spacing:-.04em; line-height:1.35; }
+.rf-entry-card>span:not(.rf-entry-mark) { color:#806b74; font-size:14px; line-height:1.8; }
+.rf-entry form { margin-top:26px; }
+.rf-entry label { display:block; margin-bottom:9px; color:#715762; font-size:14px; }
+.rf-entry input { width:100%; min-height:54px; padding:12px 15px; border:1px solid #d7b8c3; border-radius:12px; font:inherit; font-size:18px; color:#392830; background:#fffafc; }
+.rf-entry form>button { width:100%; min-height:52px; padding:12px; margin-top:17px; border:0; border-radius:12px; color:white; background:#49333e; font:inherit; font-weight:650; cursor:pointer; }
+.rf-entry form>button:disabled { opacity:.4; cursor:default; }
+.rf-entry [role="alert"] { margin:12px 0 0; color:#a13c59; font-size:14px; line-height:1.7; }
+.rf-entry small { display:block; margin-top:22px; color:#8b7780; font-size:12px; line-height:1.7; }
+.rf-entry-retry { min-height:44px; padding:12px 0; color:#9b3b58; background:none; border:0; text-decoration:underline; cursor:pointer; }
+.rf-entry :focus-visible,.rf-entry-lock:focus-visible { outline:3px solid #a74763; outline-offset:3px; }
+.rf-entry-lock { position:fixed; z-index:20; right:18px; top:18px; padding:9px 12px; min-height:40px; border:1px solid #dfcdd2; border-radius:99px; color:#80616f; background:#fffaf7ee; font:13px system-ui,sans-serif; cursor:pointer; }
+@media(max-width:420px){.rf-entry-card{padding:26px 22px}.rf-entry-card h1{font-size:29px}}
+@media print{.rf-entry-lock{display:none}}
