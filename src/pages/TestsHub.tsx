@@ -59,7 +59,7 @@ export default function TestsHub() {
         <div className="th-card__body"><p>{tr("\u5728\u786E\u5B9A\u5173\u7CFB\u4E4B\u524D\uFF0C\u8BA4\u771F\u804A\u4E00\u6B21")}</p><h2>{tr("\u5173\u7CFB\u4F7F\u7528\u8BF4\u660E\u4E66")}</h2><span>{tr("\u6574\u7406\u4EB2\u5BC6\u5173\u7CFB\u4E2D\u7684\u9700\u6C42\u3001\u8FB9\u754C\u548C\u53EF\u534F\u5546\u6761\u4EF6\uFF0C\u4E5F\u53EF\u4EE5\u4E24\u4E2A\u4EBA\u8F6E\u6D41\u5B8C\u6210\u8BA8\u8BBA\u5730\u56FE\u3002")}</span></div>
         <footer><div><strong>{tr(relationshipStatus.label)}</strong><small className={relationshipStatus.active ? "active" : ""}>{tr(relationshipStatus.detail)}</small></div><b>→</b></footer>
       </a>
-      <a className="th-card th-card--work" href="/work-return/?v=3.9">
+      <a className="th-card th-card--work" href="/work-return/?v=3.10">
         <header><span>03</span><small>SELF · WORK &amp; REWARD</small></header>
         <div className="th-card__diagram"><span>成果</span><i /><span>责任</span><i /><span>回报</span></div>
         <div className="th-card__body"><p>从最近半年的真实工作经历出发</p><h2>付出与回报<br />中国职场复盘</h2><span>先选你看重的方面，再答7道体验题和2道评级题，点选自动下一题。</span></div>
@@ -84,6 +84,7 @@ export default function TestsHub() {
     <footer className="th-footer"><a href="/">{tr("\u2190 \u8FD4\u56DE\u6478\u9C7C\u4E4B\u795E\u6E29\u8FEA\u7684 LAB")}</a><span>04 TESTS · MORE LATER</span></footer>
   </main>;
 }
+
 
 
 
