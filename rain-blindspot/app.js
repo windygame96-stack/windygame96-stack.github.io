@@ -1,4 +1,8 @@
 const game = document.querySelector('#game');
+const detective = PEOPLE.xu;
+const castList = document.querySelector('#cast-list');
+castList.innerHTML = Object.values(PEOPLE).map(person => `
+  <li><img src="portraits/${person.portrait}" alt="" loading="lazy"><div><strong>${person.name}${person === detective ? '（你）' : ''}</strong><span>${person.role}</span></div></li>`).join('');
 const saveKey = 'rain-blindspot-story-v3';
 const newGame = () => ({ scene: 0, beat: 0, choice: null, ended: false });
 let progress = loadProgress();
@@ -45,13 +49,13 @@ function choose(index) {
 }
 
 function portrait(person) {
-  return `<figure class="portrait"><img src="portraits/${person.portrait}" alt="${person.name}的立绘"><figcaption>${person.name} <span>${person.role}</span></figcaption></figure>`;
+  return `<figure class="portrait"><img src="portraits/${person.portrait}" alt="${person.name}的立绘"><figcaption><strong>${person.name}${person === detective ? "（你）" : ""}</strong><span class="identity">${person.role}</span></figcaption></figure>`;
 }
 
 function render(focus = false) {
   if (!playing) {
     game.innerHTML = `<section class="cover">
-      <div><h1>雨夜盲区</h1><p>一场雨，三个人在等同一个人。</p><p class="muted">跟着调查员许澄走过九幕故事。你可以选一句追问，再听对方怎么回答。</p>
+      <div><h1>雨夜盲区</h1><div class="player-intro"><img src="portraits/xu-police.webp" alt=""><div><strong>你是韩岚</strong><span>刑警队长</span></div></div><p>一场雨，三个人在等同一个人。</p><p class="muted">你接到报案，赶到便利店。先问问老板，她在巷子里看见了什么。</p>
       <button type="button" data-action="start">${progress ? '继续故事' : '开始故事'} <span aria-hidden="true">→</span></button>
       ${progress ? '<button class="quiet" type="button" data-action="restart">从头开始</button>' : ''}</div>
     </section>`;
@@ -76,7 +80,7 @@ function render(focus = false) {
   game.innerHTML = `<section class="scene">
     <div class="chapter">第 ${progress.scene + 1} / ${STORY.length} 幕 <span>${scene.title}</span><small>${scene.location}</small></div>
     <div class="stage">${portrait(speaker || PEOPLE[scene.portrait])}</div>
-    <div class="dialogue"><div class="speaker">${speaker?.name || (isChoice ? (chosen ? '回应' : '你的选择') : '旁白')}</div>
+    <div class="dialogue"><div class="speaker">${speaker === detective ? '你 · 韩岚' : speaker?.name || (isChoice ? (chosen ? '回应' : '你要怎么选') : '旁白')}</div>
     <p tabindex="-1" class="line">${text}</p>
     <div class="actions">${actions}</div></div>
   </section>`;
