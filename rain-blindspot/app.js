@@ -1,5 +1,5 @@
 const game = document.querySelector('#game');
-const saveKey = 'rain-blindspot-story-v2';
+const saveKey = 'rain-blindspot-story-v3';
 const newGame = () => ({ scene: 0, beat: 0, choice: null, ended: false });
 let progress = loadProgress();
 let playing = false;
@@ -51,14 +51,14 @@ function portrait(person) {
 function render(focus = false) {
   if (!playing) {
     game.innerHTML = `<section class="cover">
-      <div><h1>雨夜盲区</h1><p>一场雨，三个人在等同一个人。</p><p class="muted">跟着调查员许澄问话，听完他们的故事，再作判断。</p>
+      <div><h1>雨夜盲区</h1><p>一场雨，三个人在等同一个人。</p><p class="muted">跟着调查员许澄走过九幕故事。你可以选一句追问，再听对方怎么回答。</p>
       <button type="button" data-action="start">${progress ? '继续故事' : '开始故事'} <span aria-hidden="true">→</span></button>
       ${progress ? '<button class="quiet" type="button" data-action="restart">从头开始</button>' : ''}</div>
     </section>`;
     return;
   }
   if (progress.ended) {
-    game.innerHTML = `<section class="cover"><div><p class="chapter">故事结束</p><h1 tabindex="-1">雨停之后</h1><p>老板把门口的水扫开。那条小巷又可以直接走过去了。</p><button type="button" data-action="restart">重读故事</button><a class="back" href="/#games">返回游戏区</a></div></section>`;
+    game.innerHTML = `<section class="cover"><div><p class="chapter">故事结束</p><h1 tabindex="-1">雨停之后</h1><p>白川町案卷已结。</p><button type="button" data-action="restart">重读故事</button><a class="back" href="/#games">返回游戏区</a></div></section>`;
     if (focus) game.querySelector('h1').focus();
     return;
   }
@@ -74,7 +74,7 @@ function render(focus = false) {
       ? '<button type="button" data-action="retry">再想一想</button>'
       : '<button type="button" data-action="next">继续 <span aria-hidden="true">→</span></button>';
   game.innerHTML = `<section class="scene">
-    <div class="chapter">第 ${progress.scene + 1} / ${STORY.length} 幕 <span>${scene.title}</span></div>
+    <div class="chapter">第 ${progress.scene + 1} / ${STORY.length} 幕 <span>${scene.title}</span><small>${scene.location}</small></div>
     <div class="stage">${portrait(speaker || PEOPLE[scene.portrait])}</div>
     <div class="dialogue"><div class="speaker">${speaker?.name || (isChoice ? (chosen ? '回应' : '你的选择') : '旁白')}</div>
     <p tabindex="-1" class="line">${text}</p>
