@@ -28,7 +28,7 @@ interface ProductSlot {
 const games: Game[] = [
   {
     title: "雨夜盲区",
-    description: "暴雨夜，三个人都在等同一个人。调查现场、比对证词，找出谁真正动了手。试玩约 15–25 分钟。",
+    description: "暴雨夜，三个人都在等同一个人。跟着许澄问话，在对话里找出真相。",
     url: "/rain-blindspot/",
     image: "/assets/rain-blindspot-cover.webp",
     tag: "本格推理 · 试玩",

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 export type Language = 'zh' | 'en';
 const english: Record<string, string> = {
   '雨夜盲区': 'Rain Blindspot',
-  '暴雨夜，三个人都在等同一个人。调查现场、比对证词，找出谁真正动了手。试玩约 15–25 分钟。': 'Three people are waiting for the same man on a stormy night. Investigate the scene, compare testimonies and find out who acted. Playtime: about 15–25 minutes. Game in Chinese.',
+  '暴雨夜，三个人都在等同一个人。跟着许澄问话，在对话里找出真相。': 'Three people are waiting for the same man on a stormy night. Question the suspects and uncover the truth through dialogue. Game in Chinese.',
   '本格推理 · 试玩': 'Detective mystery · Demo',
   '摸鱼之神温迪的 LAB': 'wendi’s Lab',
   '独立游戏': 'Games', '产品实验': 'Experiments', '小红书 ↗': 'Rednote ↗',

@@ -1,28 +1,97 @@
-const $=s=>document.querySelector(s), KEY='rain-blindspot-v1';
-function fresh(){return{started:false,ch:0,line:0,found:[],solved:[],deduced:[],weather:'暴雨',route:false,final:0,ending:null,mistakes:0}}
-let state=fresh();try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.found)&&s.ch>=0&&s.ch<=4)state={...state,...s}}catch(e){}
-let view='story',selected=[],feedback='',audioCtx,noise;const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
-function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';clearTimeout(window.tid);window.tid=setTimeout(()=>$('#toast').style.display='none',3500)}
-function btn(text,action,cls=''){return `<button class="${cls}" onclick="${action}">${text}</button>`}
-function go(v){view=v;feedback='';render()}
-function start(){state.started=true;save();render()}
-function reset(){if(confirm('清除本机进度并重新调查？')){state=fresh();selected=[];feedback='';view='story';save();render()}}
-function collect(id){if(!state.found.includes(id)){state.found.push(id);save();toast('已收入证据夹 · E'+id);render()}}
-function nextLine(){state.line++;save();render()}
-function answer(i){const c=CHAPTERS[state.ch];if(i!==c.answer){state.mistakes++;feedback='这一步还缺证据。'+c.why;save();render();return}if(!state.solved.includes(state.ch))state.solved.push(state.ch);feedback=c.why;save();render()}
-function advance(){state.ch++;state.line=0;feedback='';view=state.ch===4?'final':'story';save();render()}
-function render(){const a=$('#app');$('#nav').innerHTML=state.started?['story','weather','evidence','board','final'].map((v,i)=>btn(['案卷','天气','证据','推演','指认'][i],`go('${v}')`,view===v?'active':'')).join(''):'';
-if(!state.started){a.innerHTML=`<section class="hero"><div class="eyebrow">INTERACTIVE MYSTERY / CASE 001</div><h1>雨夜盲区</h1><p class="intro">一场雨。三个人在等他。<br>只有一个人的计划，走到了终点。</p><p class="muted intro">调查雨巷、重建归途，把想杀他的人与真正动手的人分开。</p><div class="row">${btn('进入雨夜 →','start()','primary')}</div><p class="footer">可通关原型 · 约15–25分钟<br>正式版目标45–60分钟 · 自动保存于本机<br>含死亡、操纵关系与复仇主题，无血腥画面。所有技术鉴定均属虚构。</p></section>`;return}
-if(view==='story'){if(state.ch===4){a.innerHTML=`<div class="eyebrow">FINAL ACT</div><h2>三条计划，一次死亡</h2><p>证词已全部收录。回看证据与天气，完成推演后提交指认。</p>${btn('进入终章',"go('final')",'primary')}`;return}const c=CHAPTERS[state.ch],done=state.line>=c.lines.length;const line=c.lines[Math.min(state.line,c.lines.length-1)];const es=EVIDENCE.filter(e=>e.chapter===state.ch);const all=es.every(e=>state.found.includes(e.id));a.innerHTML=`<div class="eyebrow">${c.tag} / ${state.ch+1} OF 5</div><h2>${c.title}</h2><div class="progress"><span style="width:${(state.ch+1)*20}%"></span></div><section class="comic"><small>${c.loc} / 证词摘录 ${Math.min(state.line+1,c.lines.length)} · ${c.lines.length}</small><strong>${line[0]}</strong><p>${line[1]}</p></section>${!done?btn('继续对话 →','nextLine()','primary'):''}${done?`<h3>调查现场</h3><p class="muted">点击地点中的档案卡查看并收集。每条来源均可回看。</p><div class="grid">${es.map(e=>`<button class="card" onclick="collect('${e.id}')"><small>E${e.id} / ${state.found.includes(e.id)?'已收录':'查看线索'}</small><h3>${e.name}</h3>${state.found.includes(e.id)?`<p>${e.text}</p>`:''}</button>`).join('')}</div>${all?`<h3>${c.question}</h3><div class="answers">${c.options.map((o,i)=>btn(o,`answer(${i})`)).join('')}</div>${feedback?`<div class="note" role="status">${feedback}</div>`:''}${state.solved.includes(state.ch)?`<div class="row">${btn('结案本章，继续 →','advance()','primary')}</div>`:''}`:'<p class="muted">收齐本章线索后，整理你的判断。</p>'}`:''}`}
-if(view==='weather'){const w=state.weather,route=w==='晴'?'M80 90 L280 90 L520 90 L520 280':w==='小雨'?'M80 90 L80 200 L400 200 L520 280':'M80 90 L80 200 L230 200 L230 300 L400 300 L520 280';a.innerHTML=`<div class="eyebrow">WEATHER RECONSTRUCTION</div><h2>同一座街区，不同的归途</h2><p class="muted">这是依据已收集材料进行的模拟，切换天气不会改变已经发生的案情。</p><div class="tabs">${['晴','小雨','暴雨'].map(w=>btn(w,`weather('${w}')`,w===state.weather?'active':'')).join('')}</div><svg class="map" viewBox="0 0 600 360" role="img" aria-label="${w}路线重建图"><path class="street" d="M80 90H520V280M80 90V200H400L520 280M230 200V300H400L520 280"/><path class="route" d="${route}"/><text x="40" y="60">便利店</text><text x="240" y="60">旧路 · B</text><text x="300" y="180">商店檐下</text><text x="245" y="335">高处侧巷</text><text x="462" y="320">回家</text><circle cx="400" cy="300" r="8" fill="#cb8c7f"/></svg>${state.found.includes('13')?`<div class="note">${w==='晴'?'走旧路，浅色外套可见。B有机会等到目标。':w==='小雨'?'走檐下。现有记录不足以断定所有小雨时的衣着，不能擅自推断C一定成功。':'走高处侧巷，深色雨衣遮住外套；在井盖旁停步整理鞋套。'}</div><h3>案发夜的路径是哪条？</h3><div class="row">${['旧路','商店檐下','高处侧巷'].map((r,i)=>btn(r,`chooseRoute(${i})`)).join('')}</div>${state.route?'<p class="tag">✓ 路线重建完成 · 暴雨 / 高处侧巷</p>':''}`:'<p class="note">当前仅展示候选路线。第三章取得 E13 后可验证习惯与提交重建。</p>'}`}
-if(view==='evidence'){a.innerHTML=`<div class="eyebrow">CASE ARCHIVE / ${state.found.length} OF 19</div><h2>证据夹</h2><div class="grid">${EVIDENCE.filter(e=>state.found.includes(e.id)).map(e=>`<article class="card"><small>E${e.id} / ${e.loc}</small><h3>${e.name}</h3><p>${e.text}</p></article>`).join('')||'<p>完成对话后，点击现场线索即可收集。</p>'}</div>`}
-if(view==='board'){a.innerHTML=`<div class="eyebrow">DEDUCTION BOARD</div><h2>让证据彼此作证</h2><p>每次选择两张证据卡，建立一条可验证的推论。</p><div class="row">${btn('组合所选证据','combine()','primary')}${btn('清空选择','clearSelected()')}</div><p role="status">已选 ${selected.map(id=>'E'+id).join(' ＋ ')||'无'}</p>${feedback?`<div class="note">${feedback}</div>`:''}<div class="grid">${EVIDENCE.filter(e=>state.found.includes(e.id)).map(e=>btn(`E${e.id} · ${e.name}`,`selectCard('${e.id}')`,selected.includes(e.id)?'selected card':'card')).join('')}</div><h3>已成立的推论 · ${state.deduced.length}/5</h3>${RECIPES.map(r=>`<div class="card"><strong>${r.name}</strong><p>${state.deduced.includes(r.id)?r.text:'尚未建立'}</p></div>`).join('')}<details><summary>需要一点提示</summary><p>先找“在现场”与“有没有启动”，再对照照片与连续记录；路线要同时看衣着与习惯；最后把袭击来源与控制记录相连。</p><details><summary>显示明确组合提示</summary><p>E04＋E05；E08＋E10；E03＋E13；E14＋E15；E17＋E18。</p></details></details>`}
-if(view==='final')renderFinal(a);save()}
-function weather(w){state.weather=w;save();render()}function chooseRoute(i){if(i===2){state.route=true;toast('与案发夜录像及雨量相符')}else{state.mistakes++;toast('请对照 E01、E03、E13 的案发条件')}save();render()}
-function selectCard(id){if(selected.includes(id))selected=selected.filter(x=>x!==id);else if(selected.length<2)selected.push(id);else toast('每次组合两张，请先取消一张');render()}
-function clearSelected(){selected=[];feedback='';render()}
-function combine(){const r=RECIPES.find(r=>r.need.length===selected.length&&r.need.every(id=>selected.includes(id)));if(r){if(!state.deduced.includes(r.id))state.deduced.push(r.id);feedback=r.text;selected=[]}else feedback='这两张材料还不能独立支持一个完整结论。试着把行为证据与结果证据配成一对。';save();render()}
-const finalQ=[['谁实际造成林知远死亡？',['沈雨晴','周明哲','陈默'],0,'动机并不区分成败。请核对袭击来源与控制链。'],['B的谋杀为什么未能发生？',['设备被雨水损坏','目标改道，B没有启动','B已经放弃复仇'],1,'没有证据证明设备损坏或主动放弃。'],['C的摄影计划败在哪一环？',['相机进水','长曝光照证明没人经过','雨衣遮蔽识别特征，未确认且未启动'],2,'必须区分成片、预览、人工确认和独立启动记录。'],['雨如何促成A的机会？',['雷声直接造成死亡','暴雨触发改道及可预测停步','雨夜所有人都去同一地点'],1,'行为条件由历史记录与案发录像交叉支持。'],['最终指认需要哪条独立链？',['她熟悉死者','她曾经说谎','致死袭击→R7→个人终端→本人操作'],2,'猜中身份不算完成证明。']];
-function finalAnswer(i){const q=finalQ[state.final];if(i!==q[2]){state.mistakes++;feedback=q[3];save();render();return}state.final++;feedback='';if(state.final===finalQ.length)state.ending='truth';save();render()}
-function renderFinal(a){if(state.ending){a.innerHTML=`<div class="eyebrow">TRUE END / 雨停之后</div><h2>三个人想让他消失。<br>一人真正动了手。</h2><div class="timeline"><p>21时46分 · B进入旧路守候，准备局部坍塌。</p><p>21时50分 · 暴雨开始。A等待条件成立，C继续摄影预览。</p><p>21时58分 · 林套上深色雨衣。</p><p>22时03分 · 林从便利店改走避水路径，B未等到目标。</p><p>22时04分 · C看到深色背影，未能确认；致害环节始终未启动。</p><p>22时05分56秒 · 林在井盖旁整理鞋套。</p><p>22时06分03秒 · A操作终端，R7产生唯一致死袭击。</p><p>22时12分 · B离开旧路；三条计划没有串联。</p></div><section class="comic"><strong>沈雨晴</strong><p>“我约过律师。那天我本来可以去的。”</p><strong>许澄</strong><p>“那张预约单，也会放进卷宗。”</p></section><p>周明哲承认守候。陈默交出原始档案。两人的准备与意图被分别记录，未造成这次死亡不等于没有责任；故事不预判具体法律处置。</p><p>店主把门口的水扫开。那条小巷又可以直接走过去了。</p><p class="muted">完整证据结局已达成。作答修正 ${state.mistakes} 次，不扣除剧情内容。</p><div class="row">${btn('回看证据',"go('evidence')")}${btn('重新调查','reset()')}</div>`;return}if(state.ch<4||state.deduced.length<5||!state.route){a.innerHTML=`<div class="eyebrow">FINAL ACCUSATION / 尚待证实</div><h2>指认之前</h2><p>完成四幕调查、五条证据推论与天气路线重建，才能提交结论。</p><div class="card"><p>调查章节 ${Math.min(state.ch,4)}/4</p><p>证据推论 ${state.deduced.length}/5</p><p>路线重建 ${state.route?'完成':'未完成'}</p></div><div class="row">${btn('继续调查',"go('story')")}${btn('证据推演',"go('board')")}${btn('重建路线',"go('weather')")}</div>`;return}const q=finalQ[state.final];a.innerHTML=`<div class="eyebrow">FINAL ACCUSATION / ${state.final+1} OF 5</div><h2>${q[0]}</h2><div class="answers">${q[1].map((o,i)=>btn(o,`finalAnswer(${i})`)).join('')}</div>${feedback?`<div class="note" role="status">${feedback}</div>`:''}<p class="muted">可随时回看证据。答错会得到质疑，不会清空进度。</p>`}
-$('#brand').onclick=e=>{e.preventDefault();go('story')};$('#sound').onclick=()=>{if(noise){noise.stop();noise=null;$('#sound').textContent='雨声 关';return}try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();audioCtx.resume();const b=audioCtx.createBuffer(1,audioCtx.sampleRate*2,audioCtx.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.07;noise=audioCtx.createBufferSource();noise.buffer=b;noise.loop=true;const f=audioCtx.createBiquadFilter();f.type='lowpass';f.frequency.value=800;noise.connect(f);f.connect(audioCtx.destination);noise.start();$('#sound').textContent='雨声 开'}catch(e){toast('当前浏览器不支持环境音')}};render();
+const game = document.querySelector('#game');
+const saveKey = 'rain-blindspot-story-v2';
+const newGame = () => ({ scene: 0, beat: 0, choice: null, ended: false });
+let progress = loadProgress();
+let playing = false;
+
+function loadProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(saveKey));
+    const scene = STORY[saved?.scene];
+    if (!scene?.beats[saved.beat]) return null;
+    const options = scene.beats[saved.beat].choices;
+    if (saved.choice !== null && !options?.[saved.choice]) return null;
+    return saved;
+  } catch { return null; }
+}
+
+function save() {
+  try { localStorage.setItem(saveKey, JSON.stringify(progress)); } catch {}
+}
+
+function start(restart = false) {
+  if (!progress || restart) progress = newGame();
+  playing = true;
+  save();
+  render(true);
+}
+
+function advance() {
+  const beats = STORY[progress.scene].beats;
+  if (progress.beat < beats.length - 1) progress.beat++;
+  else if (progress.scene < STORY.length - 1) {
+    progress.scene++;
+    progress.beat = 0;
+  } else progress.ended = true;
+  progress.choice = null;
+  save();
+  render(true);
+}
+
+function choose(index) {
+  progress.choice = index;
+  save();
+  render(true);
+}
+
+function portrait(person) {
+  return `<figure class="portrait"><img src="portraits/${person.portrait}" alt="${person.name}的立绘"><figcaption>${person.name} <span>${person.role}</span></figcaption></figure>`;
+}
+
+function render(focus = false) {
+  if (!playing) {
+    game.innerHTML = `<section class="cover">
+      <div><h1>雨夜盲区</h1><p>一场雨，三个人在等同一个人。</p><p class="muted">跟着调查员许澄问话，听完他们的故事，再作判断。</p>
+      <button type="button" data-action="start">${progress ? '继续故事' : '开始故事'} <span aria-hidden="true">→</span></button>
+      ${progress ? '<button class="quiet" type="button" data-action="restart">从头开始</button>' : ''}</div>
+    </section>`;
+    return;
+  }
+  if (progress.ended) {
+    game.innerHTML = `<section class="cover"><div><p class="chapter">故事结束</p><h1 tabindex="-1">雨停之后</h1><p>老板把门口的水扫开。那条小巷又可以直接走过去了。</p><button type="button" data-action="restart">重读故事</button><a class="back" href="/#games">返回游戏区</a></div></section>`;
+    if (focus) game.querySelector('h1').focus();
+    return;
+  }
+  const scene = STORY[progress.scene];
+  const beat = scene.beats[progress.beat];
+  const isChoice = Boolean(beat.choices);
+  const speaker = !isChoice && beat[0] ? PEOPLE[beat[0]] : null;
+  const chosen = isChoice && progress.choice !== null ? beat.choices[progress.choice] : null;
+  const text = isChoice ? chosen?.[1] || beat.prompt : beat[1];
+  const actions = isChoice && !chosen
+    ? beat.choices.map(([label], i) => `<button type="button" data-action="choice" data-index="${i}">${label}</button>`).join('')
+    : chosen?.[2] === false
+      ? '<button type="button" data-action="retry">再想一想</button>'
+      : '<button type="button" data-action="next">继续 <span aria-hidden="true">→</span></button>';
+  game.innerHTML = `<section class="scene">
+    <div class="chapter">第 ${progress.scene + 1} / ${STORY.length} 幕 <span>${scene.title}</span></div>
+    <div class="stage">${portrait(speaker || PEOPLE[scene.portrait])}</div>
+    <div class="dialogue"><div class="speaker">${speaker?.name || (isChoice ? (chosen ? '回应' : '你的选择') : '旁白')}</div>
+    <p tabindex="-1" class="line">${text}</p>
+    <div class="actions">${actions}</div></div>
+  </section>`;
+  if (focus) game.querySelector('.line').focus({ preventScroll: true });
+}
+
+game.addEventListener('click', (event) => {
+  const button = event.target.closest('button[data-action]');
+  if (!button) return;
+  switch (button.dataset.action) {
+    case 'start': start(); break;
+    case 'restart': start(true); break;
+    case 'next': advance(); break;
+    case 'choice': choose(Number(button.dataset.index)); break;
+    case 'retry': progress.choice = null; save(); render(true); break;
+  }
+});
+render();
