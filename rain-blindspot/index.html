@@ -6,14 +6,29 @@
   <meta name="theme-color" content="#101820">
   <meta name="description" content="一场雨，三个人在等同一个人。扮演刑警队长韩岚，在对话里找出真相。">
   <title>雨夜盲区 · 剧情游戏</title>
-  <link rel="stylesheet" href="style.css?v=story3.2">
+  <link rel="stylesheet" href="style.css?v=story3.5">
   <script defer src="data.js?v=story3.4"></script>
-  <script defer src="app.js?v=story3.2"></script>
+  <script defer src="app.js?v=story3.5"></script>
 </head>
 <body>
   <header><a href="/#games">‹ 游戏区</a><span>你 · 刑警队长韩岚</span></header>
-  <details class="cast"><summary>人物表</summary><ul id="cast-list"></ul></details>
+  <div class="story-tools">
+    <details class="cast"><summary>人物表</summary><ul id="cast-list"></ul></details>
+    <button id="open-synopsis" class="synopsis-trigger" type="button" aria-haspopup="dialog">剧情梗概</button>
+  </div>
   <main id="game"></main>
+  <dialog id="synopsis" class="synopsis" aria-labelledby="synopsis-title">
+    <div class="synopsis-heading">
+      <h2 id="synopsis-title">剧情梗概</h2>
+      <form method="dialog"><button type="submit" autofocus>关闭</button></form>
+    </div>
+    <p>白川町下着暴雨。便利店老板何姐去扶巷口倒下的单车，却发现常来买水的林知远倒在墙根。林的手机上有三条没读的消息，有人叫他去老地方见面，有人警告他别签字，还有人发来了律师事务所的地址。</p>
+    <p>你是刑警队长韩岚，和队员小顾一起出警。林平时走哪条路？为什么那晚换了衣服？你得从几个人的说法里找出对不上的地方。</p>
+    <section aria-labelledby="recap-title">
+      <h3 id="recap-title">前情回顾</h3>
+      <div id="synopsis-recap"></div>
+    </section>
+  </dialog>
   <noscript>开启 JavaScript 后即可试玩。</noscript>
 </body>
 </html>

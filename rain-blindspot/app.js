@@ -8,6 +8,29 @@ const newGame = () => ({ scene: 0, beat: 0, choice: null, ended: false });
 let progress = loadProgress();
 let playing = false;
 
+const chapterRecaps = [
+  '何姐在侧巷发现林知远。店里录像拍到他穿上黑雨衣。林手机上的三条消息，分别指向三个人。',
+  '工程师周砚在北边的旧路等林知远。他妹妹曾在林坚持继续的拍摄中遇难。暴雨让林改道，周砚等到离开也没见到他。',
+  '摄影师邵白交了张空巷照，拍照时的另一段画面却有人经过。黑雨衣挡住了浅外套，邵白没敢认人。另有记录证明他没动手。',
+  '你和何姐走了一遍归途。大雨淹到屋檐边，林绕进侧巷，在井盖旁停下弄鞋套。何姐想起，姜宁也熟悉这条路。',
+  '姜宁说案发时在跟姐姐打电话。她拿出林没取走的鞋和一封没寄的信，说林逼她认下借款，还要把剪过的录音发给她母亲。',
+  '你看了店里的录像，也听了姜宁保存的原录音。她拒绝签字，约了律师，准备拿聊天和转账记录说明这笔钱的来路。',
+  '回访和独立记录证实，周砚没等到林，邵白没启动袭击。你让小顾重新调出工作间的录像，查那次袭击的指令是谁发的。',
+  '姜宁的电话确实没断，但录像拍到她一边通话，一边操作自己的设备。她发出指令的时间，和巷子里发生袭击的时间对上了。',
+  '你写下姜宁的名字，分别记录周砚和邵白做过的事。姜宁把信托姐姐交给律师，何姐揭下绕行告示，重新开门。',
+];
+
+const synopsis = document.querySelector('#synopsis');
+const recap = document.querySelector('#synopsis-recap');
+document.querySelector('#open-synopsis').addEventListener('click', () => {
+  const completed = progress?.ended ? STORY.length : progress?.scene ?? 0;
+  recap.innerHTML = completed
+    ? `<ol>${chapterRecaps.slice(0, completed).map((text, i) =>
+        `<li><strong>${STORY[i].title}</strong><p>${text}</p></li>`).join('')}</ol>`
+    : '<p class="muted">看完第一幕后，这里会出现已经看过的剧情。</p>';
+  synopsis.showModal();
+});
+
 function loadProgress() {
   try {
     const saved = JSON.parse(localStorage.getItem(saveKey));
