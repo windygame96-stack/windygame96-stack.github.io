@@ -74,13 +74,13 @@ export default function TestsHub() {
         <div className="th-card__body"><p>从你在乎、擅长和愿意尝试的事出发</p><h2>AI时代<br />职业可能性测试</h2><span>18题探索6种原型、30个工作方向和4种发展模式，带走一个30分钟体验任务。</span></div>
         <footer><div><strong>输入口令开始</strong><small>18题 · 点选自动下一题</small></div><b>→</b></footer>
       </a>
-      <a className="th-card th-card--returnee th-card--ai-career" href="/returnee-career/">
+      <a className="th-card th-card--returnee" href="/returnee-career/">
         <header><span>05</span><small>SELF · CAREER CARDS</small></header>
         <div className="th-card__diagram"><span>背景</span><i /><span>经历</span><i /><span>补强</span></div>
         <div className="th-card__body"><p>把留学经历变成具体的求职筹码</p><h2>海归求职<br />筹码测试</h2><span>按11类岗位盘点学历、学校、英语和实践，查看得分依据、补强建议，下载一张报告长图。</span></div>
         <footer><div><strong>开始盘点</strong><small>全选择题 · PNG图片报告</small></div><b>→</b></footer>
       </a>
-      <a className="th-card th-card--ai-career" href="/lifemax/">
+      <a className="th-card th-card--lifemax" href="/lifemax/">
         <header><span>06</span><small>SELF · LIFE PLANNING</small></header>
         <div className="th-card__diagram"><span>现在</span><i /><span>喜欢</span><i /><span>安排</span></div>
         <div className="th-card__body"><p>从你真实的一天开始</p><h2>LifeMax<br />生活时间规划</h2><span>画出一天，选想多做的事，带走完整时段的建议。</span></div>
