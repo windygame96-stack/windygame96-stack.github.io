@@ -86,7 +86,7 @@ export default function TestsHub() {
         <div className="th-card__body"><p>从你真实的一天开始</p><h2>LifeMax<br />生活时间规划</h2><span>画出一天，选想多做的事，带走完整时段的建议。</span></div>
         <footer><div><strong>输入密码开始</strong><small>双表盘 · 连续时段建议</small></div><b>→</b></footer>
       </a>
-      <a className="th-card th-card--relationship" href="/travel-buddy/?v=4.1">
+      <a className="th-card th-card--relationship" href="/travel-buddy/?v=4.2">
         <header><span>07</span><small>SELF · TRAVEL BUDDIES</small></header>
         <div className="th-card__diagram"><span>节奏</span><i /><span>偏好</span><i /><span>匹配</span></div>
         <div className="th-card__body"><p>出发前对一对</p><h2>旅行搭子人格测试</h2><span>测出你的旅行风格，和搭子对一对行程、预算和拍照习惯。</span></div>
