@@ -127,7 +127,20 @@ summary{cursor:pointer;min-height:30px;padding:4px 0}
     <div class="wordmark"><span class="compass" aria-hidden="true">✦</span> 旅行搭子人格测试</div>
     <span class="header-note">出发前对一对</span>
   </header>
-  <main id="app">
+  <main id="access-gate" class="flow">
+    <section class="sheet">
+      <h1>输入口令，开始测试</h1>
+      <form id="access-form" class="code-box" novalidate>
+        <label for="access-pin">四位数访问口令</label>
+        <div class="code-controls">
+          <input id="access-pin" type="password" inputmode="numeric" autocomplete="off" maxlength="4" required>
+          <button class="primary" type="submit">进入测试</button>
+        </div>
+        <p id="access-error" class="status" role="status"></p>
+      </form>
+    </section>
+  </main>
+  <main id="app" hidden>
     <section class="hero">
       <div class="hero-copy">
         <div class="eyebrow"><span class="dot"></span> 16 道情境题 <span aria-hidden="true">·</span> 预计 3 分钟</div>
@@ -895,6 +908,29 @@ function showComparison() {
 
 document.querySelector('#start').addEventListener('click',()=>start(false));
 document.querySelector('#duo').addEventListener('click',()=>start(true));
+
+const accessGate = document.querySelector('#access-gate');
+const accessPin = document.querySelector('#access-pin');
+const accessError = document.querySelector('#access-error');
+const accessForm = document.querySelector('#access-form');
+
+accessForm.addEventListener('submit',event=>{
+  event.preventDefault();
+  const pin = accessPin.value.trim();
+  if (pin!=='6847') {
+    accessError.textContent = /^\d{4}$/.test(pin) ? '口令不对，再试一次。' : '请输入四位数字。';
+    accessPin.setAttribute('aria-invalid','true');
+    accessPin.focus();
+    accessPin.select();
+    return;
+  }
+  accessPin.value = '';
+  accessError.textContent = '';
+  accessPin.removeAttribute('aria-invalid');
+  accessGate.hidden = true;
+  app.hidden = false;
+  focusHeading(app.querySelector('h1'));
+});
 
 </script>
 </body>
