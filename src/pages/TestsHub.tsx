@@ -43,7 +43,7 @@ export default function TestsHub() {
     };
   }, []);
   return <main className="th-shell">
-    <header className="th-nav"><a href="/">WENDI'S LAB</a><span>SELF TESTS · 06</span></header>
+    <header className="th-nav"><a href="/">WENDI'S LAB</a><span>SELF TESTS · 07</span></header>
     <section className="th-hero">
       <p>TESTS · FOR CONVERSATION</p>
       <h1>{tr("\u6709\u4E9B\u95EE\u9898\uFF0C")}<br /><i>{tr("\u503C\u5F97\u8BA4\u771F\u95EE\u81EA\u5DF1\u3002")}</i></h1>
@@ -86,6 +86,12 @@ export default function TestsHub() {
         <div className="th-card__body"><p>从你真实的一天开始</p><h2>LifeMax<br />生活时间规划</h2><span>画出一天，选想多做的事，带走完整时段的建议。</span></div>
         <footer><div><strong>输入密码开始</strong><small>双表盘 · 连续时段建议</small></div><b>→</b></footer>
       </a>
+      <a className="th-card th-card--relationship" href="/travel-buddy/?v=4.1">
+        <header><span>07</span><small>SELF · TRAVEL BUDDIES</small></header>
+        <div className="th-card__diagram"><span>节奏</span><i /><span>偏好</span><i /><span>匹配</span></div>
+        <div className="th-card__body"><p>出发前对一对</p><h2>旅行搭子人格测试</h2><span>测出你的旅行风格，和搭子对一对行程、预算和拍照习惯。</span></div>
+        <footer><div><strong>输入口令开始</strong><small>16 题 · 支持双人匹配</small></div><b>→</b></footer>
+      </a>
     </section>
     <section className="th-compare">
       <p>{tr("\u600E\u4E48\u9009\u62E9")}</p>
@@ -96,7 +102,7 @@ export default function TestsHub() {
     </section>
     <section className="th-compare th-compare--ai"><div><span>想探索“AI时代可以做什么、怎样开始”</span><strong>试试AI职业可能性 · 需口令</strong></div></section>
     <section className="th-privacy"><strong>{tr("答案属于你")}</strong><p>{tr("生活源动力与职场复盘仅在当前页面内存计算，刷新或退出会清空；AI职业测试默认仅在本页计算，也可自愿保存进度7天；关系说明书默认仅在本页计算，也可自愿保存进度7天。测试答案不上传服务器，换设备不会自动同步。")}</p></section>
-    <footer className="th-footer"><a href="/">{tr("\u2190 \u8FD4\u56DE\u6478\u9C7C\u4E4B\u795E\u6E29\u8FEA\u7684 LAB")}</a><span>06 TESTS · MORE LATER</span></footer>
+    <footer className="th-footer"><a href="/">{tr("\u2190 \u8FD4\u56DE\u6478\u9C7C\u4E4B\u795E\u6E29\u8FEA\u7684 LAB")}</a><span>07 TESTS · MORE LATER</span></footer>
   </main>;
 }
 

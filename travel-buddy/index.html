@@ -20,6 +20,7 @@
   background:var(--paper);
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0}
 button,summary{font:inherit}
 button{cursor:pointer}
@@ -140,7 +141,8 @@ summary{cursor:pointer;min-height:30px;padding:4px 0}
       </form>
     </section>
   </main>
-  <main id="app" hidden>
+  <main id="app" hidden></main>
+  <template id="quiz-home">
     <section class="hero">
       <div class="hero-copy">
         <div class="eyebrow"><span class="dot"></span> 16 道情境题 <span aria-hidden="true">·</span> 预计 3 分钟</div>
@@ -162,7 +164,7 @@ summary{cursor:pointer;min-height:30px;padding:4px 0}
       <div><span aria-hidden="true">⇄</span><h2>旅行目的</h2><p>想探索新地方，还是好好享受？</p></div>
       <div><span aria-hidden="true">◎</span><h2>消费观念</h2><p>守住原预算，还是喜欢就加一点？</p></div>
     </section>
-  </main>
+  </template>
   <footer><span>旅行搭子人格测试</span><span>按你这次想怎么旅行来选</span></footer>
 </div>
 <script>
@@ -463,7 +465,7 @@ function decodeTravel(code) {
 
 
 const app = document.querySelector('#app');
-const home = [...app.children];
+const home = [...document.querySelector('#quiz-home').content.children];
 const total = questions.length;
 let answers, participant, index, editing, locked;
 let screen = 'home';
@@ -906,9 +908,6 @@ function showComparison() {
   method(flow);
 }
 
-document.querySelector('#start').addEventListener('click',()=>start(false));
-document.querySelector('#duo').addEventListener('click',()=>start(true));
-
 const accessGate = document.querySelector('#access-gate');
 const accessPin = document.querySelector('#access-pin');
 const accessError = document.querySelector('#access-error');
@@ -927,6 +926,9 @@ accessForm.addEventListener('submit',event=>{
   accessPin.value = '';
   accessError.textContent = '';
   accessPin.removeAttribute('aria-invalid');
+  app.replaceChildren(...home);
+  app.querySelector('#start').addEventListener('click',()=>start(false));
+  app.querySelector('#duo').addEventListener('click',()=>start(true));
   accessGate.hidden = true;
   app.hidden = false;
   focusHeading(app.querySelector('h1'));
