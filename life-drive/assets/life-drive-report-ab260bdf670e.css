@@ -1,0 +1,60 @@
+.plain-result .paid-result-top {
+  padding: clamp(24px, 5vw, 44px);
+  background: #203e31;
+  border-color: #203e31;
+}
+
+.plain-result .paid-result-top .paid-kicker {
+  color: #e5edc5;
+}
+
+.plain-result .paid-result-top h1 {
+  display: block;
+  max-width: none;
+  padding: 15px 0 0;
+  border-top: 1px solid #718f76;
+  border-radius: 0;
+  background: none;
+  color: #e6efb1;
+  font-family: "Songti SC", "Noto Serif CJK SC", serif;
+  font-size: clamp(38px, 7vw, 68px);
+  overflow-wrap: anywhere;
+}
+
+.plain-result .plain-result-summary {
+  padding-inline: 0;
+  color: #fbf8e9;
+}
+
+.plain-result .plain-job-examples {
+  gap: 0;
+  margin-top: 8px;
+}
+
+.plain-result .plain-job-examples article {
+  display: grid;
+  grid-template-columns: minmax(8em, 30%) minmax(0, 1fr);
+  gap: 4px 16px;
+  align-items: baseline;
+  border-bottom: 1px solid #d9decb;
+  padding: 12px 0;
+}
+
+.plain-result .plain-job-examples article > h3,
+.plain-result .plain-job-examples article > p {
+  margin: 0;
+}
+
+.plain-result .plain-job-examples article > h3 {
+  color: #365744;
+}
+
+.plain-result .plain-ask {
+  background: #e9eedb;
+}
+
+@media (max-width: 620px) {
+  .plain-result .plain-job-examples article {
+    grid-template-columns: 1fr;
+  }
+}
